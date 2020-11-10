@@ -1,0 +1,25 @@
+export const REGISTER_SUCCESS = "REGISTER_SUCCESS"
+export const REGISTER_FAIL = "REGISTER_FAIL"
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS"
+export const LOGIN_FAIL = "LOGIN_FAIL"
+export const LOGOUT = "LOGOUT"
+
+export const SET_MESSAGE = "SET_MESSAGE"
+export const CLEAR_MESSAGE = "CLEAR_MESSAGE"
+
+export const SELECT_PARCEL = "SELECT_PARCEL"
+export const ADD_PARCEL = "ADD_PARCEL"
+export const EDIT_PARCEL = "EDIT_PARCEL"
+export const DELETE_PARCEL = "DELETE_PARCEL"
+
+
+export const SELECT_USER = "SELECT_USER"
+export const SELECT_WAREHOUSE = "SELECT_WAREHOUSE"
+export const SELECT_REPORT = "SELECT_REPORT"
+
+export const OPEN_DIALOG = "OPEN_DIALOG"
+export const CLOSE_DIALOG = "CLOSE_DIALOG"
+export const DIALOG_STATE = "DIALOG_STATE"
+
+export const EDIT_USER = "EDIT_USER"
+export const DELETE_USER = "DELETE_USER"
