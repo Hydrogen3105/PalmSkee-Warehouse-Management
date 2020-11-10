@@ -153,7 +153,7 @@ class App extends Component {
               <Route exact path="/add-warehouse" component={AddWarehouse}/>
               <Route exact path="/edit-warehouse" component={EditWarehouse}/>
               <Route exact path="/delete-warehouse" component={DeleteWarehouse}/>
-              <Route exact path="/error" component=""/>
+              <Route exact path="/error" component="1"/>
             </Switch>
           </div>
         </div>
