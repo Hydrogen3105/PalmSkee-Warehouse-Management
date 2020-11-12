@@ -13,7 +13,7 @@ import { history } from '../../helpers/history'
 import QuestionDialog from '../../dialogs/dialog.component'
 import ConfirmedDialog from '../../dialogs/dialog-confirmed.component'
 import { dialog_state } from '../../actions/dialog'
-
+import { select_user } from '../../actions/admin'
 
 class EditUser extends Component {
     constructor(props) {
@@ -53,6 +53,28 @@ class EditUser extends Component {
             this.setState({
                 allUser: response.data.payload
             })
+        })
+        .then(() => {
+            if(this.state.userId === '' && this.props.userId !== ''){   
+                const pre_selected_user = this.state.allUser.filter((user) => {return user.userId === this.props.userId} )
+                let dob = pre_selected_user[0].dob
+                dob = dob.slice(0,10)
+                this.setState({
+                    userId: this.props.userId,
+                    firstName: pre_selected_user[0].firstName,
+                    lastName: pre_selected_user[0].lastName,
+                    position: pre_selected_user[0].position,
+                    address: pre_selected_user[0].address,
+                    zipCode: pre_selected_user[0].zipCode,
+                    city: pre_selected_user[0].city,
+                    country: pre_selected_user[0].country,
+                    dob,
+                    gender: pre_selected_user[0].gender,
+                    email: pre_selected_user[0].email,
+                    phone: pre_selected_user[0].phone,
+                    warehouseId: pre_selected_user[0].warehouseId,
+                })
+            }
         })
     }
 
@@ -109,6 +131,7 @@ class EditUser extends Component {
     }
 
     handleBack() {
+        this.props.dispatch(select_user(''))
         history.push('/manage-user')
     }
 
@@ -154,7 +177,7 @@ class EditUser extends Component {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="firstName">First Name</label>
+                            <label htmlFor="firstName">First Name</label>
                         <input  type="text"
                                 name="firstName"
                                 style={{width: 300}}
@@ -234,7 +257,7 @@ class EditUser extends Component {
                         <input  type="tel"
                                 name="phone"
                                 pattern="[0-9]{10}"
-                                placeholder="082-740-0474"
+                                placeholder="0827400474"
                                 style={{width: 300}}
                                 value={this.state.phone}
                                 onChange={this.handleChange}
@@ -340,10 +363,12 @@ function mapStateToProps(state) {
     const { message } = state.message
     const { user } = state.auth
     const { dialog_state } = state.dialog
+    const { userId } = state.user
     return {
         user,
         message,
         dialog_state,
+        userId,
     }
   }
   

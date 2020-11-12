@@ -1,13 +1,17 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
+import React from 'react'
+import { connect } from "react-redux"
+
+import Paper from '@material-ui/core/Paper'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableContainer from '@material-ui/core/TableContainer'
+import TableHead from '@material-ui/core/TableHead'
+import TablePagination from '@material-ui/core/TablePagination'
+import TableRow from '@material-ui/core/TableRow'
+
+import { history } from '../../helpers/history'
+import { select_user } from '../../actions/admin'
 
 const columns = [
     { id: "userId" , label: "Staff ID" ,minWidth: 100},
@@ -45,8 +49,9 @@ class UsersTable extends React.Component {
         })
     }
     
-    handleSelectUser() {
-
+    handleSelectUser(userId) {
+        this.props.dispatch(select_user(userId))
+        history.push('/edit-user')
     }
 
     render () {
@@ -70,9 +75,9 @@ class UsersTable extends React.Component {
                 <TableBody>
                   {this.props.users.slice(this.state.page * this.state.rowPerPage, this.state.page * this.state.rowPerPage + this.state.rowPerPage).map((row) => {
                     return (
-                            <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                            <TableRow hover role="checkbox" tabIndex={-1} key={row['userId']} name={row['userId']} onClick={() => this.handleSelectUser(row['userId'])} >
                               {columns.map((column) => {
-                                const value = row[column.id];
+                                const value = row[column.id]
                                 return (
                                   <TableCell key={column.id} align={column.align}>
                                       {value}
@@ -99,4 +104,11 @@ class UsersTable extends React.Component {
     }
 }
 
-export default UsersTable
+function mapStateToProp(state) {
+  const { userId } = state.user
+  return {
+      userId,
+  }
+}
+
+export default connect(mapStateToProp)(UsersTable)

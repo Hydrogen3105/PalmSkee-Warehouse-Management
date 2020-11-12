@@ -64,47 +64,61 @@ class DeleteUser extends Component {
         return (
             <div className="col-md-12">
                 <h2>Deleting User</h2>
-                <div className="card card-container-edit-user">
-                    <div className="form-group">
-                        <FormControl>
-                            <InputLabel>Staff ID</InputLabel>
-                            <Select name="staff-id"
-                                    value={this.state.userId}
-                                    onChange={this.handleChange}
-                                    style={{ width: 250}}
-                            >
-                            { this.state.allUser.map(user => {
-                                return <MenuItem    key={user.userId} 
-                                                    value={user.userId}
-                                        >
-                                            <span>
-                                                <strong>{user.userId}</strong> {user.firstName} {user.lastName}
-                                            </span>
-                                        </MenuItem>
-                                })}
-                            </Select>
-                        </FormControl>
+                <div className='menu-and-button center' >
+                    <div>
+                        <div className="card card-container-edit-user">
+                            <div className="form-group">
+                                <FormControl>
+                                    <InputLabel>Staff ID</InputLabel>
+                                    <Select name="staff-id"
+                                            value={this.state.userId}
+                                            onChange={this.handleChange}
+                                            style={{ width: 250}}
+                                    >
+                                    { this.state.allUser.map(user => {
+                                        return <MenuItem    key={user.userId} 
+                                                            value={user.userId}
+                                                >
+                                                    <span>
+                                                        <strong>{user.userId}</strong> {user.firstName} {user.lastName}
+                                                    </span>
+                                                </MenuItem>
+                                        })}
+                                    </Select>
+                                </FormControl>
+                            </div>
+                        </div>
                     </div>
+
+                    <div className='button-back-comfirm'>
+                        <div>
+                            <button className="btn btn-danger btn-block" 
+                                    style={{width: 100}}
+                                    onClick={this.handleBack}
+                            >
+                                    Back
+                            </button>
+                        </div>
+                        <div>
+                            <button className="btn btn-primary btn-block" 
+                                    style={{width: 100}}
+                                    onClick={this.handleDelete}
+                            >
+                                    Delete
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
+                
+                
                 {   this.props.dialog_state === 1 ? 
                         <QuestionDialog topic='delete-user' data={this.state.userId}/> :
                         this.props.dialog_state === 2 && 
                         <ConfirmedDialog topic='delete-user' />
                 }
-                <div>
-                        <button className="btn btn-danger btn-block" 
-                                style={{width: 100}}
-                                onClick={this.handleBack}
-                        >
-                                Back
-                        </button>
-                        <button className="btn btn-primary btn-block" 
-                                style={{width: 100}}
-                                onClick={this.handleDelete}
-                        >
-                                Delete
-                        </button>
-                </div>
+
+               
             </div>
         )
     }

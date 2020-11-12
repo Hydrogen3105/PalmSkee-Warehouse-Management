@@ -1,7 +1,6 @@
 import React, { Component } from "react"
 import { Redirect, Link } from "react-router-dom"
 import { connect } from "react-redux"
-import { Button } from '@material-ui/core'
 import AdminService from '../../services/admin-service'
 
 import AdminProfile from '../profile.components/admin-profile.component'
@@ -9,17 +8,37 @@ import UsersTable from './users-table.component'
 import { history } from '../../helpers/history'
 
 import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
 import DialogTitle from '@material-ui/core/DialogTitle'
+
+import { makeStyles } from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
+import SearchIcon from '@material-ui/icons/Search'
+import FilterListIcon from '@material-ui/icons/FilterList'
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      '& > *': {
+        margin: theme.spacing(1),
+      },
+    },
+    input: {
+      display: 'none',
+    },
+  }))
 
 class ManageUser extends Component {
     constructor(props){
         super(props)
         this.state = {
             allUser: [],
+            showUser: [],
             isLoading: true,
+            searchText: '',
+            
         }
         this.handleBack = this.handleBack.bind(this)
+        this.handleChange = this.handleChange.bind(this)
     }
 
     componentDidMount() {
@@ -27,6 +46,7 @@ class ManageUser extends Component {
         .then((response) => {
             this.setState({
                 allUser: response.data.payload,
+                showUser: response.data.payload,
                 isLoading: false,
             })
         })
@@ -35,7 +55,29 @@ class ManageUser extends Component {
     handleBack() {
         history.push('/manage-user')
     }
+
+    handleSearch(allUser) {
+        if(this.state.searchText !== ''){
+            const searchData = allUser.filter(user => user.userId === this.state.searchText)
+            this.setState({
+                showUser: searchData,
+                searchText: ''
+            })     
+        }
+        else {
+            this.setState({
+                showUser: allUser
+            })  
+        }
+    }
     
+    handleChange(e) {
+        const { name , value } = e.target
+        this.setState({
+            [name]: value
+        })
+    }
+
     render () {
         const { user: currentUser } = this.props
 
@@ -84,7 +126,46 @@ class ManageUser extends Component {
 
                 <div className='container-manage-user'>
                     <div>
-                        <UsersTable users={this.state.allUser}/>
+                        <div className='search-bar'>
+                            <div className='search-bar-container'>
+                                <div className='filter-container'>
+                                    <div>
+                                        <IconButton color="primary" 
+                                                    aria-label="search" 
+                                                    component="span" 
+
+                                        >
+                                            <FilterListIcon />
+                                        </IconButton>
+                                    </div>
+                                </div>
+
+                                <div className='search-container'> 
+                                    <div className='form-group'>
+                                        <input  type='text'
+                                                className='form-control'
+                                                name='searchText'
+                                                style= {{width: 250}}
+                                                placeholder='Search Here..'
+                                                value={this.state.searchText}
+                                                onChange={this.handleChange}
+                                        />
+                                    </div>
+                                    <div>
+                                        <IconButton color="primary" 
+                                                    aria-label="search" 
+                                                    component="span" 
+                                                    onClick={() => this.handleSearch(this.state.allUser)}
+                                        >
+                                            <SearchIcon />
+                                        </IconButton>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                        <UsersTable users={this.state.showUser}/>
                     </div>
 
                     <div>

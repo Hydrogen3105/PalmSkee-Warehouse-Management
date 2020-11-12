@@ -5,7 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { connect } from 'react-redux'
 import { dialog_state } from '../actions/dialog'
-import { edit_user, delete_user } from '../actions/admin'
+import { edit_user, delete_user, select_user } from '../actions/admin'
 
 function QuestionDialog({ dispatch, dialog_state:state, topic, data }) {
   const [open, setOpen] = React.useState(false)
@@ -31,6 +31,7 @@ function QuestionDialog({ dispatch, dialog_state:state, topic, data }) {
             dispatch(edit_user(userId, firstName, lastName, address, zipCode, city, country, dob, gender, email, phone, warehouseId))
                     .then(() => {
                         dispatch(dialog_state(prevState + 1))
+                        dispatch(select_user(''))
                     })
                     .catch(() => {
                       setLoading(false)
@@ -94,8 +95,10 @@ function QuestionDialog({ dispatch, dialog_state:state, topic, data }) {
 
 function mapStateToProp(state) {
     const {dialog_state} = state.dialog
+    const {userId} = state.user
     return {
         dialog_state,
+        userId,
     }
 }
 
