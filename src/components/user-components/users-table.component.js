@@ -21,7 +21,7 @@ class UsersTable extends React.Component {
         super(props)
         this.state = {
             page: 0,
-            rowPerPage: 5,
+            rowPerPage: 10,
 
         }
         this.handleChangePage = this.handleChangePage.bind(this)
@@ -52,9 +52,9 @@ class UsersTable extends React.Component {
     render () {
       
         return (
-            <Paper >
-            <TableContainer >
-              <Table stickyHeader aria-label="sticky table">
+            <Paper style={{width: 780}}>
+            <TableContainer  >
+              <Table stickyHeader aria-label="sticky table" >
                 <TableHead>
                   <TableRow>
                     {columns.map((column) => (
@@ -86,7 +86,7 @@ class UsersTable extends React.Component {
               </Table>
             </TableContainer>
             <TablePagination
-              rowsPerPageOptions={[5, 10, 15]}
+              rowsPerPageOptions={[10, 20, 30]}
               component="div"
               count={this.props.users.length}
               rowsPerPage={this.state.rowPerPage}
