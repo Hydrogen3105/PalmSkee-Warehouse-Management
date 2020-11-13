@@ -5,6 +5,7 @@ import parcel from "./parcel"
 import warehouse from './warehouse'
 import report from './report'
 import dialog from './dialog'
+import user from './user'
 
 export default combineReducers({
   auth,
@@ -12,5 +13,6 @@ export default combineReducers({
   parcel,
   warehouse,
   report,
-  dialog
+  dialog,
+  user
 });

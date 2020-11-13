@@ -1,5 +1,5 @@
 import AdminService from '../services/admin-service'
-import { SET_MESSAGE } from '../actions/types'
+import { SET_MESSAGE, SELECT_USER } from '../actions/types'
 
 export const edit_user = (userId, firstName, lastName, address, zipCode, city, country, dob, gender, email, phone, warehouseId) => (dispatch) => {
     return AdminService.editUser(userId, firstName, lastName, address, zipCode, city, country, dob, gender, email, phone, warehouseId).then(
@@ -56,3 +56,8 @@ export const delete_user = (userId) => (dispatch) => {
         }
     )
 }
+
+export const select_user = (userId) => ({
+    type: SELECT_USER,
+    payload: userId
+})

@@ -111,7 +111,7 @@ class App extends Component {
                     <li className="nav-item">
                       <Link to={"/profile"} className="nav-link text-light right-nav-items">
                         <Typography variant="h6" >
-                          {currentUser.payload[0].firstname}
+                          {currentUser.payload[0].firstName}
                         </Typography>
                       </Link>
                     </li>
