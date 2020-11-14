@@ -12,6 +12,7 @@ import { history } from '../../helpers/history'
 import QuestionDialog from '../../dialogs/dialog.component'
 import ConfirmedDialog from '../../dialogs/dialog-confirmed.component'
 import { dialog_state } from '../../actions/dialog'
+import { Button, Dialog, DialogActions, DialogTitle } from '@material-ui/core'
 
 class DeleteUser extends Component {
     constructor(props) {
@@ -19,12 +20,14 @@ class DeleteUser extends Component {
         this.state = {
             userId: "",
             loading: false,
-            allUser: []
+            allUser: [],
+            open_warning: false,
         }
 
         this.handleBack = this.handleBack.bind(this)
         this.handleDelete = this.handleDelete.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        this.handleClose = this.handleClose.bind(this)
     }
 
     componentDidMount() {
@@ -49,7 +52,23 @@ class DeleteUser extends Component {
     }
 
     handleDelete() {
-        this.props.dispatch(dialog_state(1))
+        if(this.state.userId !== ''){
+            this.props.dispatch(dialog_state(1))
+            this.setState({
+                open_warning: false
+            })
+        }
+        else{
+            this.setState({
+                open_warning: true
+            })
+        }
+    }
+
+    handleClose() {
+        this.setState({
+            open_warning: false
+        })
     }
 
     render () {
@@ -110,8 +129,20 @@ class DeleteUser extends Component {
                     </div>
 
                 </div>
-                
-                
+                <Dialog open={this.state.open_warning}
+                            onClose={this.handleClose}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">
+                            Please select user ID
+                        </DialogTitle>
+                        <DialogActions>
+                            <Button onClick={this.handleClose} color='primary'>
+                                OK
+                            </Button>
+                        </DialogActions>
+                </Dialog>
                 {   this.props.dialog_state === 1 ? 
                         <QuestionDialog topic='delete-user' data={this.state.userId}/> :
                         this.props.dialog_state === 2 && 

@@ -1,7 +1,7 @@
 import { SELECT_WAREHOUSE } from '../actions/types'
 
 const initialState = {
-    warehouse_id: ""
+    warehouseId: ""
 }
 
 export default function(state = initialState, action) {
@@ -9,7 +9,7 @@ export default function(state = initialState, action) {
 
     switch(type){
         case SELECT_WAREHOUSE:
-            return { warehouse_id: payload}
+            return { warehouseId: payload}
 
         default:
             return state

@@ -48,6 +48,7 @@ import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import EditParcel from "./components/staff-components/edit-parcel.component"
+import ShowReports from "./components/manager-components/show-report.component"
 
 class App extends Component {
   constructor(props) {
@@ -153,6 +154,7 @@ class App extends Component {
               <Route exact path="/add-warehouse" component={AddWarehouse}/>
               <Route exact path="/edit-warehouse" component={EditWarehouse}/>
               <Route exact path="/delete-warehouse" component={DeleteWarehouse}/>
+              <Route exact path="/show-report" component={ShowReports}/>
               <Route exact path="/palmskYz" component=""/>
             </Switch>
           </div>

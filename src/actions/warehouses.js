@@ -1,9 +1,9 @@
 import { SELECT_WAREHOUSE, SET_MESSAGE } from './types'
 import WarehouseService from '../services/warehouse-service'
 
-export const select_warehouse = (warehouse_id) => ({
+export const select_warehouse = (warehouseId) => ({
     type: SELECT_WAREHOUSE,
-    payload: warehouse_id
+    payload: warehouseId
 })
 
 export const add_warehouse = () => (dispatch) => {

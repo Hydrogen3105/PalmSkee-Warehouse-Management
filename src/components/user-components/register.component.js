@@ -259,7 +259,7 @@ class Register extends Component {
 
                 <div className="form-group">
                   <label htmlFor="dob">Date of Birth</label>
-                  <input  type="date"
+                  <Input  type="date"
                       name="dob"
                       className="form-control"
                       value={this.state.dob}
@@ -270,7 +270,7 @@ class Register extends Component {
 
                 <div className="form-group">
                   <label htmlFor="email">Email</label>
-                  <input  type="email"
+                  <Input  type="email"
                       name="email"
                       placeholder="palmskee@si.com"
                       className="form-control"
@@ -282,7 +282,7 @@ class Register extends Component {
 
                 <div className="form-group">
                   <label htmlFor="phone_number">Phone Number</label>
-                  <input  type="tel"
+                  <Input  type="tel"
                       name="phone_number"
                       pattern="[0-9]{10}"
                       placeholder="0827400474"
@@ -343,6 +343,7 @@ class Register extends Component {
                     value='male'
                     checked={this.state.gender === 'male'}
                     onChange={this.handleChange}
+                    validations={[required]}
                   />
                     Male
                   </label>
@@ -365,19 +366,23 @@ class Register extends Component {
                       Others
                   </label>
                 </div>
-
-                <div>
-                    <button className="btn btn-primary btn-block" 
+                
+                <div className='button-back-comfirm'>
+                  <div>
+                      <button className="btn btn-primary btn-block" 
+                              style={{width: 100}}
+                              onClick={this.handleBack}
+                      >
+                          Back
+                      </button>
+                  </div>
+                  <div className="form-group">
+                    <button className="btn btn-primary btn-block"
                             style={{width: 100}}
-                            onClick={this.handleBack}
-                    >
-                        Back
-                    </button>
+                    >Sign Up</button>
+                  </div>
                 </div>
-                <br />
-                <div className="form-group">
-                  <button className="btn btn-primary btn-block">Sign Up</button>
-                </div>
+                
               </div>
             )}
 

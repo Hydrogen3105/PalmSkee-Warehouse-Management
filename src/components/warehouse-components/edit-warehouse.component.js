@@ -35,7 +35,7 @@ class EditWarehouse extends Component {
     }
  
     componentDidMount() {
-        this.dispatch(dialog_state(0))
+        this.props.dispatch(dialog_state(0))
         AdminService.getAllUsers().then(response => {
             this.setState({
                 allUser: response.data.payload
@@ -74,129 +74,137 @@ class EditWarehouse extends Component {
         return (
             <div>
                 <h1>Editing New Warehouse</h1>
-                <div className="card card-container-edit-user">
-                    <form>
-                        <h4>Detail</h4>
-                        <div className='form-group'>
-                            <h5>Warehouse name</h5>
-                            <input  type='text'
-                                    name='warehouse_name'
-                                    value={this.state.warehouse_name}
-                                    onChange={this.handleChange}
-                                    className='form-control'
-                            />
-                        </div>
-
-                        <div className='form-group'>
-                            <h5>Warehouse Address</h5>
-                            <textarea type='text'
-                                    style= {{width: 300}}
-                                    name='warehouse_address'
-                                    value={this.state.warehouse_address}
-                                    onChange={this.handleChange}
-                                    className='form-control'
-                            />
-                            <br />
-                            <input  type='text'
-                                    name='warehouse_zip'
-                                    style= {{width: 300}}
-                                    value={this.state.warehouse_zip}
-                                    onChange={this.handleChange}
-                                    className='form-control'
-                            />
-                            <br />
-                            <input  type='text'
-                                    name='warehouse_city'
-                                    style= {{width: 300}}
-                                    value={this.state.warehouse_city}
-                                    onChange={this.handleChange}
-                                    className='form-control'
-                            />
-                            <br />
-                            <input  type='text'
-                                    name='warehouse_country'
-                                    style= {{width: 300}}
-                                    value={this.state.warehouse_country}
-                                    onChange={this.handleChange}
-                                    className='form-control'
-                            />
-                        </div>
-
-                        <div className='form-group'>
-                            <h5>Warehouse capacity</h5>
-                            <input  type='number'
-                                    name='capacity'
-                                    value={this.state.capacity}
-                                    onChange={this.handleChange}
-                                    className='form-control'
-                            />
-                        </div>
-
-                        <div className='form-group'>
-                            <h5>Warehouse contact</h5>
-                            <input  type='text'
-                                    name='contact'
-                                    value={this.state.contact}
-                                    onChange={this.handleChange}
-                                    className='form-control'
-                            />
-                        </div>
-
-                        <div className='form-group'>
-                            <h5>Number of Staffs</h5>
-                            <input  type='number'
-                                    name='number_staffs'
-                                    value={this.state.number_staffs}
-                                    onChange={this.handleChange}
-                                    className='form-control'
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <FormControl>
-                                <InputLabel>Manager</InputLabel>
-                                <Select name="manager_id"
-                                        value={this.state.manager_id}
+                <div className='menu-and-button center'>
+                    <div className="card card-container-edit-user">
+                        <form>
+                            <h4>Detail</h4>
+                            <div className='form-group'>
+                                <h5>Warehouse name</h5>
+                                <input  type='text'
+                                        name='warehouse_name'
+                                        value={this.state.warehouse_name}
                                         onChange={this.handleChange}
-                                        style={{ width: 300}}
-                                >
-                                { 
-                                    allManagers.map(user => {
-                                    return <MenuItem    key={user.user_id} 
-                                                        value={user.user_id}
-                                            >
-                                                <span>
-                                                    <strong>{user.user_id}</strong> {user.first_name} {user.last_name}
-                                                </span>
-                                            </MenuItem>
-                                    })
-                                }
-                                </Select>
-                            </FormControl>
+                                        className='form-control'
+                                />
+                            </div>
+
+                            <div className='form-group'>
+                                <h5>Warehouse Address</h5>
+                                <textarea type='text'
+                                        style= {{width: 300}}
+                                        name='warehouse_address'
+                                        value={this.state.warehouse_address}
+                                        onChange={this.handleChange}
+                                        className='form-control'
+                                />
+                                <br />
+                                <input  type='text'
+                                        name='warehouse_zip'
+                                        style= {{width: 300}}
+                                        value={this.state.warehouse_zip}
+                                        onChange={this.handleChange}
+                                        className='form-control'
+                                />
+                                <br />
+                                <input  type='text'
+                                        name='warehouse_city'
+                                        style= {{width: 300}}
+                                        value={this.state.warehouse_city}
+                                        onChange={this.handleChange}
+                                        className='form-control'
+                                />
+                                <br />
+                                <input  type='text'
+                                        name='warehouse_country'
+                                        style= {{width: 300}}
+                                        value={this.state.warehouse_country}
+                                        onChange={this.handleChange}
+                                        className='form-control'
+                                />
+                            </div>
+
+                            <div className='form-group'>
+                                <h5>Warehouse capacity</h5>
+                                <input  type='number'
+                                        name='capacity'
+                                        value={this.state.capacity}
+                                        onChange={this.handleChange}
+                                        className='form-control'
+                                />
+                            </div>
+
+                            <div className='form-group'>
+                                <h5>Warehouse contact</h5>
+                                <input  type='tel'
+                                        name='contact'
+                                        pattern="[0-9]{10}"
+                                        placeholder="0827400474"
+                                        value={this.state.contact}
+                                        onChange={this.handleChange}
+                                        className='form-control'
+                                />
+                            </div>
+
+                            <div className='form-group'>
+                                <h5>Number of Staffs</h5>
+                                <input  type='number'
+                                        name='number_staffs'
+                                        value={this.state.number_staffs}
+                                        onChange={this.handleChange}
+                                        className='form-control'
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <FormControl>
+                                    <InputLabel>Manager</InputLabel>
+                                    <Select name="manager_id"
+                                            value={this.state.manager_id}
+                                            onChange={this.handleChange}
+                                            style={{ width: 300}}
+                                    >
+                                    { 
+                                        allManagers.map(user => {
+                                        return <MenuItem    key={user.user_id} 
+                                                            value={user.user_id}
+                                                >
+                                                    <span>
+                                                        <strong>{user.user_id}</strong> {user.first_name} {user.last_name}
+                                                    </span>
+                                                </MenuItem>
+                                        })
+                                    }
+                                    </Select>
+                                </FormControl>
+                            </div>
+                        </form>
+                        {   this.props.dialog_state === 1 ? 
+                            <QuestionDialog topic='edit' /> :
+                            this.props.dialog_state === 2 && 
+                            <ComfirmedDialog topic='edit' />
+                        }
+                    </div>
+                    <div className='button-back-comfirm'>
+                        <div>
+                            <button className="btn btn-danger btn-block" 
+                                    style={{width: 100}}
+                                    onClick={this.handleBack}
+                            >
+                                    Back
+                            </button>
                         </div>
-                    </form>
-                    {   this.props.dialog_state === 1 ? 
-                        <QuestionDialog topic='edit' /> :
-                        this.props.dialog_state === 2 && 
-                        <ComfirmedDialog topic='edit' />
-                    }
+                        <div>
+                            <button className="btn btn-primary btn-block" 
+                                    style={{width: 100}}
+                                    onClick={this.handleEdit}
+                            >
+                                    Edit
+                            </button>
+                        </div>
+                    </div>
+                    
                 </div>
                 
-                <div>
-                    <button className="btn btn-danger btn-block" 
-                            style={{width: 150}}
-                            onClick={this.handleBack}
-                    >
-                        Back
-                    </button>
-                    <button className="btn btn-primary btn-block" 
-                            style={{width: 150}}
-                            onClick={this.handleEdit}
-                    >
-                        Confirm Edit
-                    </button>
-
-                </div>
             </div>
         )
     }

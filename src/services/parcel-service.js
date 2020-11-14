@@ -4,6 +4,10 @@ const API_URL = "https://owsd-wms-backend.herokuapp.com/api/"
 
 class ParcelService {
 
+    getAllParcel() {
+        return axios.get(API_URL + '',{ headers: authHeader()})
+    }
+
     addParcel() {
         return axios.post(API_URL + '', 
         {},

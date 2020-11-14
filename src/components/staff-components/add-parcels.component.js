@@ -62,127 +62,142 @@ class AddParcel extends Component {
         return (
             <div className="col-md-12">
                 <h2>Add New Parcel</h2>
-                <div>
-                    <div>
-                        <Link to="/exported-parcels">
-                            <Button variant="contained" color="primary">
-                                Exported
-                            </Button>
-                        </Link>
-                    </div>
-                    <br />
-                    <div>
-                        <Link to="/stored-parcels">
-                            <Button variant="contained" color="secondary">
-                                Stored
-                            </Button>
-                        </Link>
-                    </div>
-                    <br />
-                    <div>
+                <div id='outer'>
+                    <div className='inner'>
                         <Link to="/add-parcel">
                             <Button variant="contained" color="primary">
                                 New
                             </Button>
                         </Link>
                     </div>
+                    <div className='inner'>
+                        <Link to="/exported-parcels">
+                            <Button variant="contained" color="primary">
+                                Exported
+                            </Button>
+                        </Link>
+                    </div>
+                    <div className='inner'>
+                        <Link to="/stored-parcels">
+                            <Button variant="contained" color="secondary">
+                                Stored
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
-                <div className="card card-container-staff">
-                    <h4>Detail</h4>
-                    <div className="form-group">
-                        <label htmlFor="width">Width</label>
-                        <input  type="number"
-                                name="width"
-                                value={this.state.width}
-                                onChange={this.handleChange}
-                        />
+
+                <div className='menu-and-button center'>
+                    <div>
+                        <div className="card card-container-staff">
+                            <h4>Detail</h4>
+                            <div className="form-group">
+                                <label htmlFor="width">Width</label>
+                                <input  type="number"
+                                        name="width"
+                                        className="form-control"
+                                        value={this.state.width}
+                                        onChange={this.handleChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="height">Height</label>
+                                <input  type="number"
+                                        name="height"
+                                        className="form-control"
+                                        value={this.state.height}
+                                        onChange={this.handleChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="length">Length</label>
+                                <input  type="number"
+                                        name="length"
+                                        className="form-control"
+                                        value={this.state.length}
+                                        onChange={this.handleChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="weight">Weight</label>
+                                <input  type="number"
+                                        name="weight"
+                                        className="form-control"
+                                        value={this.state.weight}
+                                        onChange={this.handleChange}
+                                />
+                            </div>
+                            <h4>Destination</h4>
+                            <div className="form-group">
+                                <label htmlFor="from_wh">From</label>
+                                <input  type="text"
+                                        name="from_wh"
+                                        className="form-control"
+                                        value={this.state.from_wh}
+                                        onChange={this.handleChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <FormControl>
+                                    <InputLabel>To</InputLabel>
+                                    <Select name="destination"
+                                            value={this.state.destination}
+                                            onChange={this.handleChange}
+                                            style={{ width: 250}}
+                                    >
+                                    {/* this.state.allUser.map(user => {
+                                        return <MenuItem    key={user.user_id} 
+                                                            value={user.user_id}
+                                                >
+                                                    <span>
+                                                        <strong>{user.user_id}</strong> {user.first_name} {user.last_name}
+                                                    </span>
+                                                </MenuItem>
+                                        })*/}
+                                        <MenuItem value="WH112">WH006 O-Koi</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </div>
+                            <h4>Optional</h4>
+                            <div className="form-group">
+                                <label htmlFor="optional">From</label>
+                                <textarea   name="optional"
+                                            value={this.state.optional}
+                                            className="form-control"
+                                            style={{width: 300, height: 150}}
+                                            placeholder="optional"
+                                            onChange={this.handleChange}
+                                            
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="height">Height</label>
-                        <input  type="number"
-                                name="height"
-                                value={this.state.height}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="length">Length</label>
-                        <input  type="number"
-                                name="length"
-                                value={this.state.length}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="weight">Weight</label>
-                        <input  type="number"
-                                name="weight"
-                                value={this.state.weight}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-                    <h4>Destination</h4>
-                    <div className="form-group">
-                        <label htmlFor="from_wh">From</label>
-                        <input  type="text"
-                                name="from_wh"
-                                value={this.state.from_wh}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <FormControl>
-                            <InputLabel>To</InputLabel>
-                            <Select name="destination"
-                                    value={this.state.destination}
-                                    onChange={this.handleChange}
-                                    style={{ width: 250}}
+                    <div className="button-back-comfirm">
+                        <div>
+                            <button className="btn btn-danger btn-block" 
+                                    style={{width: 100}}
+                                    onClick={this.handleBack}
                             >
-                            {/* this.state.allUser.map(user => {
-                                return <MenuItem    key={user.user_id} 
-                                                    value={user.user_id}
-                                        >
-                                            <span>
-                                                <strong>{user.user_id}</strong> {user.first_name} {user.last_name}
-                                            </span>
-                                        </MenuItem>
-                                })*/}
-                                <MenuItem value="WH112">WH006 O-Koi</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </div>
-                    <h4>Optional</h4>
-                    <div className="form-group">
-                        <label htmlFor="optional">From</label>
-                        <textarea   name="optional"
-                                    value={this.state.optional}
-                                    style={{width: 300, height: 150}}
-                                    placeholder="optional"
-                                    onChange={this.handleChange}
-                                    
-                        />
+                                    Back
+                            </button>
+                        </div>
+                        <div>   
+                            <button className="btn btn-primary btn-block" 
+                                    style={{width: 100}}
+                                    onClick={this.handleAdd}
+                            >
+                                    Confirm 
+                            </button>
+                        </div>
                     </div>
                 </div>
+                
                 {
                     this.props.dialog_state === 1 ? 
                     <QuestionDialog topic='add-parcel' /> :
                     this.props.dialog_state === 2 && 
                     <ConfirmedDialog topic='add-parcel' />
                 }
-                <div>
-                        <button className="btn btn-danger btn-block" 
-                                style={{width: 100}}
-                                onClick={this.handleBack}
-                        >
-                                Back
-                        </button>
-                        <button className="btn btn-primary btn-block" 
-                                style={{width: 100}}
-                                onClick={this.handleAdd}
-                        >
-                                Confirm 
-                        </button>
-                </div>    
+                    
             </div>
         )
     }

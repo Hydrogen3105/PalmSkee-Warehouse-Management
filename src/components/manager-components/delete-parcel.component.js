@@ -7,11 +7,16 @@ import QuestionDialog from '../../dialogs/dialog.component'
 import ConfirmedDialog from '../../dialogs/dialog-confirmed.component'
 import { dialog_state } from '../../actions/dialog'
 
+import ParcelsTable from '../staff-components/parcels-table.component'
+import IconButton from '@material-ui/core/IconButton'
+import SearchIcon from '@material-ui/icons/Search'
+import FilterListIcon from '@material-ui/icons/FilterList'
+
 class DeleteParcel extends Component {
     constructor(props) {
         super(props)
         this.state = {
-
+            showParcels: []
         }
         this.handleBack = this.handleBack.bind(this)
         this.handleDelete = this.handleDelete.bind(this)
@@ -37,21 +42,68 @@ class DeleteParcel extends Component {
         }
 
         return (
-            <div className="col-md-12">
+            <div>
                 <h3>Parcels list for deleting</h3>
                 <div>
-                    <button className="btn btn-danger btn-block" 
-                            style={{width: 100}}
-                            onClick={this.handleDelete}
-                    >
-                        Delete
-                    </button>
-                    <button className="btn btn-primary btn-block" 
-                            style={{width: 100}}
-                            onClick={this.handleBack}
-                    >
-                        Back
-                    </button>
+                    <div className='search-bar'>
+                        <div className='search-bar-container'>
+                            <div className='filter-container'>
+                                <div>
+                                    <IconButton color="primary" 
+                                                aria-label="search" 
+                                                component="span" 
+
+                                    >
+                                        <FilterListIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className='search-container'> 
+                                <div className='form-group'>
+                                    <input  type='text'
+                                            className='form-control'
+                                            name='searchText'
+                                            style= {{width: 250}}
+                                            placeholder='Search Here..'
+                                            value={this.state.searchText}
+                                            onChange={this.handleChange}
+                                    />
+                                </div>
+                                <div>
+                                    <IconButton color="primary" 
+                                                aria-label="search" 
+                                                component="span" 
+                                                onClick={() => this.handleSearch(this.state.allUser)}
+                                    >
+                                        <SearchIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+                                
+                        </div>
+                            
+                    </div>
+                    {/*Above Table */}
+                    <ParcelsTable parcels={this.state.showParcels}/>
+                </div>
+                <div className='button-back-comfirm' style={{marginTop: 10}}>
+                    <div>
+                        <button className="btn btn-primary btn-block" 
+                                style={{width: 100}}
+                                onClick={this.handleBack}
+                        >
+                            Back
+                        </button>
+                    </div>
+                    <div>
+                        <button className="btn btn-danger btn-block" 
+                                style={{width: 100}}
+                                onClick={this.handleDelete}
+                        >
+                            Delete
+                        </button>
+                    </div>
                 </div>
                 {
                     this.props.dialog_state === 1 ? 

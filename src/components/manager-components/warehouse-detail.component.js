@@ -5,6 +5,13 @@ import { history } from '../../helpers/history'
 import { Button } from '@material-ui/core'
 import { select_warehouse } from '../../actions/warehouses'
 
+import IconButton from '@material-ui/core/IconButton'
+import SearchIcon from '@material-ui/icons/Search'
+import FilterListIcon from '@material-ui/icons/FilterList'
+
+import ManagerProfile from '../profile.components/manager-profile.component'
+import WarehouseCardDetail from './warehouse-card-detail.component'
+
 class WarehouseDetail extends Component {
     constructor(props) {
         super(props)
@@ -34,54 +41,113 @@ class WarehouseDetail extends Component {
         }
 
         return (
-            <div>
-                <h3>Warehouse {this.props.warehouse_id} Detail</h3>
-                <div className="card card-container-manager-warehouse">
-                    
-                </div>
+            <div >
+                <h1>Warehouse Management System : Manager </h1>
+                <div className='container-manage-user'>
+                    <div>
+                        <div className='search-bar'>
+                            <div className='search-bar-container'>
+                                <div className='filter-container'>
+                                    <div>
+                                        <IconButton color="primary" 
+                                                    aria-label="search" 
+                                                    component="span" 
 
-                <div className="button-manager">
-                    <div>
-                        <Link to="/parcels">
-                            <Button variant='contained'>
-                                Warehouse Parcels
+                                        >
+                                        <FilterListIcon />
+                                        </IconButton>
+                                    </div>
+                                </div>
+
+                                <div className='search-container'> 
+                                    <div className='form-group'>
+                                        <input  type='text'
+                                                className='form-control'
+                                                name='searchText'
+                                                style= {{width: 250}}
+                                                placeholder='Search Here..'
+                                                value={this.state.searchText}
+                                                onChange={this.handleChange}
+                                        />
+                                    </div>
+                                    <div>
+                                        <IconButton color="primary" 
+                                                    aria-label="search" 
+                                                    component="span" 
+                                                    onClick={() => this.handleSearch(this.state.allUser)}
+                                        >
+                                            <SearchIcon />
+                                        </IconButton>
+                                    </div>
+                                </div>
+                                        
+                            </div>
+                                    
+                        </div>
+                        {/*Above Table */}
+                        <div>
+                            <WarehouseCardDetail warehouseId= {this.props.warehouseId} />
+                        </div>
+                        <div className='button-back-comfirm' style={{marginTop: 20,}}>
+                            <Button variant='contained' style={{width: 100}} onClick={this.handleBack}>
+                                    Back
                             </Button>
-                        </Link>
+                            <Link to="/show-report">
+                                <Button variant='contained' style={{width: 235}}>
+                                    Show Analysis Report
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
-                    <br />
-                    <div>   
-                        <Link to="/stored-parcels"> 
-                            <Button variant='contained'>
-                            Confirm stored
-                            </Button>
-                        </Link>
-                    </div>
-                    <br />
+
                     <div>
-                        <Link to="/exported-parcels">
-                            <Button variant='contained'>
-                                Confirm exported
-                            </Button>
-                        </Link>
+                        <div className='item-manage-user'>
+                            <ManagerProfile user={currentUser} />
+                        </div>
+                        <div className='item-manage-user'>
+                            <Link to="/warehouse-detail">
+                                <Button variant='contained'
+                                        color= 'secondary'
+                                        onClick={this.handleMock}        
+                                >
+                                    Mock select warehouse
+                                </Button>
+                            </Link>
+                        </div>
+                        <div className='item-manage-user'>
+                            <Link to="/parcels">
+                                <Button variant='contained' style={{width: 235}}>
+                                    Warehouse Parcels
+                                </Button>
+                            </Link>
+                        </div>
+                        <div className='item-manage-user'>   
+                            <Link to="/stored-parcels"> 
+                                <Button variant='contained' style={{width: 235}}>
+                                Confirm stored
+                                </Button>
+                            </Link>
+                        </div>
+                        <div className='item-manage-user'>
+                            <Link to="/exported-parcels">
+                                <Button variant='contained' style={{width: 235}}>
+                                    Confirm exported
+                                </Button>
+                            </Link>
+                        </div>
+                        <div className='item-manage-user'>
+                            <Link to="/request-report">
+                                <Button variant='contained' style={{width: 235}}>
+                                    Request Report
+                                </Button>
+                            </Link>
+                        </div>
+
                     </div>
-                    <br />
-                    <div>
-                        <Link to="/request-report">
-                            <Button variant='contained'>
-                                Request Report
-                            </Button>
-                        </Link>
-                    </div>
-                    <br />
-                    <div>
-                        <button className="btn btn-primary btn-block" 
-                                style={{width: 100}}
-                                onClick={this.handleBack}
-                        >
-                            Back
-                        </button>
-                    </div>
+
                 </div>
+                
+
             </div>
         )
     }
@@ -90,11 +156,11 @@ class WarehouseDetail extends Component {
 
 function mapStateToProp(state) {
     const { user } = state.auth
-    const { warehouse_id } = state.warehouse
+    const { warehouseId } = state.warehouse
 
     return {
         user,
-        warehouse_id,
+        warehouseId,
     }
 }
 

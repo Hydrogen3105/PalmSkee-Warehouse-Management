@@ -37,7 +37,7 @@ class ParcelDetail extends Component {
 
         return (
             <div className="col-md-12">
-                <h2>Parcel Detail {this.props.parcel_id} </h2>
+                <h2>Parcel Detail {this.props.parcelId} </h2>
                 <br />
                 <div>
                     <button className="btn btn-danger btn-block" 
@@ -65,10 +65,10 @@ class ParcelDetail extends Component {
 
 function mapStateToProp(state) {
     const { user } = state.auth
-    const { parcel_id } = state.parcel
+    const { parcelId } = state.parcel
     return {
         user,
-        parcel_id,
+        parcelId,
     }
 }
 

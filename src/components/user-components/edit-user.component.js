@@ -148,211 +148,230 @@ class EditUser extends Component {
         return (
             <div className="col-md-12">
                 <h2>Edit User</h2>
-                <div className="card card-container-edit-user">
-                    {   this.props.dialog_state === 1 ? 
-                        <QuestionDialog topic='edit-user' data={payload_data}/> :
-                        this.props.dialog_state === 2 && 
-                        <ConfirmedDialog topic='edit-user' />
-                    }
+                <div className='menu-and-button center'>
+                    <div>
+                        <div className="card card-container-edit-user">
+                            {   this.props.dialog_state === 1 ? 
+                                <QuestionDialog topic='edit-user' data={payload_data}/> :
+                                this.props.dialog_state === 2 && 
+                                <ConfirmedDialog topic='edit-user' />
+                            }
 
-                    <div className="form-group">
-                        <FormControl>
-                            <InputLabel>Staff ID</InputLabel>
-                            <Select name="staff-id"
-                                    value={this.state.userId}
-                                    onChange={this.onChangeUserID}
-                                    style={{ width: 250}}
-                            >
-                            { this.state.allUser.map(user => {
-                                return <MenuItem    key={user.userId} 
-                                                    value={user.userId}
-                                        >
-                                            <span>
-                                                <strong>{user.userId}</strong> {user.firstName} {user.lastName}
-                                            </span>
+                            <div className="form-group">
+                                <FormControl>
+                                    <InputLabel>Staff ID</InputLabel>
+                                    <Select name="staff-id"
+                                            value={this.state.userId}
+                                            onChange={this.onChangeUserID}
+                                            style={{ width: 250}}
+                                    >
+                                    { this.state.allUser.map(user => {
+                                        return <MenuItem    key={user.userId} 
+                                                            value={user.userId}
+                                                >
+                                                    <span>
+                                                        <strong>{user.userId}</strong> {user.firstName} {user.lastName}
+                                                    </span>
+                                                </MenuItem>
+                                        })}
+                                    </Select>
+                                </FormControl>
+                            </div>
+
+                            <div className="form-group">
+                                    <label htmlFor="firstName">First Name</label>
+                                <input  type="text"
+                                        name="firstName"
+                                        className="form-control"
+                                        style={{width: 300}}
+                                        value={this.state.firstName}
+                                        onChange={this.handleChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="lastName">Last Name</label>
+                                <input  type="text"
+                                        name="lastName"
+                                        className="form-control"
+                                        style={{width: 300}}
+                                        value={this.state.lastName}
+                                        onChange={this.handleChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="address">Staff Address</label>
+                                <textarea  type="text"
+                                        name="address"
+                                        className="form-control"
+                                        style={{width: 300}}
+                                        value={this.state.address}
+                                        onChange={this.handleChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="zipCode">Zip Code</label>
+                                <input  type="text"
+                                        name="zipCode"
+                                        className="form-control"
+                                        style={{width: 300}}
+                                        value={this.state.zipCode}
+                                        onChange={this.handleChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="city">City</label>
+                                <input  type="text"
+                                        name="city"
+                                        className="form-control"
+                                        style={{width: 300}}
+                                        value={this.state.city}
+                                        onChange={this.handleChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="country">Country</label>
+                                <input  type="text"
+                                        name="country"
+                                        className="form-control"
+                                        style={{width: 300}}
+                                        value={this.state.country}
+                                        onChange={this.handleChange}
+                                />
+                            </div>
+                            
+                            <div className="form-group">
+                                <label htmlFor="dob">Date of Birth</label>
+                                <input  type="date"
+                                        name="dob"
+                                        className="form-control"
+                                        style={{width: 300}}
+                                        value={this.state.dob}
+                                        onChange={this.handleChange}
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="email">Email</label>
+                                <input  type="email"
+                                        name="email"
+                                        className="form-control"
+                                        placeholder="palmskee@si.com"
+                                        style={{width: 300}}
+                                        value={this.state.email}
+                                        onChange={this.handleChange}
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="phone">Phone Number</label>
+                                <input  type="tel"
+                                        name="phone"
+                                        className="form-control"
+                                        pattern="[0-9]{10}"
+                                        placeholder="0827400474"
+                                        style={{width: 300}}
+                                        value={this.state.phone}
+                                        onChange={this.handleChange}
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <FormControl>
+                                    <InputLabel>Warehouse</InputLabel>
+                                    <Select name="warehouseId"
+                                            value={this.state.warehouseId}
+                                            onChange={this.onChangewarehouseIdID}
+                                            style={{ width: 250}}
+                                    >
+                                    {/* this.state.allUser.map(user => {
+                                        return <MenuItem    key={user.userId} 
+                                                            value={user.userId}
+                                                >
+                                                    <span>
+                                                        <strong>{user.userId}</strong> {user.first_name} {user.last_name}
+                                                    </span>
+                                                </MenuItem>
+                                        })*/}
+                                        <MenuItem value="WH006" > <span>
+                                                        <strong>WH006</strong> O-Cha warehouse
+                                                    </span>
                                         </MenuItem>
-                                })}
-                            </Select>
-                        </FormControl>
-                    </div>
-
-                    <div className="form-group">
-                            <label htmlFor="firstName">First Name</label>
-                        <input  type="text"
-                                name="firstName"
-                                style={{width: 300}}
-                                value={this.state.firstName}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="lastName">Last Name</label>
-                        <input  type="text"
-                                name="lastName"
-                                style={{width: 300}}
-                                value={this.state.lastName}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="address">Staff Address</label>
-                        <textarea  type="text"
-                                name="address"
-                                style={{width: 300}}
-                                value={this.state.address}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="zipCode">Zip Code</label>
-                        <input  type="text"
-                                name="zipCode"
-                                style={{width: 300}}
-                                value={this.state.zipCode}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="city">City</label>
-                        <input  type="text"
-                                name="city"
-                                style={{width: 300}}
-                                value={this.state.city}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="country">Country</label>
-                        <input  type="text"
-                                name="country"
-                                style={{width: 300}}
-                                value={this.state.country}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-                    
-                    <div className="form-group">
-                        <label htmlFor="dob">Date of Birth</label>
-                        <input  type="date"
-                                name="dob"
-                                style={{width: 300}}
-                                value={this.state.dob}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="email">Email</label>
-                        <input  type="email"
-                                name="email"
-                                placeholder="palmskee@si.com"
-                                style={{width: 300}}
-                                value={this.state.email}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="phone">Phone Number</label>
-                        <input  type="tel"
-                                name="phone"
-                                pattern="[0-9]{10}"
-                                placeholder="0827400474"
-                                style={{width: 300}}
-                                value={this.state.phone}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <FormControl>
-                            <InputLabel>Warehouse</InputLabel>
-                            <Select name="warehouseId"
-                                    value={this.state.warehouseId}
-                                    onChange={this.onChangewarehouseIdID}
-                                    style={{ width: 250}}
-                            >
-                            {/* this.state.allUser.map(user => {
-                                return <MenuItem    key={user.userId} 
-                                                    value={user.userId}
-                                        >
-                                            <span>
-                                                <strong>{user.userId}</strong> {user.first_name} {user.last_name}
-                                            </span>
+                                        <MenuItem value="BK047" > <span>
+                                                        <strong>BK047</strong> Thaliand 47
+                                                    </span>
                                         </MenuItem>
-                                })*/}
-                                <MenuItem value="WH006" > <span>
-                                                <strong>WH006</strong> O-Cha warehouse
-                                            </span>
-                                </MenuItem>
-                                <MenuItem value="BK047" > <span>
-                                                <strong>BK047</strong> Thaliand 47
-                                            </span>
-                                </MenuItem>
-                            </Select>
-                        </FormControl>
-                    </div>
+                                    </Select>
+                                </FormControl>
+                            </div>
 
-                    <div className="form-group">
-                        <FormControl>
-                            <InputLabel>Position</InputLabel>
-                            <Select name="postion"
-                                    style={{width: 250}}
-                                    value={this.state.position}
-                                    onChange={this.onChangePosition}
+                            <div className="form-group">
+                                <FormControl>
+                                    <InputLabel>Position</InputLabel>
+                                    <Select name="postion"
+                                            style={{width: 250}}
+                                            value={this.state.position}
+                                            onChange={this.onChangePosition}
+                                    >
+                                    <MenuItem value="staff">Warehouse Staff</MenuItem>
+                                    <MenuItem value="manager">Manager</MenuItem>
+                                    <MenuItem value="admin">Admin</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </div>
+
+                            <div className="form-group">
+                                <label>Gender</label>
+                                <label>
+                                    <input  type="radio"
+                                            name="gender"
+                                            value='male'
+                                            checked={this.state.gender === 'male'}
+                                            onChange={this.handleChange}
+                                    />
+                                    Male
+                                </label>
+                                <label>
+                                    <input  type="radio"
+                                            name="gender"
+                                            value='female'
+                                            checked={this.state.gender === 'female'}
+                                            onChange={this.handleChange}
+                                    />
+                                    Female
+                                </label>
+                                <label>
+                                    <input  type="radio"
+                                            name="gender"
+                                            value='others'
+                                            checked={this.state.gender === 'others'}
+                                            onChange={this.handleChange}
+                                    />
+                                    Others
+                                </label>
+                            </div>
+
+                        </div>
+                        {/*Ending form */}
+                    </div>
+                    <div className='button-back-comfirm'>
+                        <div>
+                            <button className="btn btn-danger btn-block" 
+                                    style={{width: 100}}
+                                    onClick={this.handleBack}
                             >
-                            <MenuItem value="staff">Warehouse Staff</MenuItem>
-                            <MenuItem value="manager">Manager</MenuItem>
-                            <MenuItem value="admin">Admin</MenuItem>
-                            </Select>
-                        </FormControl>
+                                    Back
+                            </button>
+                        </div>
+                        <div>
+                            <button className="btn btn-primary btn-block" 
+                                    style={{width: 100}}
+                                    onClick={this.handleEdit}
+                            >
+                                    Edit
+                            </button>
+                        </div>
                     </div>
-
-                    <div className="form-group">
-                        <label>Gender</label>
-                        <label>
-                            <input  type="radio"
-                                    name="gender"
-                                    value='male'
-                                    checked={this.state.gender === 'male'}
-                                    onChange={this.handleChange}
-                            />
-                            Male
-                        </label>
-                        <label>
-                            <input  type="radio"
-                                    name="gender"
-                                    value='female'
-                                    checked={this.state.gender === 'female'}
-                                    onChange={this.handleChange}
-                            />
-                            Female
-                        </label>
-                        <label>
-                            <input  type="radio"
-                                    name="gender"
-                                    value='others'
-                                    checked={this.state.gender === 'others'}
-                                    onChange={this.handleChange}
-                            />
-                            Others
-                        </label>
-                    </div>
-
-                </div>
-                <div>
-                        <button className="btn btn-danger btn-block" 
-                                style={{width: 150}}
-                                onClick={this.handleBack}
-                        >
-                                Back
-                        </button>
-                        <button className="btn btn-primary btn-block" 
-                                style={{width: 150}}
-                                onClick={this.handleEdit}
-                        >
-                                Confirm Edit
-                        </button>
+                {/*Ending*/ }
                 </div>
             </div>
         )

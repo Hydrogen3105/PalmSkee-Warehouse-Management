@@ -1,9 +1,9 @@
 import { SELECT_PARCEL, SET_MESSAGE } from './types'
 import ParcelService from '../services/parcel-service'
 
-export const select_parcel = (parcel_id) => ({
+export const select_parcel = (parcelId) => ({
     type: SELECT_PARCEL,
-    payload: parcel_id
+    payload: parcelId
 })
 
 export const add_parcel = () => (dispatch) => {
