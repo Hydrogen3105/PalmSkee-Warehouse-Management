@@ -5,25 +5,29 @@ const API_URL = "https://owsd-wms-backend.herokuapp.com/api/"
 class ParcelService {
 
     getAllParcel() {
-        return axios.get(API_URL + '',{ headers: authHeader()})
+        return axios.get(API_URL + 'parcels',{ headers: authHeader()})
     }
 
-    addParcel() {
-        return axios.post(API_URL + '', 
-        {},
+    getPacelById(parcelId) {
+        return axios.get(API_URL + `parcels/${parcelId}`, { headers: authHeader()})
+    }
+
+    addParcel(senderId, fromWarehouseId, toWarehouseId, width, length, height, weight, optional) {
+        return axios.post(API_URL + 'parcels', 
+        { senderId, fromWarehouseId, toWarehouseId, width, length, height, weight, optional },
         { headers: authHeader() }
         )
     }
 
     editParcel() {
-        return axios.put(API_URL + '',
+        return axios.put(API_URL + 'parcels',
         {},
         { headers: authHeader() }
         )
     }
 
     deleteParcel( parcelId ) {
-        return axios.delete(API_URL + '',
+        return axios.delete(API_URL + 'parcels',
         { parcelId },
         { headers: authHeader() }
         )

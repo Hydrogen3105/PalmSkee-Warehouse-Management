@@ -22,7 +22,8 @@ class StoredParcels extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            showParcels: []
+            showParcels: [],
+            isLoading: true,
         }
 
         this.handleBack = this.handleBack.bind(this)
@@ -31,13 +32,14 @@ class StoredParcels extends Component {
 
     componentDidMount() {
         this.props.dispatch(dialog_state(0))
-        /*ParcelService.getAllParcel()
+        ParcelService.getAllParcel()
         .then((response) => {
-            const unexported =  response.data.payload.filter((parcel) => parcel.status === 'Stored')
+            const unstored =  response.data.payload.filter((parcel) => parcel.latestStatus === 'picked up')
             this.setState({
-                showParcels: unexported
+                showParcels: unstored,
+                isLoading: false
             })
-        })*/
+        })
     }
     
     handleBack() {

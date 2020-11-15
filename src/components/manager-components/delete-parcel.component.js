@@ -12,16 +12,25 @@ import IconButton from '@material-ui/core/IconButton'
 import SearchIcon from '@material-ui/icons/Search'
 import FilterListIcon from '@material-ui/icons/FilterList'
 
+import { delete_parcel } from '../../actions/parcel'
+
 class DeleteParcel extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            showParcels: []
+            allParcels: [],
+            showParcels: [],
+            isLoading: true,
+            parcelId: '',
         }
         this.handleBack = this.handleBack.bind(this)
         this.handleDelete = this.handleDelete.bind(this)
     }
 
+    componentDidMount() {
+
+    }
+    
     handleBack() {
         history.push('/parcels')
     }

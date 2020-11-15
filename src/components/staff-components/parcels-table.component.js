@@ -16,10 +16,10 @@ import { select_parcel } from '../../actions/parcel'
 
 const columns = [
     { id: "parcelId" , label: "Parcel ID" ,minWidth: 150},
-    { id: "recievedDate" , label: "Recieved Date" ,minWidth: 150},
-    { id: "destination" , label: "Destination" ,minWidth: 150},
+    { id: "receivedDate" , label: "Recieved Date" ,minWidth: 150},
+    { id: "toWarehouseId" , label: "Destination" ,minWidth: 150},
     { id: "location" , label: "Location" ,minWidth: 150},
-    { id: "status", label: "Status", minWidth: 200}
+    { id: "latestStatus", label: "Status", minWidth: 200}
 ]
 
 class ParcelsTable extends Component {
@@ -53,7 +53,7 @@ class ParcelsTable extends Component {
     
     handleSelectParcel(parcelId) {
         this.props.dispatch(select_parcel(parcelId))
-        history.push('/edit-parcel')
+        history.push('/parcel-detail')
     }
 
     render () {
@@ -75,9 +75,9 @@ class ParcelsTable extends Component {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {/*this.props.users.slice(this.state.page * this.state.rowPerPage, this.state.page * this.state.rowPerPage + this.state.rowPerPage).map((row) => {
+                  {this.props.parcels.slice(this.state.page * this.state.rowPerPage, this.state.page * this.state.rowPerPage + this.state.rowPerPage).map((row) => {
                     return (
-                            <TableRow hover role="checkbox" tabIndex={-1} key={row['userId']} name={row['userId']} onClick={() => this.handleSelectUser(row['userId'])} >
+                            <TableRow hover role="checkbox" tabIndex={-1} key={row['parcelId']} name={row['parcelId']} onClick={() => this.handleSelectParcel(row['parcelId'])} >
                               {columns.map((column) => {
                                 const value = row[column.id]
                                 return (
@@ -88,7 +88,7 @@ class ParcelsTable extends Component {
                               })}
                             </TableRow>
                     )
-                  })*/}
+                  })}
                 </TableBody>
               </Table>
             </TableContainer>

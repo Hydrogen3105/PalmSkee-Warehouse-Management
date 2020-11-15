@@ -4,18 +4,35 @@ import { Redirect , Link } from 'react-router-dom'
 import { Button } from '@material-ui/core'
 import { history } from '../../helpers/history'
 import { select_parcel } from '../../actions/parcel' 
+
+import ParcelService from '../../services/parcel-service'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+
+import ParcelLabel from './parcel-detail.components/parcel-pdf.component'
+import ParcelData from './parcel-detail.components/parcel-data.component'
  
 class ParcelDetail extends Component {
     constructor(props) {
         super(props)
         this.state = {
-
+            isLoading: true,
+            parcel: {},
         }
 
         this.handleBack = this.handleBack.bind(this)
         this.handleEdit = this.handleEdit.bind(this)
     }
 
+    componentDidMount() {
+        ParcelService.getPacelById(this.props.parcelId)
+        .then((response) => {
+            this.setState({
+                parcel: response.data.payload[0],
+                isLoading: false,
+            })
+        })
+    }
 
     handleBack() {
         this.props.dispatch(select_parcel(''))
@@ -38,6 +55,19 @@ class ParcelDetail extends Component {
         return (
             <div className="col-md-12">
                 <h2>Parcel Detail {this.props.parcelId} </h2>
+                <div style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                    }}>
+                    <div>
+                        <ParcelData data={this.state.parcel}/>
+                    </div>
+                    <div className='parcel-detail  parcel-detail-sizing'>
+                        <ParcelLabel labelPath={this.state.parcel.labelPath} />
+                    </div>
+                </div>
+                
                 <br />
                 <div>
                     <button className="btn btn-danger btn-block" 
@@ -58,6 +88,20 @@ class ParcelDetail extends Component {
                         Edit
                     </button>
                 </div>
+
+                { this.state.isLoading && (
+                    <Dialog
+                    open={this.state.isLoading}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">
+                            <span className="spinner-border spinner-border-sm"></span>
+                            Loading...
+                        </DialogTitle>
+                    </Dialog>
+                    )
+                }
             </div>
         )
     }

@@ -24,7 +24,7 @@ class ExportedParcels extends Component {
         this.state = {
             redirect: "",
             showParcels: [],
-            isLoading: false,
+            isLoading: true,
         }
 
         this.handleBack = this.handleBack.bind(this)
@@ -33,14 +33,14 @@ class ExportedParcels extends Component {
 
     componentDidMount() {
         this.props.dispatch(dialog_state(0))
-        /*ParcelService.getAllParcel()
+        ParcelService.getAllParcel()
         .then((response) => {
-            const unstored =  response.data.payload.filter((parcel) => parcel.status === 'Added')
+            const unexported =  response.data.payload.filter((parcel) => parcel.status === 'Added')
             this.setState({
-                showParcels: unstored
+                showParcels: unexported,
                 isLoading: false
             })
-        })*/
+        })
     }
 
     handleBack() {

@@ -6,6 +6,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import { connect } from 'react-redux'
 import { dialog_state } from '../actions/dialog'
 import { edit_user, delete_user, select_user } from '../actions/admin'
+import { /*edit_parcel, , delete_parcel*/ add_parcel} from '../actions/parcel'
 
 function QuestionDialog({ dispatch, dialog_state:state, topic, data }) {
   const [open, setOpen] = React.useState(false)
@@ -48,10 +49,41 @@ function QuestionDialog({ dispatch, dialog_state:state, topic, data }) {
             setLoading(false)
           })
           break
-
-        default:
-           dispatch(dialog_state(prevState + 1))
-           break
+        
+        case 'add-parcel':
+          const {senderId, fromWarehouseId, toWarehouseId, width, length, height, weight, optional} = data
+          dispatch(add_parcel(senderId, fromWarehouseId, toWarehouseId, width, length, height, weight, optional))
+          .then(() => {
+            dispatch(dialog_state(prevState + 1))
+          })
+          .catch(() => {
+            setLoading(false)
+          })
+          break
+        /*
+          case 'edit-parcel':
+            const edited_parcel = data
+            dispatch(edit_parcel())
+            .then(() => {
+              dispatch(dialog_state(prevState + 1))
+            })
+            .catch(() => {
+              setLoading(false)
+            })
+          
+            case 'delete-parcel':
+              const deleted_parcel = data
+              dispatch(add_parcel())
+              .then(() => {
+                dispatch(dialog_state(prevState + 1))
+              })
+              .catch(() => {
+                setLoading(false)
+              })*/
+              
+          default:
+            dispatch(dialog_state(prevState + 1))
+            break
       }
       setOpen(false)
   }

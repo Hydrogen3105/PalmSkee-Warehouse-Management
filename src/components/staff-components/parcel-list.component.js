@@ -22,7 +22,7 @@ class Parcels extends Component {
         this.state = {
             allParcel: [],
             showParcel: [],
-            isLoading: false,
+            isLoading: true,
         }
 
         this.handleBack = this.handleBack.bind(this)
@@ -30,14 +30,14 @@ class Parcels extends Component {
     }
 
     componentDidMount() {
-        /*ParcelService.getAllParcel()
+        ParcelService.getAllParcel()
         .then((response) => {
             this.setState({
                 allParcel: response.data.payload,
                 showParcel: response.data.payload,
                 isLoading: false
             })
-        })*/
+        })
     }
 
     handleBack () {
@@ -61,6 +61,7 @@ class Parcels extends Component {
         return (
             <div>
                 <h2>Parcels list</h2>
+                <button onClick={() => console.log(this.state.showParcel)}>Data</button>
                 <div>
                     <div id='outer'>
                         <div className='inner'>
@@ -163,14 +164,6 @@ class Parcels extends Component {
                                 onClick={this.handleBack}
                         >
                             Back
-                        </button>
-                    </div>
-                    <div>
-                        <button className="btn btn-primary btn-block" 
-                                style={{width: 200}}
-                                onClick={this.handleMock}
-                        >
-                            mock up select parcel
                         </button>
                     </div>
                 </div>

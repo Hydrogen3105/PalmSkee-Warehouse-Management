@@ -6,8 +6,8 @@ export const select_parcel = (parcelId) => ({
     payload: parcelId
 })
 
-export const add_parcel = () => (dispatch) => {
-    return  ParcelService.addParcel()
+export const add_parcel = ( senderId, fromWarehouseId, toWarehouseId, width, length, height, weight, optional ) => (dispatch) => {
+    return  ParcelService.addParcel( senderId, fromWarehouseId, toWarehouseId, width, length, height, weight, optional )
             .then( (response) => {
                 dispatch({
                     type: SET_MESSAGE,

@@ -21,9 +21,11 @@ class AddParcel extends Component {
             height: 0,
             length: 0,
             weight: 0,
-            from_wh: "",
-            destination: "",
+            fromWarehouseId: "",
+            toWarehouseId: "",
             optional: "",
+            senderId: "",
+            isLoading: true,
         }
         
         this.handleBack = this.handleBack.bind(this)
@@ -58,7 +60,9 @@ class AddParcel extends Component {
         }else if(currentUser.payload[0].position !== "staff" && currentUser.payload[0].position !== "manager") {
             return <Redirect to="/home" />
         }
-        
+
+        const { senderId, fromWarehouseId, toWarehouseId, width, length, height, weight, optional } = this.state
+        const payload_data = { senderId, fromWarehouseId, toWarehouseId, width, length, height, weight, optional }
         return (
             <div className="col-md-12">
                 <h2>Add New Parcel</h2>
@@ -126,21 +130,21 @@ class AddParcel extends Component {
                                         onChange={this.handleChange}
                                 />
                             </div>
-                            <h4>Destination</h4>
+                            <h4>Sender</h4>
                             <div className="form-group">
-                                <label htmlFor="from_wh">From</label>
                                 <input  type="text"
-                                        name="from_wh"
+                                        name="senderId"
                                         className="form-control"
-                                        value={this.state.from_wh}
+                                        value={this.state.senderId}
                                         onChange={this.handleChange}
                                 />
                             </div>
+                            <h4>Destination</h4>
                             <div className="form-group">
                                 <FormControl>
-                                    <InputLabel>To</InputLabel>
-                                    <Select name="destination"
-                                            value={this.state.destination}
+                                    <InputLabel>From</InputLabel>
+                                    <Select name="fromWarehouseId"
+                                            value={this.state.fromWarehouseId}
                                             onChange={this.handleChange}
                                             style={{ width: 250}}
                                     >
@@ -153,7 +157,30 @@ class AddParcel extends Component {
                                                     </span>
                                                 </MenuItem>
                                         })*/}
-                                        <MenuItem value="WH112">WH006 O-Koi</MenuItem>
+                                        <MenuItem value="WH001">WH001 O-Koi</MenuItem>
+                                        <MenuItem value="WH002">WH002 Koi The</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </div>
+                            <div className="form-group">
+                                <FormControl>
+                                    <InputLabel>To</InputLabel>
+                                    <Select name="toWarehouseId"
+                                            value={this.state.toWarehouseId}
+                                            onChange={this.handleChange}
+                                            style={{ width: 250}}
+                                    >
+                                    {/* this.state.allUser.map(user => {
+                                        return <MenuItem    key={user.user_id} 
+                                                            value={user.user_id}
+                                                >
+                                                    <span>
+                                                        <strong>{user.user_id}</strong> {user.first_name} {user.last_name}
+                                                    </span>
+                                                </MenuItem>
+                                        })*/}
+                                        <MenuItem value="WH001">WH001 O-Koi</MenuItem>
+                                        <MenuItem value="WH002">WH002 Koi The</MenuItem>
                                     </Select>
                                 </FormControl>
                             </div>
@@ -193,7 +220,7 @@ class AddParcel extends Component {
                 
                 {
                     this.props.dialog_state === 1 ? 
-                    <QuestionDialog topic='add-parcel' /> :
+                    <QuestionDialog topic='add-parcel' data={payload_data}/> :
                     this.props.dialog_state === 2 && 
                     <ConfirmedDialog topic='add-parcel' />
                 }

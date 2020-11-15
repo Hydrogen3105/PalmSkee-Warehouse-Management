@@ -7,18 +7,24 @@ import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
 
 import QuestionDialog from '../../dialogs/dialog.component'
 import ConfirmedDialog from '../../dialogs/dialog-confirmed.component'
 import { dialog_state } from '../../actions/dialog'
 
+import { edit_parcel } from '../../actions/parcel'
+import ParcelService from '../../services/parcel-service'
+
 class EditParcel extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            destination: "",
-            status: "",
+            toWarehouseId: "",
+            lastestStatus: "",
             optional: "",
+            isLoading: true,
         }
         
         this.handleBack = this.handleBack.bind(this)
@@ -28,6 +34,20 @@ class EditParcel extends Component {
 
     componentDidMount() {
         this.props.dispatch(dialog_state(0))
+        ParcelService.getPacelById(this.props.parcelId)
+        .then((response) => {
+            this.setState({
+                parcel: response.data.payload[0],
+                isLoading: false,
+            })
+        }).then(() => {
+            const { toWarehouseId, lastestStatus, optional } = this.state.parcel
+            this.setState({
+                toWarehouseId,
+                lastestStatus,
+                optional
+            })
+        })
     }
 
     handleChange (e) {
@@ -66,8 +86,8 @@ class EditParcel extends Component {
                             <div className="form-group">
                                 <FormControl>
                                     <InputLabel>Destination</InputLabel>
-                                    <Select name="destination"
-                                            value={this.state.destination}
+                                    <Select name="toWarehouseId"
+                                            value={this.state.toWarehouseId}
                                             onChange={this.handleChange}
                                             style={{ width: 250}}
                                     >
@@ -87,8 +107,8 @@ class EditParcel extends Component {
                             <div className="form-group">
                                 <FormControl>
                                     <InputLabel>Status</InputLabel>
-                                    <Select name="destination"
-                                            value={this.state.status}
+                                    <Select name="lastestStatus"
+                                            value={this.state.lastestStatus}
                                             onChange={this.handleChange}
                                             style={{ width: 250}}
                                     >
@@ -131,9 +151,19 @@ class EditParcel extends Component {
                         </div>
                     </div>
                 </div>
-
-                
-                
+                { this.state.isLoading && (
+                    <Dialog
+                    open={this.state.isLoading}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">
+                            <span className="spinner-border spinner-border-sm"></span>
+                            Loading...
+                        </DialogTitle>
+                    </Dialog>
+                    )
+                }
                  
                 {
                     this.props.dialog_state === 1 ? 
