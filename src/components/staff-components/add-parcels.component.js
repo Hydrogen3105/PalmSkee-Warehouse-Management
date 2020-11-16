@@ -75,16 +75,16 @@ class AddParcel extends Component {
                         </Link>
                     </div>
                     <div className='inner'>
-                        <Link to="/exported-parcels">
-                            <Button variant="contained" color="primary">
-                                Exported
+                        <Link to="/stored-parcels">
+                            <Button variant="contained" color="secondary">
+                                Stored
                             </Button>
                         </Link>
                     </div>
                     <div className='inner'>
-                        <Link to="/stored-parcels">
-                            <Button variant="contained" color="secondary">
-                                Stored
+                        <Link to="/exported-parcels">
+                            <Button variant="contained" color="primary">
+                                Exported
                             </Button>
                         </Link>
                     </div>

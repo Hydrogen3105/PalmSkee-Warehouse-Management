@@ -7,7 +7,8 @@ import QuestionDialog from '../../dialogs/dialog.component'
 import ConfirmedDialog from '../../dialogs/dialog-confirmed.component'
 import { dialog_state } from '../../actions/dialog'
 
-import ParcelsTable from '../staff-components/parcels-table.component'
+import ParcelSelectTable from '../../components/staff-components/parcel-select-table.component'
+
 import IconButton from '@material-ui/core/IconButton'
 import SearchIcon from '@material-ui/icons/Search'
 import FilterListIcon from '@material-ui/icons/FilterList'
@@ -22,6 +23,7 @@ class DeleteParcel extends Component {
             showParcels: [],
             isLoading: true,
             parcelId: '',
+            selectedParcels: [],
         }
         this.handleBack = this.handleBack.bind(this)
         this.handleDelete = this.handleDelete.bind(this)
@@ -37,6 +39,12 @@ class DeleteParcel extends Component {
 
     handleDelete() {
         this.props.dispatch(dialog_state(1))
+    }
+
+    onSelectParcel = (parcelsList) => {
+        this.setState({
+            selectedParcels: parcelsList
+        })
     }
     
     render () {
@@ -94,7 +102,9 @@ class DeleteParcel extends Component {
                             
                     </div>
                     {/*Above Table */}
-                    <ParcelsTable parcels={this.state.showParcels}/>
+                    <div style={{marginBottom: 15}}>
+                        <ParcelSelectTable onSelectParcel={this.onSelectParcel} status='delete'/>
+                    </div>
                 </div>
                 <div className='button-back-comfirm' style={{marginTop: 10}}>
                     <div>

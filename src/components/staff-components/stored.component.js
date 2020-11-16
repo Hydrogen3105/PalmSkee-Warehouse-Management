@@ -8,7 +8,8 @@ import QuestionDialog from '../../dialogs/dialog.component'
 import ConfirmedDialog from '../../dialogs/dialog-confirmed.component'
 import { dialog_state } from '../../actions/dialog'
 
-import ParcelsTable from './parcels-table.component'
+import ParcelSelectTable from './parcel-select-table.component'
+
 import IconButton from '@material-ui/core/IconButton'
 import SearchIcon from '@material-ui/icons/Search'
 import FilterListIcon from '@material-ui/icons/FilterList'
@@ -24,6 +25,7 @@ class StoredParcels extends Component {
         this.state = {
             showParcels: [],
             isLoading: true,
+            selectedParcels: [],
         }
 
         this.handleBack = this.handleBack.bind(this)
@@ -51,6 +53,12 @@ class StoredParcels extends Component {
         this.props.dispatch(dialog_state(1))
     }
 
+    onSelectParcel = (parcelsList) => {
+        this.setState({
+            selectedParcels: parcelsList
+        })
+    }
+
     render () {
         const { user: currentUser } = this.props
 
@@ -73,16 +81,16 @@ class StoredParcels extends Component {
                             </Link>
                         </div>
                         <div className='inner'>
-                            <Link to="/exported-parcels">
-                                <Button variant="contained" color="primary">
-                                    Exported
+                            <Link to="/stored-parcels">
+                                <Button variant="contained" color="secondary">
+                                    Stored
                                 </Button>
                             </Link>
                         </div>
                         <div className='inner'>
-                            <Link to="/stored-parcels">
-                                <Button variant="contained" color="secondary">
-                                    Stored
+                            <Link to="/exported-parcels">
+                                <Button variant="contained" color="primary">
+                                    Exported
                                 </Button>
                             </Link>
                         </div>
@@ -142,7 +150,10 @@ class StoredParcels extends Component {
                             
                         </div>
                     {/*Above Table */}
-                    <ParcelsTable parcels={this.state.showParcels}/>
+                    <div style={{marginBottom: 15}}>
+                        <ParcelSelectTable onSelectParcel={this.onSelectParcel} status='picked up'/>
+                    </div>
+                    
                 </div>
                 { this.state.isLoading && (
                     <Dialog

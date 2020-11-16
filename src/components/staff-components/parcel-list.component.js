@@ -61,7 +61,6 @@ class Parcels extends Component {
         return (
             <div>
                 <h2>Parcels list</h2>
-                <button onClick={() => console.log(this.state.showParcel)}>Data</button>
                 <div>
                     <div id='outer'>
                         <div className='inner'>
@@ -72,16 +71,16 @@ class Parcels extends Component {
                             </Link>
                         </div>
                         <div className='inner'>
-                            <Link to="/exported-parcels">
-                                <Button variant="contained" color="primary">
-                                    Exported
+                            <Link to="/stored-parcels">
+                                <Button variant="contained" color="secondary">
+                                    Stored
                                 </Button>
                             </Link>
                         </div>
                         <div className='inner'>
-                            <Link to="/stored-parcels">
-                                <Button variant="contained" color="secondary">
-                                    Stored
+                            <Link to="/exported-parcels">
+                                <Button variant="contained" color="primary">
+                                    Exported
                                 </Button>
                             </Link>
                         </div>

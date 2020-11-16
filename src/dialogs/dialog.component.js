@@ -83,9 +83,10 @@ function QuestionDialog({ dispatch, dialog_state:state, topic, data }) {
               
           default:
             dispatch(dialog_state(prevState + 1))
+            setOpen(false)
             break
       }
-      setOpen(false)
+      
   }
 
   return (

@@ -8,7 +8,8 @@ import QuestionDialog from '../../dialogs/dialog.component'
 import ConfirmedDialog from '../../dialogs/dialog-confirmed.component'
 import { dialog_state } from '../../actions/dialog'
 
-import ParcelsTable from './parcels-table.component'
+import ParcelSelectTable from './parcel-select-table.component'
+
 import IconButton from '@material-ui/core/IconButton'
 import SearchIcon from '@material-ui/icons/Search'
 import FilterListIcon from '@material-ui/icons/FilterList'
@@ -24,6 +25,7 @@ class ExportedParcels extends Component {
         this.state = {
             redirect: "",
             showParcels: [],
+            selectedParcels: [],
             isLoading: true,
         }
 
@@ -35,7 +37,7 @@ class ExportedParcels extends Component {
         this.props.dispatch(dialog_state(0))
         ParcelService.getAllParcel()
         .then((response) => {
-            const unexported =  response.data.payload.filter((parcel) => parcel.status === 'Added')
+            const unexported =  response.data.payload.filter((parcel) => parcel.status === 'stored')
             this.setState({
                 showParcels: unexported,
                 isLoading: false
@@ -49,6 +51,12 @@ class ExportedParcels extends Component {
 
     handleExported() {
         this.props.dispatch(dialog_state(1))
+    }
+
+    onSelectParcel = (parcelsList) => {
+        this.setState({
+            selectedParcels: parcelsList
+        })
     }
 
     render () {
@@ -142,7 +150,9 @@ class ExportedParcels extends Component {
                             
                         </div>
                     {/*Above Table */}
-                    <ParcelsTable parcels={this.state.showParcels}/>
+                    <div style={{marginBottom: 15}}>
+                        <ParcelSelectTable onSelectParcel={this.onSelectParcel} status='stored'/>
+                    </div>
                 </div>
                 { this.state.isLoading && (
                     <Dialog
