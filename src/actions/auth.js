@@ -5,6 +5,7 @@ import {
     LOGIN_FAIL,
     LOGOUT,
     SET_MESSAGE,
+    LOGIN_STATUS,
   } from "./types";
   
 import AuthService from "../services/auth.service";
@@ -31,7 +32,8 @@ export const register = (userId, firstName, lastName, position, address, zipCode
             error.response.data.message) ||
           error.message ||
           error.toString();
-  
+        
+
         dispatch({
           type: REGISTER_FAIL,
         });
@@ -48,10 +50,11 @@ export const register = (userId, firstName, lastName, position, address, zipCode
   
 export const login = (user_id, password) => (dispatch) => {
     return AuthService.login(user_id, password).then(
-      (data) => {
+      (response) => {
+        console.log(response)
         dispatch({
           type: LOGIN_SUCCESS,
-          payload: { user: data },
+          payload: { user: response.data },
         });
   
         return Promise.resolve();
@@ -63,6 +66,11 @@ export const login = (user_id, password) => (dispatch) => {
             error.response.data.success) ||
           error.message ||
           error.toString();
+        
+        dispatch({
+          type: LOGIN_STATUS,
+          payload: error.response.status
+        })
   
         dispatch({
           type: LOGIN_FAIL,
@@ -137,3 +145,8 @@ export const edit_user = (userId, firstName, lastName, position, address, zipCod
     }
   )
 }
+
+export const login_status = (statusId) => ({
+  type: LOGIN_STATUS,
+  payload: statusId
+})

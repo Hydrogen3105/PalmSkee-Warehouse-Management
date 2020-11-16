@@ -1,12 +1,15 @@
 import React, { Component } from "react";
-import { Redirect } from 'react-router-dom';
+import { Redirect } from "react-router-dom";
+import ReactDOM from "react-dom";
 
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
+import LoginDialog from "../dialogs/LoginDialog";
 
 import { connect } from "react-redux";
-import { login } from "../actions/auth";
+import { login, login_status } from "../actions/auth";
+
 
 const required = (value) => {
   if (!value) {
@@ -31,6 +34,11 @@ class Login extends Component {
       loading: false,
     };
   }
+
+  componentDidMount() {
+    this.props.dispatch(login_status(''))
+  }
+
 
   onChangeUsername(e) {
     this.setState({
@@ -63,7 +71,7 @@ class Login extends Component {
         })
         .catch(() => {
           this.setState({
-            loading: false
+            loading: false,
           });
         });
     } else {
@@ -77,7 +85,7 @@ class Login extends Component {
     const { isLoggedIn, message } = this.props;
 
     if (isLoggedIn) {
-      return <Redirect to="/home"/>;
+      return <Redirect to="/home" />;
     }
 
     return (
@@ -129,6 +137,7 @@ class Login extends Component {
                 )}
                 <span>Login</span>
               </button>
+              
             </div>
 
             {message && (
@@ -146,6 +155,9 @@ class Login extends Component {
             />
           </Form>
         </div>
+        { this.props.statusId === 426 &&
+          <LoginDialog isOpen={true}/>
+        }
       </div>
     );
   }
@@ -154,9 +166,11 @@ class Login extends Component {
 function mapStateToProps(state) {
   const { isLoggedIn } = state.auth;
   const { message } = state.message;
+  const { statusId } = state.status 
   return {
     isLoggedIn,
-    message
+    message,
+    statusId,
   };
 }
 

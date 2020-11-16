@@ -311,8 +311,12 @@ class Register extends Component {
                                             </span>
                                         </MenuItem>
                                 })*/}
-                                <MenuItem value="WH006" > <span>
-                                                <strong>WH006</strong> O-Cha Warehouse
+                                <MenuItem value="WH001" > <span>
+                                                <strong>WH001</strong> O-Cha Warehouse
+                                            </span>
+                                </MenuItem>
+                                <MenuItem value="WH002" > <span>
+                                                <strong>WH002</strong> O-Cha Warehouse
                                             </span>
                                 </MenuItem>
                             </Select>
