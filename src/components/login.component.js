@@ -6,6 +6,7 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import LoginDialog from "../dialogs/LoginDialog";
+import { clearMessage } from '../actions/message'
 
 import { connect } from "react-redux";
 import { login, login_status } from "../actions/auth";
@@ -37,6 +38,7 @@ class Login extends Component {
 
   componentDidMount() {
     this.props.dispatch(login_status(''))
+    this.props.dispatch(clearMessage())
   }
 
 
@@ -156,7 +158,7 @@ class Login extends Component {
           </Form>
         </div>
         { this.props.statusId === 426 &&
-          <LoginDialog isOpen={true}/>
+          <LoginDialog isOpen={true} userId={this.state.username} password={this.state.password}/>
         }
       </div>
     );

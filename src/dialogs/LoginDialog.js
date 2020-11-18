@@ -1,50 +1,91 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import React from "react";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
-import { login_status } from '../actions/auth'
-import { clearMessage } from '../actions/message'
-import { connect } from 'react-redux'
+import UserService from "../services/user.service";
 
-function LoginDialog({ isOpen, dispatch }) {
+import { login_status } from "../actions/auth";
+import { clearMessage } from "../actions/message";
+import { connect } from "react-redux";
+
+function LoginDialog({ isOpen, dispatch, userId, password }) {
   const [open, setOpen] = React.useState(false);
+  const [confirmPassword, setConfirmPassword] = React.useState("");
+  const [newPassword, setNewPassword] = React.useState("");
+  const [error,setError] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false)
 
   React.useEffect(() => {
-    if(isOpen){
-      setOpen(true)
+    if (isOpen) {
+      setOpen(true);
     }
-  },[]) 
+  }, []);
 
   const handleClose = () => {
-    dispatch(login_status(''))
-    dispatch(clearMessage())
+    dispatch(login_status(""));
+    dispatch(clearMessage());
     setOpen(false);
+  };
+
+  const onChangePassword = () => {
+    setIsLoading(true)
+    if (newPassword === confirmPassword) {
+      const oldPassword = password;
+      UserService.changePassword(userId, oldPassword, newPassword)
+      .then(() => {
+        setIsLoading(false)
+        handleClose()
+        window.location.reload()
+      })
+      .catch(() => {
+        setIsLoading(false)
+      })
+    } else {
+      setIsLoading(false)
+      setError(true)
+    }
   };
 
   return (
     <div>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" className="dialog">
-        <DialogTitle id="form-dialog-title">Please enter your password</DialogTitle>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+        className="dialog"
+      >
+        <DialogTitle id="form-dialog-title">
+          Please enter your password 
+          { error && 'Password mismatched'} 
+        </DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            id="name"
             label="Password"
-            type="text"
+            type="password"
+            name="new"
+            value={newPassword}
+            onChange={(event) => {
+              setNewPassword(event.target.value);
+            }}
             fullWidth
           />
           <TextField
             autoFocus
             margin="dense"
-            id="name"
             label="Confirm Password"
-            type="text"
+            type="password"
+            name="confirm"
+            value={confirmPassword}
+            onChange={(event) => {
+              setConfirmPassword(event.target.value);
+            }}
             fullWidth
           />
         </DialogContent>
@@ -52,7 +93,10 @@ function LoginDialog({ isOpen, dispatch }) {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={onChangePassword} color="primary">
+              {isLoading && (
+                  <span className="spinner-border spinner-border-sm"></span>
+                )}
             Confirm
           </Button>
         </DialogActions>
@@ -61,4 +105,4 @@ function LoginDialog({ isOpen, dispatch }) {
   );
 }
 
-export default connect()(LoginDialog)
+export default connect()(LoginDialog);
