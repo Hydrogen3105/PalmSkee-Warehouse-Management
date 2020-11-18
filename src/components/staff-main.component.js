@@ -23,7 +23,7 @@ class StaffMain extends Component {
 
         return (
             <div>
-                <h1>Warehouse Management System : Staff</h1>
+                <h2 style={{marginBottom: 15}}>Warehouse Management System : Staff</h2>
                 <div className='staff-container'>
                     <div className='item-manage-user'>
                         <div className='staff-main'>

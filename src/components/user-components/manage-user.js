@@ -16,7 +16,9 @@ import IconButton from '@material-ui/core/IconButton'
 import SearchIcon from '@material-ui/icons/Search'
 import FilterListIcon from '@material-ui/icons/FilterList'
 
-const useStyles = makeStyles((theme) => ({
+import { ColorButton, useStyles } from '../../styles/material-style'
+
+/*const useStyles = makeStyles((theme) => ({
     root: {
       '& > *': {
         margin: theme.spacing(1),
@@ -25,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     input: {
       display: 'none',
     },
-  }))
+  }))*/
 
 class ManageUser extends Component {
     constructor(props){
@@ -57,8 +59,12 @@ class ManageUser extends Component {
     }
 
     handleSearch(allUser) {
+        //user => user.userId === this.state.searchText
         if(this.state.searchText !== ''){
-            const searchData = allUser.filter(user => user.userId === this.state.searchText)
+            const searchData = allUser.filter(user => {
+                const regex = new RegExp(  '^' + this.state.searchText,'g')
+                return regex.test(user.userId)
+            })
             this.setState({
                 showUser: searchData,
                 searchText: ''
@@ -206,9 +212,9 @@ class ManageUser extends Component {
                 <br />
                 <div>
                     <Link to="/home">
-                        <Button variant="contained">
+                        <ColorButton variant="contained" color="primary" className={useStyles.margin}>
                             Back
-                        </Button>
+                        </ColorButton>
                     </Link>
                 </div>
             

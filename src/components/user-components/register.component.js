@@ -146,7 +146,7 @@ class Register extends Component {
     return (
       <div className="col-md-12">
         <h4>Adding New User</h4>
-        <div className="card card-container">
+        <div className="card full-card">
           <img
             src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
             alt="profile-img"

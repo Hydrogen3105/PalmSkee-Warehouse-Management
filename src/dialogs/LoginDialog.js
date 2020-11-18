@@ -18,6 +18,7 @@ function LoginDialog({ isOpen, dispatch, userId, password }) {
   const [confirmPassword, setConfirmPassword] = React.useState("");
   const [newPassword, setNewPassword] = React.useState("");
   const [error,setError] = React.useState(false);
+  const [samePasswordError, setSamePasswordError] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
 
   React.useEffect(() => {
@@ -33,8 +34,10 @@ function LoginDialog({ isOpen, dispatch, userId, password }) {
   };
 
   const onChangePassword = () => {
+    setError(false)
+    setSamePasswordError(false)
     setIsLoading(true)
-    if (newPassword === confirmPassword) {
+    if ((newPassword === confirmPassword) && (newPassword !== password)) {
       const oldPassword = password;
       UserService.changePassword(userId, oldPassword, newPassword)
       .then(() => {
@@ -45,6 +48,9 @@ function LoginDialog({ isOpen, dispatch, userId, password }) {
       .catch(() => {
         setIsLoading(false)
       })
+    } else if((newPassword === confirmPassword) && (newPassword === password)){
+      setIsLoading(false)
+      setSamePasswordError(true)
     } else {
       setIsLoading(false)
       setError(true)
@@ -61,9 +67,18 @@ function LoginDialog({ isOpen, dispatch, userId, password }) {
       >
         <DialogTitle id="form-dialog-title">
           Please enter your password 
-          { error && 'Password mismatched'} 
         </DialogTitle>
         <DialogContent>
+          {
+            error ? 
+            <DialogContentText>
+              <span style={{color: "red"}}>Both passwords mismatched</span>
+            </DialogContentText> :
+            samePasswordError && 
+            <DialogContentText>
+              <span style={{color: "red"}}>Password is same with old password, please change</span>
+            </DialogContentText>
+          }
           <TextField
             autoFocus
             margin="dense"
