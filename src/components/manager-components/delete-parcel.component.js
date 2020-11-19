@@ -13,7 +13,9 @@ import IconButton from '@material-ui/core/IconButton'
 import SearchIcon from '@material-ui/icons/Search'
 import FilterListIcon from '@material-ui/icons/FilterList'
 
-import { delete_parcel } from '../../actions/parcel'
+import ParcelService from '../../services/parcel-service'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
 
 class DeleteParcel extends Component {
     constructor(props) {
@@ -24,13 +26,35 @@ class DeleteParcel extends Component {
             isLoading: true,
             parcelId: '',
             selectedParcels: [],
+            searchText: "",
         }
         this.handleBack = this.handleBack.bind(this)
         this.handleDelete = this.handleDelete.bind(this)
     }
 
     componentDidMount() {
+        ParcelService.getAllParcel()
+        .then((response) => {
+            const parcelsInTable = response.data.payload.map((parcel) => {
+                return {
+                    ...parcel,
+                    id: parcel.parcelId
+                }
+            })
+            this.setState({
+                allParcels: parcelsInTable,
+                showParcels: parcelsInTable,
+                isLoading: false
+            })
+        })
+    }
 
+    componentDidUpdate(prevProps, prevState) {
+        if(prevState.showParcels !== this.state.showParcels){
+            this.setState({
+                isLoading: false
+            })
+        }
     }
     
     handleBack() {
@@ -41,10 +65,41 @@ class DeleteParcel extends Component {
         this.props.dispatch(dialog_state(1))
     }
 
+    handleChange = (e) => {
+        const { name, value } = e.target
+        this.setState({
+            [name]: value
+        })
+    }
+
     onSelectParcel = (parcelsList) => {
         this.setState({
             selectedParcels: parcelsList
         })
+    }
+
+    handleSearch = (allParcels) => {
+        this.setState({
+            isLoading: true
+        })
+        
+        if(this.state.searchText !== ''){
+            const searchData = allParcels.filter(parcel => {
+                const regex = new RegExp(  '^' + this.state.searchText,'gi',)
+                return regex.test(parcel.parcelId)
+            })
+            console.log(searchData)
+            this.setState({
+                showParcels: searchData,
+                searchText: '',
+            })  
+        }
+        else {
+            this.setState({
+                showParcels: allParcels,
+                isLoading: false
+            })  
+        }
     }
     
     render () {
@@ -91,7 +146,7 @@ class DeleteParcel extends Component {
                                     <IconButton color="primary" 
                                                 aria-label="search" 
                                                 component="span" 
-                                                onClick={() => this.handleSearch(this.state.allUser)}
+                                                onClick={() => this.handleSearch(this.state.allParcels)}
                                     >
                                         <SearchIcon />
                                     </IconButton>
@@ -102,9 +157,11 @@ class DeleteParcel extends Component {
                             
                     </div>
                     {/*Above Table */}
-                    <div style={{marginBottom: 15}}>
-                        <ParcelSelectTable onSelectParcel={this.onSelectParcel} status='delete'/>
-                    </div>
+                    {   !this.state.isLoading &&
+                        <div style={{marginBottom: 15}}>
+                            <ParcelSelectTable parcels={this.state.showParcels} onSelectParcel={this.onSelectParcel}/>
+                        </div>
+                    }
                 </div>
                 <div className='button-back-comfirm' style={{marginTop: 10}}>
                     <div>
@@ -124,6 +181,19 @@ class DeleteParcel extends Component {
                         </button>
                     </div>
                 </div>
+                { this.state.isLoading && (
+                    <Dialog
+                    open={this.state.isLoading}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">
+                            <span className="spinner-border spinner-border-sm"></span>
+                            Loading...
+                        </DialogTitle>
+                    </Dialog>
+                    )
+                }
                 {
                     this.props.dialog_state === 1 ? 
                     <QuestionDialog topic='delete-parcel' /> :

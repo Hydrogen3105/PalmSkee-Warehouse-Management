@@ -23,7 +23,7 @@ class ExportedParcels extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            redirect: "",
+            storedParcels: [],
             showParcels: [],
             selectedParcels: [],
             isLoading: true,
@@ -37,12 +37,27 @@ class ExportedParcels extends Component {
         this.props.dispatch(dialog_state(0))
         ParcelService.getAllParcel()
         .then((response) => {
-            const unexported =  response.data.payload.filter((parcel) => parcel.status === 'stored')
+            const filtered =  response.data.payload.filter((parcel) => parcel.status === 'stored')
+            const unexported = filtered.map((parcel) => {
+                return {
+                    ...parcel,
+                    id: parcel.parcelId
+                }
+            })
             this.setState({
+                storedParcels: unexported,
                 showParcels: unexported,
                 isLoading: false
             })
         })
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(prevState.showParcels !== this.state.showParcels){
+            this.setState({
+                isLoading: false
+            })
+        }
     }
 
     handleBack() {
@@ -51,6 +66,30 @@ class ExportedParcels extends Component {
 
     handleExported() {
         this.props.dispatch(dialog_state(1))
+    }
+
+    handleSearch = (storedParcels) => {
+        this.setState({
+            isLoading: true
+        })
+        
+        if(this.state.searchText !== ''){
+            const searchData = storedParcels.filter(parcel => {
+                const regex = new RegExp(  '^' + this.state.searchText,'gi',)
+                return regex.test(parcel.parcelId)
+            })
+            console.log(searchData)
+            this.setState({
+                showParcels: searchData,
+                searchText: '',
+            })  
+        }
+        else {
+            this.setState({
+                showParcels: storedParcels,
+                isLoading: false
+            })  
+        }
     }
 
     onSelectParcel = (parcelsList) => {
@@ -81,16 +120,16 @@ class ExportedParcels extends Component {
                             </Link>
                         </div>
                         <div className='inner'>
-                            <Link to="/exported-parcels">
-                                <Button variant="contained" color="primary">
-                                    Exported
+                            <Link to="/stored-parcels">
+                                <Button variant="contained" color="secondary">
+                                    Stored
                                 </Button>
                             </Link>
                         </div>
                         <div className='inner'>
-                            <Link to="/stored-parcels">
-                                <Button variant="contained" color="secondary">
-                                    Stored
+                            <Link to="/exported-parcels">
+                                <Button variant="contained" color="primary">
+                                    Exported
                                 </Button>
                             </Link>
                         </div>
@@ -139,7 +178,7 @@ class ExportedParcels extends Component {
                                         <IconButton color="primary" 
                                                     aria-label="search" 
                                                     component="span" 
-                                                    onClick={() => this.handleSearch(this.state.allUser)}
+                                                    onClick={() => this.handleSearch(this.state.storedParcels)}
                                         >
                                             <SearchIcon />
                                         </IconButton>
@@ -151,7 +190,7 @@ class ExportedParcels extends Component {
                         </div>
                     {/*Above Table */}
                     <div style={{marginBottom: 15}}>
-                        <ParcelSelectTable onSelectParcel={this.onSelectParcel} status='stored'/>
+                        <ParcelSelectTable parcels={this.state.showParcels} onSelectParcel={this.onSelectParcel} />
                     </div>
                 </div>
                 { this.state.isLoading && (

@@ -68,7 +68,7 @@ class ManageUser extends Component {
             this.setState({
                 showUser: searchData,
                 searchText: ''
-            })     
+            })
         }
         else {
             this.setState({

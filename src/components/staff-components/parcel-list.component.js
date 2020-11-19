@@ -23,10 +23,11 @@ class Parcels extends Component {
             allParcel: [],
             showParcel: [],
             isLoading: true,
+            searchText: "",
         }
 
         this.handleBack = this.handleBack.bind(this)
-        this.handleMock = this.handleMock.bind(this)
+        this.handleChange = this.handleChange.bind(this)
     }
 
     componentDidMount() {
@@ -46,15 +47,49 @@ class Parcels extends Component {
         })
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if(prevState.showParcel !== this.state.showParcel){
+            this.setState({
+                isLoading: false
+            })
+        }
+    }
+
     handleBack () {
         history.push('/home')
     }
 
-    handleMock() {
-        this.props.dispatch(select_parcel('JPN101'))
-
-        history.push('/parcel-detail')
+    handleChange(e) {
+        const { name, value } = e.target
+        this.setState({
+            [name]: value
+        })
     }
+
+    handleSearch(allParcels) {
+        this.setState({
+            isLoading: true
+        })
+        
+        if(this.state.searchText !== ''){
+            const searchData = allParcels.filter(parcel => {
+                const regex = new RegExp(  '^' + this.state.searchText,'gi')
+                return regex.test(parcel.parcelId)
+            })
+            console.log(searchData)
+            this.setState({
+                showParcel: searchData,
+                searchText: '',
+            })  
+        }
+        else {
+            this.setState({
+                showParcel: allParcels,
+                isLoading: false
+            })  
+        }
+    }
+
     render () {
         const { user: currentUser } = this.props
 
@@ -147,7 +182,7 @@ class Parcels extends Component {
                         </div>
                     {/*Above Table */}
                     {
-                        this.state.showParcel.length !== 0 &&
+                        !this.state.isLoading &&
                         <div style={{marginBottom: 10}}>
                             <ParcelsTable parcels={this.state.showParcel}/>
                         </div>

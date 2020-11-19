@@ -11,29 +11,9 @@ const columns = [
 ]
 
 
-export default function ParcelSelectTable({ onSelectParcel, status }) {
-    const [showParcels, setShowParcels] = React.useState([])
+export default function ParcelSelectTable({ onSelectParcel, parcels }) {
     const [selectedParcels, setSelectedParcels] = React.useState([])
 
-    React.useEffect(() => {
-        ParcelService.getAllParcel()
-        .then((response) => {
-            let filter_parcel = []
-            if(status === 'delete'){
-                filter_parcel = response.data.payload
-            }
-            else {
-                filter_parcel = response.data.payload.filter((parcel) => parcel.latestStatus === status )
-            } 
-            const unstored = filter_parcel.map((parcel) => {
-                return {
-                    ...parcel,
-                    id: parcel.parcelId
-                }
-            })
-            setShowParcels(unstored)
-        })
-    }, [])
 
     React.useEffect(() => {
         onSelectParcel(selectedParcels)
@@ -41,7 +21,7 @@ export default function ParcelSelectTable({ onSelectParcel, status }) {
 
     return (
         <div style={{ height: 500, width: '100%' }}>
-            <DataGrid   rows={showParcels} columns={columns} pageSize={10} checkboxSelection 
+            <DataGrid   rows={parcels} columns={columns} pageSize={20} checkboxSelection 
                         onSelectionChange={(newSelection) => setSelectedParcels(newSelection.rowIds)}
             />
         </div>
