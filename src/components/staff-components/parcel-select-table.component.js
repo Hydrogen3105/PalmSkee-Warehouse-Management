@@ -1,6 +1,5 @@
 import React from 'react'
 import { DataGrid } from '@material-ui/data-grid'
-import ParcelService from '../../services/parcel-service'
 
 const columns = [
   { field: 'parcelId', headerName: 'Parcel ID', width: 200 },

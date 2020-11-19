@@ -20,6 +20,9 @@ import ConfirmedDialog from "../../dialogs/dialog-confirmed.component";
 import { dialog_state } from "../../actions/dialog";
 import { select_user } from "../../actions/admin";
 
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+
 const required = (value) => {
     if (!value) {
       return (
@@ -59,7 +62,7 @@ class EditUser extends Component {
       phone: "",
       warehouseId: "",
       allUser: [],
-      loading: false,
+      loading: true,
       isGenderMissing: false,
     };
 
@@ -78,6 +81,7 @@ class EditUser extends Component {
       .then((response) => {
         this.setState({
           allUser: response.data.payload,
+          loading: false,
         });
       })
       .then(() => {
@@ -101,6 +105,7 @@ class EditUser extends Component {
             email: pre_selected_user[0].email,
             phone: pre_selected_user[0].phone,
             warehouseId: pre_selected_user[0].warehouseId,
+            loading: false
           });
         }
       });
@@ -126,6 +131,7 @@ class EditUser extends Component {
         email: selected_user[0].email,
         phone: selected_user[0].phone,
         warehouseId: selected_user[0].warehouseId,
+        loading: false
       });
     }
   }
@@ -220,9 +226,22 @@ class EditUser extends Component {
       <div className="col-md-12">
         <h4>Editing User</h4>
         {   this.props.dialog_state === 1 ? 
-                        <QuestionDialog topic='edit-user' data={payload_data}/> :
-                        this.props.dialog_state === 2 && 
-                        <ConfirmedDialog topic='edit-user' />
+                      <QuestionDialog topic='edit-user' data={payload_data}/> :
+                      this.props.dialog_state === 2 && 
+                      <ConfirmedDialog topic='edit-user' />
+        }
+        { this.state.loading && (
+                        <Dialog
+                        open={this.state.loading}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                        >
+                            <DialogTitle id="alert-dialog-title">
+                                <span className="spinner-border spinner-border-sm"></span>
+                                Loading...
+                            </DialogTitle>
+                        </Dialog>
+                    )
         }
         <div id="outer">
           <div className="inner">
