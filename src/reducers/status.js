@@ -1,14 +1,16 @@
-import { SELECT_PARCEL } from '../actions/types'
+import login_status from '../actions/auth'
+import { LOGIN_STATUS } from '../actions/types'
 
 const initialState = {
-    parcelId: ""
+    statusId: ""
 }
+
 export default function(state = initialState, action) {
     const { type, payload } = action
 
     switch(type) {
-        case SELECT_PARCEL: 
-            return { parcelId: payload }
+        case LOGIN_STATUS: 
+            return { statusId: payload }
         
         default:
             return state

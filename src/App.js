@@ -40,7 +40,7 @@ import { clearMessage } from "./actions/message"
 
 import { history } from './helpers/history'
 
-import { makeStyles } from '@material-ui/core/styles'
+
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
@@ -48,6 +48,11 @@ import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import EditParcel from "./components/staff-components/edit-parcel.component"
+import ShowReports from "./components/manager-components/show-report.component"
+
+import { Button } from '@material-ui/core'
+import { navBarUseStyles } from './styles/material-style'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 
 class App extends Component {
   constructor(props) {
@@ -79,7 +84,7 @@ class App extends Component {
 
   render() {
     const { currentUser } = this.state;
-    const classes = makeStyles((theme) => ({
+    /*const classes = makeStyles((theme) => ({
       root: {
         flexGrow: 1,
       },
@@ -92,12 +97,12 @@ class App extends Component {
       login: {
         textAlign: "right",
       },
-    }));
+    }));*/
 
     return (
       <Router history={history}>
         <div>
-          <div className={classes.root}>
+          <div className={navBarUseStyles.root}>
             <AppBar position="static">
               <Toolbar>
                 <IconButton edge="start" color="inherit" aria-label="menu">
@@ -109,16 +114,16 @@ class App extends Component {
                 { currentUser && (
                   <div className="navbar-nav ml-auto navbar-expand">
                     <li className="nav-item">
-                      <Link to={"/profile"} className="nav-link text-light right-nav-items">
-                        <Typography variant="h6" >
-                          {currentUser.payload[0].firstName}
-                        </Typography>
+                      <Link to={"/profile"} style={{marginRight: 2}} >  
+                          <Button className="text-light right-nav-items" startIcon={<AccountCircleIcon />} >
+                              {currentUser.payload[0].firstName}
+                          </Button>
                       </Link>
                     </li>
                     <li className="nav-item">
-                      <a href="/login" className="nav-link text-light right-nav-items" onClick={this.logOut}>
+                      <Button href="/login" className="text-light right-nav-items" onClick={this.logOut}>
                         <ExitToAppIcon />
-                      </a>
+                      </Button>
                     </li>
                   </div> )
                 }
@@ -153,6 +158,7 @@ class App extends Component {
               <Route exact path="/add-warehouse" component={AddWarehouse}/>
               <Route exact path="/edit-warehouse" component={EditWarehouse}/>
               <Route exact path="/delete-warehouse" component={DeleteWarehouse}/>
+              <Route exact path="/show-report" component={ShowReports}/>
               <Route exact path="/palmskYz" component=""/>
             </Switch>
           </div>

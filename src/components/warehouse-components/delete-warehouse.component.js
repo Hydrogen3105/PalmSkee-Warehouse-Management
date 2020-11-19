@@ -16,11 +16,12 @@ class DeleteWarehouse extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            warehouse_id: "",
+            warehouseId: "",
         }
 
         this.handleBack = this.handleBack.bind(this)
         this.handleDialog = this.handleDialog.bind(this)
+        this.handleChange = this.handleChange.bind(this)
     }
 
     componentDidMount() {
@@ -29,6 +30,13 @@ class DeleteWarehouse extends Component {
 
     handleBack() {
         history.push('/manage-warehouse')
+    }
+
+    handleChange(e) {
+        const { name, value } = e.target
+        this.setState({
+            [name]: value
+        })
     }
 
     handleDialog() {
@@ -49,60 +57,67 @@ class DeleteWarehouse extends Component {
         return (
             <div className="col-md-12">
                 <h1>Deleting Warehouse</h1>
-                <div className="card card-container-edit-user">
-                    <div className="form-group">
-                        <FormControl>
-                            <InputLabel>Warehouse ID</InputLabel>
-                            <Select name="warehouse_id"
-                                    value={this.state.warehouse_id}
-                                    onChange={() => console.log()}
-                                    style={{ width: 250}}
-                            >
-                            {/* this.state.allUser.map(user => {
-                                return <MenuItem    key={user.user_id} 
-                                                    value={user.user_id}
-                                        >
-                                            <span>
-                                                <strong>{user.user_id}</strong> {user.first_name} {user.last_name}
-                                            </span>
-                                        </MenuItem>
-                                })*/}
-                                <MenuItem>Sia O Warehouse</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </div>
-                    <div className='from-group'>
-                        <label> Permission File
-                            <input type='file' />
-                        </label>
-                        
-                        <label> Report file
-                            <input type='file' />
-                        </label>
+                <div className='menu-and-button center'>
+                    <div className="card card-container-edit-user">
+                        <div className="form-group">
+                            <FormControl>
+                                <InputLabel>Warehouse ID</InputLabel>
+                                <Select name="warehouseId"
+                                        value={this.state.warehouseId}
+                                        onChange={this.handleChange}
+                                        style={{ width: 250}}
+                                >
+                                {/* this.state.allUser.map(user => {
+                                    return <MenuItem    key={user.user_id} 
+                                                        value={user.user_id}
+                                            >
+                                                <span>
+                                                    <strong>{user.user_id}</strong> {user.first_name} {user.last_name}
+                                                </span>
+                                            </MenuItem>
+                                    })*/}
+                                    <MenuItem value='WH006'><strong>WH006</strong> Sia O Warehouse</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </div>
+                        <div className='from-group'>
+                            <label> Permission File
+                                <input type='file' />
+                            </label>
+                            
+                            <label> Report file
+                                <input type='file' />
+                            </label>
 
+                        </div>
                     </div>
+                    <div className='button-back-comfirm'>
+                        <div>
+                            <button className="btn btn-danger btn-block" 
+                                    style={{width: 100}}
+                                    onClick={this.handleBack}
+                            >
+                                Back
+                            </button>
+                        </div>
+                        <div>
+                            <button className="btn btn-primary btn-block" 
+                                    style={{width: 100}}
+                                    onClick={this.handleDialog}
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
+                
                 {   this.props.dialog_state === 1 ? 
                     <QuestionDialog topic='delete' /> :
                     this.props.dialog_state === 2 && 
                     <ComfirmedDialog topic='delete' />
                 }
-
-                <div>
-                    <button className="btn btn-danger btn-block" 
-                            style={{width: 150}}
-                            onClick={this.handleBack}
-                    >
-                        Back
-                    </button>
-                    <button className="btn btn-primary btn-block" 
-                            style={{width: 150}}
-                            onClick={this.handleDialog}
-                    >
-                        Confirm Delete
-                    </button>
-
-                </div>
+                
             </div>
         )
     }

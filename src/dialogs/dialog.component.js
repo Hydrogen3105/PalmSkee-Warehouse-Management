@@ -6,8 +6,11 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import { connect } from 'react-redux'
 import { dialog_state } from '../actions/dialog'
 import { edit_user, delete_user, select_user } from '../actions/admin'
+import { /*edit_parcel, , delete_parcel*/ add_parcel} from '../actions/parcel'
+import { SET_MESSAGE } from '../actions/types'
 
-function QuestionDialog({ dispatch, dialog_state:state, topic, data }) {
+
+function QuestionDialog({ dispatch, dialog_state:state, topic, data,message }) {
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
 
@@ -48,12 +51,57 @@ function QuestionDialog({ dispatch, dialog_state:state, topic, data }) {
             setLoading(false)
           })
           break
-
-        default:
-           dispatch(dialog_state(prevState + 1))
-           break
+        
+        case 'add-parcel':
+          const {senderId, fromWarehouseId, toWarehouseId, width, length, height, weight, optional} = data
+          dispatch(add_parcel(senderId, fromWarehouseId, toWarehouseId, width, length, height, weight, optional))
+          .then(() => {
+            dispatch(dialog_state(prevState + 1))
+          },(error) => {
+            const message =
+              (error.response &&
+                error.response.data &&
+                error.response.data.success) ||
+              error.message ||
+              error.toString();
+        
+              dispatch({
+                type: SET_MESSAGE,
+                payload: message,
+              });
+            }
+          )
+          .catch(() => {
+            setLoading(false)
+          })
+          break
+        /*
+          case 'edit-parcel':
+            const edited_parcel = data
+            dispatch(edit_parcel())
+            .then(() => {
+              dispatch(dialog_state(prevState + 1))
+            })
+            .catch(() => {
+              setLoading(false)
+            })
+          
+            case 'delete-parcel':
+              const deleted_parcel = data
+              dispatch(add_parcel())
+              .then(() => {
+                dispatch(dialog_state(prevState + 1))
+              })
+              .catch(() => {
+                setLoading(false)
+              })*/
+              
+          default:
+            dispatch(dialog_state(prevState + 1))
+            setOpen(false)
+            break
       }
-      setOpen(false)
+      
   }
 
   return (
@@ -77,7 +125,7 @@ function QuestionDialog({ dispatch, dialog_state:state, topic, data }) {
           <Button onClick={handleClose} color="primary">
             Back
           </Button>
-          <Button onClick={() => {console.log(data)}} color="primary">
+          <Button onClick={() => {console.log(data, message)}} color="primary">
             Data
           </Button>
           <Button onClick={handleConfirm} color="primary" autoFocus>
@@ -96,9 +144,11 @@ function QuestionDialog({ dispatch, dialog_state:state, topic, data }) {
 function mapStateToProp(state) {
     const {dialog_state} = state.dialog
     const {userId} = state.user
+    const {message} = state.message
     return {
         dialog_state,
         userId,
+        message
     }
 }
 

@@ -8,11 +8,25 @@ import QuestionDialog from '../../dialogs/dialog.component'
 import ConfirmedDialog from '../../dialogs/dialog-confirmed.component'
 import { dialog_state } from '../../actions/dialog'
 
+import ParcelSelectTable from './parcel-select-table.component'
+
+import IconButton from '@material-ui/core/IconButton'
+import SearchIcon from '@material-ui/icons/Search'
+import FilterListIcon from '@material-ui/icons/FilterList'
+
+import ParcelService from '../../services/parcel-service'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DeleteIcon from '@material-ui/icons/Delete'
+
 class ExportedParcels extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            redirect: "",
+            storedParcels: [],
+            showParcels: [],
+            selectedParcels: [],
+            isLoading: true,
         }
 
         this.handleBack = this.handleBack.bind(this)
@@ -21,6 +35,29 @@ class ExportedParcels extends Component {
 
     componentDidMount() {
         this.props.dispatch(dialog_state(0))
+        ParcelService.getAllParcel()
+        .then((response) => {
+            const filtered =  response.data.payload.filter((parcel) => parcel.status === 'stored')
+            const unexported = filtered.map((parcel) => {
+                return {
+                    ...parcel,
+                    id: parcel.parcelId
+                }
+            })
+            this.setState({
+                storedParcels: unexported,
+                showParcels: unexported,
+                isLoading: false
+            })
+        })
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(prevState.showParcels !== this.state.showParcels){
+            this.setState({
+                isLoading: false
+            })
+        }
     }
 
     handleBack() {
@@ -29,6 +66,36 @@ class ExportedParcels extends Component {
 
     handleExported() {
         this.props.dispatch(dialog_state(1))
+    }
+
+    handleSearch = (storedParcels) => {
+        this.setState({
+            isLoading: true
+        })
+        
+        if(this.state.searchText !== ''){
+            const searchData = storedParcels.filter(parcel => {
+                const regex = new RegExp(  '^' + this.state.searchText,'gi',)
+                return regex.test(parcel.parcelId)
+            })
+            console.log(searchData)
+            this.setState({
+                showParcels: searchData,
+                searchText: '',
+            })  
+        }
+        else {
+            this.setState({
+                showParcels: storedParcels,
+                isLoading: false
+            })  
+        }
+    }
+
+    onSelectParcel = (parcelsList) => {
+        this.setState({
+            selectedParcels: parcelsList
+        })
     }
 
     render () {
@@ -41,56 +108,131 @@ class ExportedParcels extends Component {
         }
 
         return (
-            <div className="col-md-12">
-                <h2>Unexported Parcels list</h2>
+            <div>
+                <h2>Parcels list for exporting</h2>
                 <div>
-                    <div>
-                        <Link to="/exported-parcels">
-                            <Button variant="contained" color="primary">
-                                Exported
-                            </Button>
-                        </Link>
+                    <div id='outer'>
+                        <div className='inner'>
+                            <Link to="/add-parcel">
+                                <Button variant="contained" color="primary">
+                                    New
+                                </Button>
+                            </Link>
+                        </div>
+                        <div className='inner'>
+                            <Link to="/stored-parcels">
+                                <Button variant="contained" color="secondary">
+                                    Stored
+                                </Button>
+                            </Link>
+                        </div>
+                        <div className='inner'>
+                            <Link to="/exported-parcels">
+                                <Button variant="contained" color="primary">
+                                    Exported
+                                </Button>
+                            </Link>
+                        </div>
+                        {   currentUser.payload[0].position === "manager" &&
+                            <div className='inner'>
+                                <Link to="/delete-parcel">
+                                    <Button variant="contained" 
+                                            startIcon={ <DeleteIcon /> }
+                                    >
+                                        Delete Parcel
+                                    </Button>
+                                </Link>
+                            </div>
+                        }
                     </div>
-                    <br />
-                    <div>
-                        <Link to="/stored-parcels">
-                            <Button variant="contained" color="secondary">
-                                Stored
-                            </Button>
-                        </Link>
-                    </div>
-                    <br />
-                    <div>
-                        <Link to="/add-parcel">
-                            <Button variant="contained" color="primary">
-                                New
-                            </Button>
-                        </Link>
+                    
+                </div>
+
+                <div>
+                        <div className='search-bar'>
+                            <div className='search-bar-container'>
+                                <div className='filter-container'>
+                                    <div>
+                                        <IconButton color="primary" 
+                                                    aria-label="search" 
+                                                    component="span" 
+
+                                        >
+                                            <FilterListIcon />
+                                        </IconButton>
+                                    </div>
+                                </div>
+
+                                <div className='search-container'> 
+                                    <div className='form-group'>
+                                        <input  type='text'
+                                                className='form-control'
+                                                name='searchText'
+                                                style= {{width: 250}}
+                                                placeholder='Search Here..'
+                                                value={this.state.searchText}
+                                                onChange={this.handleChange}
+                                        />
+                                    </div>
+                                    <div>
+                                        <IconButton color="primary" 
+                                                    aria-label="search" 
+                                                    component="span" 
+                                                    onClick={() => this.handleSearch(this.state.storedParcels)}
+                                        >
+                                            <SearchIcon />
+                                        </IconButton>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                    {/*Above Table */}
+                    <div style={{marginBottom: 15}}>
+                        <ParcelSelectTable parcels={this.state.showParcels} onSelectParcel={this.onSelectParcel} />
                     </div>
                 </div>
+                { this.state.isLoading && (
+                    <Dialog
+                    open={this.state.isLoading}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">
+                            <span className="spinner-border spinner-border-sm"></span>
+                            Loading...
+                        </DialogTitle>
+                    </Dialog>
+                    )
+                }
                 {
                     this.props.dialog_state === 1 ? 
                     <QuestionDialog topic='export' /> :
                     this.props.dialog_state === 2 && 
                     <ConfirmedDialog topic='export' />
                 }
-
                 <br />
-                <div>
-                    <button className="btn btn-danger btn-block" 
-                            style={{width: 100}}
-                            onClick={this.handleBack}
-                    >
-                        Back
-                    </button>
-                    <button className="btn btn-primary btn-block" 
+                <div className='button-back-comfirm'>
+                    <div>
+                        <button className="btn btn-danger btn-block" 
+                                style={{width: 100}}
+                                onClick={this.handleBack}
+                        >
+                            Back
+                        </button>
+                    </div>
+                    <div>
+                        <button className="btn btn-primary btn-block" 
                                 style={{width: 100}}
                                 onClick={this.handleExported}
-                    >
-                        Export
-                    </button>
+                        >
+                            Export
+                        </button>
+                    </div>
                 </div>
-            </div>
+
+        </div>
         )
     }
 }

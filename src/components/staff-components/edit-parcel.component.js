@@ -7,22 +7,24 @@ import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
 
 import QuestionDialog from '../../dialogs/dialog.component'
 import ConfirmedDialog from '../../dialogs/dialog-confirmed.component'
 import { dialog_state } from '../../actions/dialog'
 
+import { edit_parcel } from '../../actions/parcel'
+import ParcelService from '../../services/parcel-service'
+
 class EditParcel extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            width: 0,
-            height: 0,
-            length: 0,
-            weight: 0,
-            from_wh: "",
-            destination: "",
+            toWarehouseId: "",
+            lastestStatus: "",
             optional: "",
+            isLoading: true,
         }
         
         this.handleBack = this.handleBack.bind(this)
@@ -32,6 +34,20 @@ class EditParcel extends Component {
 
     componentDidMount() {
         this.props.dispatch(dialog_state(0))
+        ParcelService.getPacelById(this.props.parcelId)
+        .then((response) => {
+            this.setState({
+                parcel: response.data.payload[0],
+                isLoading: false,
+            })
+        }).then(() => {
+            const { toWarehouseId, lastestStatus, optional } = this.state.parcel
+            this.setState({
+                toWarehouseId,
+                lastestStatus,
+                optional
+            })
+        })
     }
 
     handleChange (e) {
@@ -61,104 +77,102 @@ class EditParcel extends Component {
 
         return (
             <div className="col-md-12">
-                <h2>Edit Parcel of {this.props.parcel_id}</h2>
-                <div className="card card-container-staff">
-                    <h4>Detail</h4>
-                    <div className="form-group">
-                        <label htmlFor="width">Width</label>
-                        <input  type="number"
-                                name="width"
-                                value={this.state.width}
-                                onChange={this.handleChange}
-                        />
+                <h2>Edit Parcel of {this.props.parcelId}</h2>
+                <div className='menu-and-button center'>
+                    <div>
+                        <div className="card card-container-staff">
+                            <h4>Detail</h4>
+                            <br />
+                            <div className="form-group">
+                                <FormControl>
+                                    <InputLabel>Destination</InputLabel>
+                                    <Select name="toWarehouseId"
+                                            value={this.state.toWarehouseId}
+                                            onChange={this.handleChange}
+                                            style={{ width: 250}}
+                                    >
+                                    {/* this.state.allUser.map(user => {
+                                        return <MenuItem    key={user.user_id} 
+                                                            value={user.user_id}
+                                                >
+                                                    <span>
+                                                        <strong>{user.user_id}</strong> {user.first_name} {user.last_name}
+                                                    </span>
+                                                </MenuItem>
+                                        })*/}
+                                        <MenuItem value="WH001">WH001 O-Koi</MenuItem>
+                                        <MenuItem value="WH002">WH002 O-Koi</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </div>
+                            <div className="form-group">
+                                <FormControl>
+                                    <InputLabel>Status</InputLabel>
+                                    <Select name="lastestStatus"
+                                            value={this.state.lastestStatus}
+                                            onChange={this.handleChange}
+                                            style={{ width: 250}}
+                                    >
+                                        <MenuItem value="stored">Stored</MenuItem>
+                                        <MenuItem value="exported">Exported</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </div>
+                            <h4>Optional</h4>
+                            <div className="form-group">
+                                <label htmlFor="optional">From</label>
+                                <textarea   name="optional"
+                                            className='form-control'
+                                            value={this.state.optional}
+                                            style={{width: 300, height: 150}}
+                                            placeholder="optional"
+                                            onChange={this.handleChange}
+                                            
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="height">Height</label>
-                        <input  type="number"
-                                name="height"
-                                value={this.state.height}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="length">Length</label>
-                        <input  type="number"
-                                name="length"
-                                value={this.state.length}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="weight">Weight</label>
-                        <input  type="number"
-                                name="weight"
-                                value={this.state.weight}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-                    <h4>Destination</h4>
-                    <div className="form-group">
-                        <label htmlFor="from_wh">From</label>
-                        <input  type="text"
-                                name="from_wh"
-                                value={this.state.from_wh}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <FormControl>
-                            <InputLabel>To</InputLabel>
-                            <Select name="destination"
-                                    value={this.state.destination}
-                                    onChange={this.handleChange}
-                                    style={{ width: 250}}
+                    
+                    <div className="button-back-comfirm">
+                        <div>
+                            <button className="btn btn-danger btn-block" 
+                                    style={{width: 100}}
+                                    onClick={this.handleBack}
                             >
-                            {/* this.state.allUser.map(user => {
-                                return <MenuItem    key={user.user_id} 
-                                                    value={user.user_id}
-                                        >
-                                            <span>
-                                                <strong>{user.user_id}</strong> {user.first_name} {user.last_name}
-                                            </span>
-                                        </MenuItem>
-                                })*/}
-                                <MenuItem value="WH112">WH112 O-Koi</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </div>
-                    <h4>Optional</h4>
-                    <div className="form-group">
-                        <label htmlFor="optional">From</label>
-                        <textarea   name="optional"
-                                    value={this.state.optional}
-                                    style={{width: 300, height: 150}}
-                                    placeholder="optional"
-                                    onChange={this.handleChange}
-                                    
-                        />
+                                Back
+                            </button>
+                        </div>
+                        <div>
+                            <button className="btn btn-primary btn-block" 
+                                    style={{width: 100}}
+                                    onClick={this.handleAdd}
+                            >
+                                Confirm
+                            </button>
+                        </div>
                     </div>
                 </div>
+                { this.state.isLoading && (
+                    <Dialog
+                    open={this.state.isLoading}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">
+                            <span className="spinner-border spinner-border-sm"></span>
+                            Loading...
+                        </DialogTitle>
+                    </Dialog>
+                    )
+                }
+                 
                 {
                     this.props.dialog_state === 1 ? 
                     <QuestionDialog topic='edit-parcel' /> :
                     this.props.dialog_state === 2 && 
                     <ConfirmedDialog topic='edit-parcel' />
                 }
-
-                <div>
-                        <button className="btn btn-danger btn-block" 
-                                style={{width: 100}}
-                                onClick={this.handleBack}
-                        >
-                                Back
-                        </button>
-                        <button className="btn btn-primary btn-block" 
-                                style={{width: 100}}
-                                onClick={this.handleAdd}
-                        >
-                                Confirm
-                        </button>
-                </div>    
+                {/*Ending*/}    
             </div>
         )
     }
@@ -166,11 +180,11 @@ class EditParcel extends Component {
 
 function mapStateToProp(state) {
     const { user } = state.auth
-    const { parcel_id } = state.parcel
+    const { parcelId } = state.parcel
     const { dialog_state } = state.dialog
     return {
         user,
-        parcel_id,
+        parcelId,
         dialog_state,
     }
 }

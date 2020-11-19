@@ -4,14 +4,61 @@ import { Redirect , Link } from 'react-router-dom'
 import { Button } from '@material-ui/core'
 import { history } from '../../helpers/history'
 
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
-
 import QuestionDialog from '../../dialogs/dialog.component'
 import ConfirmedDialog from '../../dialogs/dialog-confirmed.component'
 import { dialog_state } from '../../actions/dialog'
+
+import Form from "react-validation/build/form";
+import Input from "react-validation/build/input";
+import CheckButton from "react-validation/build/button";
+import Select from "react-validation/build/select";
+
+const required = (value) => {
+    if (!value) {
+      return (
+        <div className="alert alert-danger" role="alert">
+          This field is required!
+        </div>
+      );
+    }
+};
+
+const vsize = (value) => {
+    if(value > 1000) {
+        return (
+        <div className="alert alert-danger" role="alert">
+          This field needs to be below than or equal 1000 mm!
+        </div>
+        )
+    }else if(value < 0) {
+        return (
+        <div className="alert alert-danger" role="alert">
+          This field needs to be over than 0!
+        </div>
+        )
+    }
+}
+
+const vweight = (value) => {
+    if(value.includes('.')){
+        const sep = value.split('.')
+        if(sep[1].length !== 2){
+            return (
+                <div className="alert alert-danger" role="alert">
+                    This field needs to have just 2 digits!
+                </div>
+            )
+        }
+    }else if(value < 0) {
+        return (
+            <div className="alert alert-danger" role="alert">
+                This field needs to be over than 0!
+            </div>
+        )
+    }
+}
+
+
 
 class AddParcel extends Component {
     constructor(props) {
@@ -21,9 +68,12 @@ class AddParcel extends Component {
             height: 0,
             length: 0,
             weight: 0,
-            from_wh: "",
-            destination: "",
+            fromWarehouseId: "",
+            toWarehouseId: "",
             optional: "",
+            senderId: "",
+            isLoading: true,
+            isSameLocation: false,
         }
         
         this.handleBack = this.handleBack.bind(this)
@@ -46,8 +96,22 @@ class AddParcel extends Component {
         history.push('/parcels')
     }
 
-    handleAdd() {
-        this.props.dispatch(dialog_state(1))
+    handleAdd(e) {
+        e.preventDefault();
+        this.setState({
+            isSameLocation: false
+        })
+        this.form.validateAll()
+        if (this.checkBtn.context._errors.length === 0 && this.state.fromWarehouseId !== this.state.toWarehouseId && this.state.fromWarehouseId !== '' && this.state.toWarehouseId !== '') {
+            this.props.dispatch(dialog_state(1));
+            this.setState({
+                isSameLocation: false
+            })
+        }else if(this.state.fromWarehouseId === this.state.toWarehouseId && this.state.fromWarehouseId !== '' && this.state.toWarehouseId !== ''){
+            this.setState({
+                isSameLocation: true
+            })
+        }
     }
 
     render () {
@@ -58,131 +122,191 @@ class AddParcel extends Component {
         }else if(currentUser.payload[0].position !== "staff" && currentUser.payload[0].position !== "manager") {
             return <Redirect to="/home" />
         }
-        
+
+        const { senderId, fromWarehouseId, toWarehouseId, width, length, height, weight, optional } = this.state
+        const payload_data = { senderId, fromWarehouseId, toWarehouseId, width: parseInt(width), length: parseInt(length), height: parseInt(height), weight: parseFloat(weight), optional }
         return (
-            <div className="col-md-12">
+            <div>
                 <h2>Add New Parcel</h2>
-                <div>
-                    <div>
-                        <Link to="/exported-parcels">
-                            <Button variant="contained" color="primary">
-                                Exported
-                            </Button>
-                        </Link>
-                    </div>
-                    <br />
-                    <div>
-                        <Link to="/stored-parcels">
-                            <Button variant="contained" color="secondary">
-                                Stored
-                            </Button>
-                        </Link>
-                    </div>
-                    <br />
-                    <div>
+                <button onClick={() => console.log(typeof(parseInt(width)), typeof(parseFloat(weight)))}>Click</button>
+                <div id='outer'>
+                    <div className='inner'>
                         <Link to="/add-parcel">
                             <Button variant="contained" color="primary">
                                 New
                             </Button>
                         </Link>
                     </div>
+                    <div className='inner'>
+                        <Link to="/stored-parcels">
+                            <Button variant="contained" color="secondary">
+                                Stored
+                            </Button>
+                        </Link>
+                    </div>
+                    <div className='inner'>
+                        <Link to="/exported-parcels">
+                            <Button variant="contained" color="primary">
+                                Exported
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
-                <div className="card card-container-staff">
-                    <h4>Detail</h4>
-                    <div className="form-group">
-                        <label htmlFor="width">Width</label>
-                        <input  type="number"
-                                name="width"
-                                value={this.state.width}
-                                onChange={this.handleChange}
-                        />
+
+                <div className='center' style={{ display: "flex", justifyContent: "space-between", flexDirection: 'column',width: 1000 }}>
+                    <div>
+                        <Form   onSubmit={this.handleAdd}
+                                ref={(c) => this.form = c}
+                        >
+                            <div className="register-card" style={{ width: 1000 }}>
+                                
+                                <div style={{ display: "flex", justifyContent: "space-around" }}>
+                                    <div>
+                                        {""}
+                                        <h4>Detail</h4>
+                                        <div className="form-group">
+                                            <label htmlFor="width">Width</label>
+                                            <Input  type="number"
+                                                    name="width"
+                                                    className="form-control"
+                                                    value={this.state.width}
+                                                    onChange={this.handleChange}
+                                                    validations = {[required, vsize]}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="height">Height</label>
+                                            <Input  type="number"
+                                                    name="height"
+                                                    className="form-control"
+                                                    value={this.state.height}
+                                                    onChange={this.handleChange}
+                                                    validations = {[required, vsize]}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="length">Length</label>
+                                            <Input  type="number"
+                                                    name="length"
+                                                    className="form-control"
+                                                    value={this.state.length}
+                                                    onChange={this.handleChange}
+                                                    validations = {[required, vsize]}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="weight">Weight</label>
+                                            <Input  type="number"
+                                                    name="weight"
+                                                    className="form-control"
+                                                    value={this.state.weight}
+                                                    onChange={this.handleChange}
+                                                    validations = {[required, vweight]}
+                                            />
+                                        </div>
+                                        
+                                        <div className="form-group">
+                                            <h4>Optional</h4>
+                                            <textarea   name="optional"
+                                                        value={this.state.optional}
+                                                        className="form-control"
+                                                        style={{width: 350, height: 150}}
+                                                        placeholder="optional"
+                                                        onChange={this.handleChange}
+                                                        
+                                            />
+                                        </div>
+                                        {""}
+                                    </div>
+                                    <div>
+                                        {""}
+                                        <h4>Sender</h4>
+                                        <div className="form-group">
+                                            <Input  type="text"
+                                                    name="senderId"
+                                                    className="form-control"
+                                                    value={this.state.senderId}
+                                                    onChange={this.handleChange}
+                                                    validations = {[required]}
+                                                    style={{width: 350}}
+                                            />
+                                        </div>
+                                        <h4 style={{marginBottom: 15}}>Destination</h4>
+                                        { this.state.fromWarehouseId === this.state.toWarehouseId && this.state.isSameLocation && 
+                                                <div className="form-group">
+                                                    <div className="alert alert-danger" role="alert">
+                                                        Origin and Destination must not the same place!
+                                                    </div>
+                                                </div>
+                                        }
+                                        <div className="form-group">
+                                            <Select name='fromWarehouseId' 
+                                                    value={this.state.fromWarehouseId}
+                                                    onChange={this.handleChange}
+                                                    validations= {[required]}
+                                                    className='form-control'
+                        
+                                            >
+                                                <option value=''>Choose Origin</option>
+                                                <option value='WH001'>WH001</option>
+                                                <option value='WH002'>WH002</option>
+                                            </Select>
+                                        </div>
+                                        <div className="form-group">
+                                            <Select name='toWarehouseId' 
+                                                    value={this.state.toWarehouseId}
+                                                    onChange={this.handleChange}
+                                                    validations= {[required]}
+                                                    className='form-control'
+                        
+                                            >
+                                                <option value=''>Choose Destination</option>
+                                                <option value='WH001'>WH001</option>
+                                                <option value='WH002'>WH002</option>
+                                            </Select>
+                                        </div>
+                                        {""}
+                                    </div>
+                                </div>
+
+                            </div>
+                            
+                            <CheckButton
+                                style={{ display: "none" }}
+                                ref={(c) => {
+                                    this.checkBtn = c;
+                                }}
+                            />
+                        </Form>
+                        
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="height">Height</label>
-                        <input  type="number"
-                                name="height"
-                                value={this.state.height}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="length">Length</label>
-                        <input  type="number"
-                                name="length"
-                                value={this.state.length}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="weight">Weight</label>
-                        <input  type="number"
-                                name="weight"
-                                value={this.state.weight}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-                    <h4>Destination</h4>
-                    <div className="form-group">
-                        <label htmlFor="from_wh">From</label>
-                        <input  type="text"
-                                name="from_wh"
-                                value={this.state.from_wh}
-                                onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <FormControl>
-                            <InputLabel>To</InputLabel>
-                            <Select name="destination"
-                                    value={this.state.destination}
-                                    onChange={this.handleChange}
-                                    style={{ width: 250}}
+                    <div className="button-back-comfirm">
+                        <div>
+                            <button className="btn btn-danger btn-block" 
+                                    style={{width: 100}}
+                                    onClick={this.handleBack}
                             >
-                            {/* this.state.allUser.map(user => {
-                                return <MenuItem    key={user.user_id} 
-                                                    value={user.user_id}
-                                        >
-                                            <span>
-                                                <strong>{user.user_id}</strong> {user.first_name} {user.last_name}
-                                            </span>
-                                        </MenuItem>
-                                })*/}
-                                <MenuItem value="WH112">WH006 O-Koi</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </div>
-                    <h4>Optional</h4>
-                    <div className="form-group">
-                        <label htmlFor="optional">From</label>
-                        <textarea   name="optional"
-                                    value={this.state.optional}
-                                    style={{width: 300, height: 150}}
-                                    placeholder="optional"
-                                    onChange={this.handleChange}
-                                    
-                        />
+                                    Back
+                            </button>
+                        </div>
+                        <div>   
+                            <button className="btn btn-primary btn-block" 
+                                    style={{width: 100}}
+                                    onClick={this.handleAdd}
+                            >
+                                    Confirm 
+                            </button>
+                        </div>
                     </div>
                 </div>
+                
                 {
                     this.props.dialog_state === 1 ? 
-                    <QuestionDialog topic='add-parcel' /> :
+                    <QuestionDialog topic='add-parcel' data={payload_data}/> :
                     this.props.dialog_state === 2 && 
                     <ConfirmedDialog topic='add-parcel' />
                 }
-                <div>
-                        <button className="btn btn-danger btn-block" 
-                                style={{width: 100}}
-                                onClick={this.handleBack}
-                        >
-                                Back
-                        </button>
-                        <button className="btn btn-primary btn-block" 
-                                style={{width: 100}}
-                                onClick={this.handleAdd}
-                        >
-                                Confirm 
-                        </button>
-                </div>    
+                    
             </div>
         )
     }

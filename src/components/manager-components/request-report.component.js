@@ -50,107 +50,113 @@ class RequestReport extends Component {
         return (
             <div className="col-md-12">
                 <h2>Request Report</h2>
-                <div className="card card-container-staff">
-                    <div className='form-group'>
-                        <h4>Topic</h4>
-                        <input  type='text'
-                                style= {{width: 400}}
-                                name='topic'
-                                value={this.state.topic}
-                                onChange={this.handleChange}
-                        />
+                <div className='request-form'>
+                    <div className="card card-container-staff">
+                        <div className='form-group'>
+                            <h4>Topic</h4>
+                            <input  type='text'
+                                    style= {{width: 300}}
+                                    name='topic'
+                                    className='form-control'
+                                    value={this.state.topic}
+                                    onChange={this.handleChange}
+                            />
+                        </div>
+                        <br />
+                        <h4>Request Type</h4>
+                        <div className='form-group'>
+                            <label>Warehouse</label>
+                            <label>
+                                <input  type='radio'
+                                        name='selected_option'
+                                        value='delete_warehouse'
+                                        checked={this.state.selected_option === 'delete_warehouse'}
+                                        onChange={this.handleChange}
+                                />
+                                Delete Warehouse
+                            </label>
+                            <label>
+                                <input  type='radio'
+                                        name='selected_option'
+                                        value='edit_warehouse'
+                                        checked={this.state.selected_option === 'edit_warehouse'}
+                                        onChange={this.handleChange}
+                                />
+                                Edit Warehouse
+                            </label>
+                            <label>
+                                <input  type='radio'
+                                        name='selected_option'
+                                        value='add_warehouse'
+                                        checked={this.state.selected_option === 'add_warehouse'}
+                                        onChange={this.handleChange}
+                                />
+                                Add New Warehouse
+                            </label>
+
+                            <label>User</label>
+                            <label>
+                                <input  type='radio'
+                                        name='selected_option'
+                                        value='delete_user'
+                                        checked={this.state.selected_option === 'delete_user'}
+                                        onChange={this.handleChange}
+                                />
+                                Delete User
+                            </label>
+                            <label>
+                                <input  type='radio'
+                                        name='selected_option'
+                                        value='edit_user'
+                                        checked={this.state.selected_option === 'edit_user'}
+                                        onChange={this.handleChange}
+                                />
+                                Edit User
+                            </label>
+                            <label>
+                                <input  type='radio'
+                                        name='selected_option'
+                                        value='add_user'
+                                        checked={this.state.selected_option === 'add_user'}
+                                        onChange={this.handleChange}
+                                />
+                                Add New User
+                            </label>
+
+                            <label>Analysis Report</label>
+                            <label>
+                                <input  type='radio'
+                                        name='selected_option'
+                                        value='request_report'
+                                        checked={this.state.selected_option === 'request_report'}
+                                        onChange={this.handleChange}
+                                />
+                                Request Analysis Report
+                            </label>
+                        </div>
                     </div>
-                    <br />
-                    <h4>Request Type</h4>
-                    <div className='form-group'>
-                        <label>Warehouse</label>
-                        <label>
-                            <input  type='radio'
-                                    name='selected_option'
-                                    value='delete_warehouse'
-                                    checked={this.state.selected_option === 'delete_warehouse'}
-                                    onChange={this.handleChange}
-                            />
-                               Delete Warehouse
-                        </label>
-                        <label>
-                            <input  type='radio'
-                                    name='selected_option'
-                                    value='edit_warehouse'
-                                    checked={this.state.selected_option === 'edit_warehouse'}
-                                    onChange={this.handleChange}
-                            />
-                               Edit Warehouse
-                        </label>
-                        <label>
-                            <input  type='radio'
-                                    name='selected_option'
-                                    value='add_warehouse'
-                                    checked={this.state.selected_option === 'add_warehouse'}
-                                    onChange={this.handleChange}
-                            />
-                               Add New Warehouse
-                        </label>
 
-                        <label>User</label>
-                        <label>
-                            <input  type='radio'
-                                    name='selected_option'
-                                    value='delete_user'
-                                    checked={this.state.selected_option === 'delete_user'}
+                    <div className="card card-container-staff">
+                        <h4>Request Detail</h4>
+                        <div className='form-group'>
+                            <textarea
+                                    style= {{width: 300, height: 200}}
+                                    value={this.state.detail}
+                                    name='detail'
+                                    className='form-control'
+                                    placeholder='Please provide detail here....'
                                     onChange={this.handleChange}
                             />
-                               Delete User
-                        </label>
-                        <label>
-                            <input  type='radio'
-                                    name='selected_option'
-                                    value='edit_user'
-                                    checked={this.state.selected_option === 'edit_user'}
-                                    onChange={this.handleChange}
+                        </div>
+                        <div className='form-group'>
+                            <h4>File</h4>
+                            <input  type='file'
+                                    name='file'
                             />
-                               Edit User
-                        </label>
-                        <label>
-                            <input  type='radio'
-                                    name='selected_option'
-                                    value='add_user'
-                                    checked={this.state.selected_option === 'add_user'}
-                                    onChange={this.handleChange}
-                            />
-                               Add New User
-                        </label>
-
-                        <label>Analysis Report</label>
-                        <label>
-                            <input  type='radio'
-                                    name='selected_option'
-                                    value='request_report'
-                                    checked={this.state.selected_option === 'request_report'}
-                                    onChange={this.handleChange}
-                            />
-                               Request Analysis Report
-                        </label>
+                        </div>
                     </div>
                 </div>
-
-                <div className="card card-container-staff">
-                    <h4>Request Detail</h4>
-                    <div className='form-group'>
-                        <textarea
-                                style= {{width: 400}}
-                                value={this.state.detail}
-                                name='detail'
-                                onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className='form-group'>
-                        <h4>File</h4>
-                        <input  type='file'
-                                name='file'
-                        />
-                    </div>
-                </div>
+                
 
                 {
                     this.props.dialog_state === 1 ? 
@@ -170,7 +176,7 @@ class RequestReport extends Component {
                             style={{width: 150}}
                             onClick={this.handleSend}
                     >
-                        Confirm Send
+                        Send
                     </button>
                 </div>
 

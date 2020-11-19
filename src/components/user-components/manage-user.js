@@ -16,7 +16,9 @@ import IconButton from '@material-ui/core/IconButton'
 import SearchIcon from '@material-ui/icons/Search'
 import FilterListIcon from '@material-ui/icons/FilterList'
 
-const useStyles = makeStyles((theme) => ({
+import { ColorButton, useStyles } from '../../styles/material-style'
+
+/*const useStyles = makeStyles((theme) => ({
     root: {
       '& > *': {
         margin: theme.spacing(1),
@@ -25,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     input: {
       display: 'none',
     },
-  }))
+  }))*/
 
 class ManageUser extends Component {
     constructor(props){
@@ -57,12 +59,16 @@ class ManageUser extends Component {
     }
 
     handleSearch(allUser) {
+        //user => user.userId === this.state.searchText
         if(this.state.searchText !== ''){
-            const searchData = allUser.filter(user => user.userId === this.state.searchText)
+            const searchData = allUser.filter(user => {
+                const regex = new RegExp(  '^' + this.state.searchText,'g')
+                return regex.test(user.userId)
+            })
             this.setState({
                 showUser: searchData,
                 searchText: ''
-            })     
+            })
         }
         else {
             this.setState({
@@ -172,33 +178,6 @@ class ManageUser extends Component {
                         <div className='item-manage-user'>
                             <AdminProfile user={currentUser}/>
                         </div>
-                        <div className='item-manage-user'>
-                            <Link to="/manage-user">
-                                <Button variant="contained"
-                                        style={{width: 300}}
-                                >
-                                    Manager User
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>
-                            <Link to='/manage-warehouse'>
-                                <Button variant="contained"
-                                        style={{width: 300}}
-                                >
-                                    Manage Warehouse
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>
-                            <Link to='/reports'>
-                                <Button variant="contained"
-                                        style={{width: 300}}
-                                >
-                                    View Requests
-                                </Button>
-                            </Link>
-                        </div>
                     </div>
 
                 </div>
@@ -206,25 +185,25 @@ class ManageUser extends Component {
                 <br />
                 <div>
                     <Link to="/home">
-                        <Button variant="contained">
+                        <ColorButton variant="contained" color="primary" className={useStyles.margin}>
                             Back
-                        </Button>
+                        </ColorButton>
                     </Link>
                 </div>
             
-            { this.state.isLoading && (
-                    <Dialog
-                    open={this.state.isLoading}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                    >
-                        <DialogTitle id="alert-dialog-title">
-                            <span className="spinner-border spinner-border-sm"></span>
-                            Loading...
-                        </DialogTitle>
-                    </Dialog>
-                )
-            }
+                { this.state.isLoading && (
+                        <Dialog
+                        open={this.state.isLoading}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                        >
+                            <DialogTitle id="alert-dialog-title">
+                                <span className="spinner-border spinner-border-sm"></span>
+                                Loading...
+                            </DialogTitle>
+                        </Dialog>
+                    )
+                }
             </div>
             
             

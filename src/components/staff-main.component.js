@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { Redirect ,Link } from "react-router-dom"
 import { connect } from "react-redux"
 import { Button } from '@material-ui/core'
+import StaffProfile from '../components/profile.components/staff-profile.component'
 
 class StaffMain extends Component {
     constructor(props) {
@@ -21,48 +22,48 @@ class StaffMain extends Component {
         }
 
         return (
-            <div className="col-md-12">
-                <h1>Warehouse Management System : Staff</h1>
-                <div className="card card-container-edit-user">
+            <div>
+                <h2 style={{marginBottom: 15}}>Warehouse Management System : Staff</h2>
+                <div className='staff-container'>
+                    <div className='item-manage-user'>
+                        <div className='staff-main'>
+                            <div style={{width: 800}}>
+                                <StaffProfile user={currentUser}/>
+                            </div>
+                            <div style={{width: 250}}>
+                                <StaffProfile user={currentUser}/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className='item-manage-user'>
+                        <div className='staff-main-button' >
+                            <div>
+                                <Link to="/parcels">
+                                    <Button variant='contained' style={{ width: 250, height:100 }}>
+                                        Parcels
+                                    </Button>
+                                </Link>
+                            </div>
+                            <div>   
+                                <Link to="/stored-parcels"> 
+                                    <Button variant='contained' style={{ width: 250, height:100 }}>
+                                    Confirm stored
+                                    </Button>
+                                </Link>
+                            </div>
+                            <div>
+                                <Link to="/exported-parcels">
+                                    <Button variant='contained' style={{ width: 250, height:100 }}>
+                                        Confirm exported
+                                    </Button>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
                     
                 </div>
-
-                <div className="card card-container-staff">
-                    
-                </div>
-                <div>
-                    <div>
-                        <Link to="/parcels">
-                            <Button variant='contained'>
-                                Parcels
-                            </Button>
-                        </Link>
-                    </div>
-                    <br />
-                    <div>   
-                        <Link to="/stored-parcels"> 
-                            <Button variant='contained'>
-                            Confirm stored
-                            </Button>
-                        </Link>
-                    </div>
-                    <br />
-                    <div>
-                        <Link to="/exported-parcels">
-                            <Button variant='contained'>
-                                Confirm exported
-                            </Button>
-                        </Link>
-                    </div>
-                    <br />
-                    {/*<div>
-                        <Link to="/parcel-detail">
-                            <Button variant='contained'>
-                                Parcel Detail
-                            </Button>
-                        </Link>
-                    </div>*/}
-                </div>
+                
             
             </div>
         )
