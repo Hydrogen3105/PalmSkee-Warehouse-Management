@@ -25,7 +25,7 @@ class ParcelDetail extends Component {
     }
 
     componentDidMount() {
-        ParcelService.getPacelById(this.props.parcelId)
+        ParcelService.getParcelById(this.props.parcelId)
         .then((response) => {
             this.setState({
                 parcel: response.data.payload[0],
@@ -64,7 +64,12 @@ class ParcelDetail extends Component {
                         <ParcelData data={this.state.parcel}/>
                     </div>
                     <div className='parcel-detail  parcel-detail-sizing'>
-                        <ParcelLabel labelPath={this.state.parcel.labelPath} />
+                        {
+                            !this.state.isLoading && this.state.parcel.labelPath ?
+                                <ParcelLabel labelPath={this.state.parcel.labelPath} /> :
+                                "Does not have label"
+                        }
+                        
                     </div>
                 </div>
                 

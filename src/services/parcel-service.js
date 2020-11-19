@@ -8,7 +8,7 @@ class ParcelService {
         return axios.get(API_URL + 'parcels',{ headers: authHeader()})
     }
 
-    getPacelById(parcelId) {
+    getParcelById(parcelId) {
         return axios.get(API_URL + `parcels/${parcelId}`, { headers: authHeader()})
     }
 

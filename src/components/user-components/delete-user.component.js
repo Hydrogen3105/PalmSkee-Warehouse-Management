@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import AdminService from '../../services/admin-service'
 
+import AdminProfile from '../profile.components/admin-profile.component'
+
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
@@ -52,6 +54,10 @@ class DeleteUser extends Component {
     }
 
     handleDelete() {
+        this.setState({
+            open_warning: false
+        })
+
         if(this.state.userId !== ''){
             this.props.dispatch(dialog_state(1))
             this.setState({
@@ -81,68 +87,72 @@ class DeleteUser extends Component {
         }
 
         return (
-            <div className="col-md-12">
+            <div>
                 <h2>Deleting User</h2>
-                <div className='menu-and-button center' >
+                <div style={{display:"flex",justifyContent: "space-between"}}>
                     <div>
-                        <div className="card card-container-edit-user">
-                            <div className="form-group">
-                                <FormControl>
-                                    <InputLabel>Staff ID</InputLabel>
-                                    <Select name="staff-id"
-                                            value={this.state.userId}
-                                            onChange={this.handleChange}
-                                            style={{ width: 250}}
-                                    >
-                                    { this.state.allUser.map(user => {
-                                        return <MenuItem    key={user.userId} 
-                                                            value={user.userId}
-                                                >
-                                                    <span>
-                                                        <strong>{user.userId}</strong> {user.firstName} {user.lastName}
-                                                    </span>
-                                                </MenuItem>
-                                        })}
-                                    </Select>
-                                </FormControl>
+                        <div style={{display:"flex",justifyContent: "space-between",flexDirection:"column", width: 700, marginRight: 50}}>
+                            <div>
+                                <div className="register-card card-container-edit-user" >
+                                    <label>Warehouse Staff ID</label>
+                                    
+                                    <div className="form-group">
+                                        {<FormControl>
+                                            <InputLabel>Staff ID</InputLabel>
+                                            <Select name="staff-id"
+                                                    value={this.state.userId}
+                                                    onChange={this.handleChange}
+                                                    style={{ width: 250}}
+                                            >
+                                            { this.state.allUser.map(user => {
+                                                return <MenuItem    key={user.userId} 
+                                                                    value={user.userId}
+                                                        >
+                                                            <span>
+                                                                <strong>{user.userId}</strong> {user.firstName} {user.lastName}
+                                                            </span>
+                                                        </MenuItem>
+                                                })}
+                                            </Select>
+                                        </FormControl>}
+                                    </div>
+                                    { this.state.userId === '' && this.state.open_warning && 
+                                        <div className="form-group">
+                                            <div className="alert alert-danger" role="alert">
+                                                This field is required
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
                             </div>
+
+                            <div className='button-back-comfirm'>
+                                <div>
+                                    <button className="btn btn-danger btn-block" 
+                                            style={{width: 100}}
+                                            onClick={this.handleBack}
+                                    >
+                                            Back
+                                    </button>
+                                </div>
+                                <div>
+                                    <button className="btn btn-primary btn-block" 
+                                            style={{width: 100}}
+                                            onClick={this.handleDelete}
+                                    >
+                                            Delete
+                                    </button>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-
-                    <div className='button-back-comfirm'>
-                        <div>
-                            <button className="btn btn-danger btn-block" 
-                                    style={{width: 100}}
-                                    onClick={this.handleBack}
-                            >
-                                    Back
-                            </button>
-                        </div>
-                        <div>
-                            <button className="btn btn-primary btn-block" 
-                                    style={{width: 100}}
-                                    onClick={this.handleDelete}
-                            >
-                                    Delete
-                            </button>
-                        </div>
+                    <div>
+                        <AdminProfile user={currentUser} />
                     </div>
-
                 </div>
-                <Dialog open={this.state.open_warning}
-                            onClose={this.handleClose}
-                            aria-labelledby="alert-dialog-title"
-                            aria-describedby="alert-dialog-description"
-                    >
-                        <DialogTitle id="alert-dialog-title">
-                            Please select user ID
-                        </DialogTitle>
-                        <DialogActions>
-                            <Button onClick={this.handleClose} color='primary'>
-                                OK
-                            </Button>
-                        </DialogActions>
-                </Dialog>
+                
+                
                 {   this.props.dialog_state === 1 ? 
                         <QuestionDialog topic='delete-user' data={this.state.userId}/> :
                         this.props.dialog_state === 2 && 

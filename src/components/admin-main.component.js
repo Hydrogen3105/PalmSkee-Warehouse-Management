@@ -80,35 +80,8 @@ class AdminMain extends Component {
                     </div>
                     {/** */}
                     <div>
-                        <div className='item-manage-user'>
+                        <div>
                             <AdminProfile user={currentUser}/>
-                        </div>
-                        <div className='item-manage-user'>
-                            <Link to="/manage-user">
-                                <Button variant="contained"
-                                        style={{width: 230}}
-                                >
-                                    Manage User
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>
-                            <Link to='/manage-warehouse'>
-                                <Button variant="contained"
-                                        style={{width: 230}}
-                                >
-                                    Manage Warehouse
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>
-                            <Link to='/reports'>
-                                <Button variant="contained"
-                                        style={{width: 230}}
-                                >
-                                    View Requests
-                                </Button>
-                            </Link>
                         </div>
                     </div>
                 </div>

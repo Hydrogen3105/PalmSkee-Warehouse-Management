@@ -178,33 +178,6 @@ class ManageUser extends Component {
                         <div className='item-manage-user'>
                             <AdminProfile user={currentUser}/>
                         </div>
-                        <div className='item-manage-user'>
-                            <Link to="/manage-user">
-                                <Button variant="contained"
-                                        style={{width: 300}}
-                                >
-                                    Manager User
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>
-                            <Link to='/manage-warehouse'>
-                                <Button variant="contained"
-                                        style={{width: 300}}
-                                >
-                                    Manage Warehouse
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>
-                            <Link to='/reports'>
-                                <Button variant="contained"
-                                        style={{width: 300}}
-                                >
-                                    View Requests
-                                </Button>
-                            </Link>
-                        </div>
                     </div>
 
                 </div>
@@ -218,19 +191,19 @@ class ManageUser extends Component {
                     </Link>
                 </div>
             
-            { this.state.isLoading && (
-                    <Dialog
-                    open={this.state.isLoading}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                    >
-                        <DialogTitle id="alert-dialog-title">
-                            <span className="spinner-border spinner-border-sm"></span>
-                            Loading...
-                        </DialogTitle>
-                    </Dialog>
-                )
-            }
+                { this.state.isLoading && (
+                        <Dialog
+                        open={this.state.isLoading}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                        >
+                            <DialogTitle id="alert-dialog-title">
+                                <span className="spinner-border spinner-border-sm"></span>
+                                Loading...
+                            </DialogTitle>
+                        </Dialog>
+                    )
+                }
             </div>
             
             

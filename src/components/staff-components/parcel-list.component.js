@@ -32,9 +32,15 @@ class Parcels extends Component {
     componentDidMount() {
         ParcelService.getAllParcel()
         .then((response) => {
+            const parcelsInTable = response.data.payload.map((parcel) => {
+                return {
+                    ...parcel,
+                    id: parcel.parcelId
+                }
+            })
             this.setState({
-                allParcel: response.data.payload,
-                showParcel: response.data.payload,
+                allParcel: parcelsInTable,
+                showParcel: parcelsInTable,
                 isLoading: false
             })
         })
@@ -129,7 +135,7 @@ class Parcels extends Component {
                                         <IconButton color="primary" 
                                                     aria-label="search" 
                                                     component="span" 
-                                                    onClick={() => this.handleSearch(this.state.allUser)}
+                                                    onClick={() => this.handleSearch(this.state.allParcel)}
                                         >
                                             <SearchIcon />
                                         </IconButton>
@@ -140,7 +146,12 @@ class Parcels extends Component {
                             
                         </div>
                     {/*Above Table */}
-                    <ParcelsTable parcels={this.state.showParcel}/>
+                    {
+                        this.state.showParcel.length !== 0 &&
+                        <div style={{marginBottom: 10}}>
+                            <ParcelsTable parcels={this.state.showParcel}/>
+                        </div>
+                    }
                 </div>
                 { this.state.isLoading && (
                     <Dialog
@@ -155,7 +166,6 @@ class Parcels extends Component {
                     </Dialog>
                     )
                 }
-                <br />
                 <div className='button-back-comfirm'>
                     <div>
                         <button className="btn btn-danger btn-block" 

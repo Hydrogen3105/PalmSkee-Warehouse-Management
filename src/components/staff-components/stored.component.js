@@ -174,7 +174,6 @@ class StoredParcels extends Component {
                     this.props.dialog_state === 2 && 
                     <ConfirmedDialog topic='store' />
                 }
-                <br />
                 <div className='button-back-comfirm'>
                     <div>
                         <button className="btn btn-danger btn-block" 

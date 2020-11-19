@@ -5,7 +5,7 @@ import ParcelService from '../../services/parcel-service'
 const columns = [
   { field: 'parcelId', headerName: 'Parcel ID', width: 200 },
   { field: 'receivedDate', headerName: 'Received Date', width: 200 },
-  { field: 'toWarehouseId', headerName: 'Destionation', width: 200 },
+  { field: 'toWarehouseId', headerName: 'Destination', width: 200 },
   { field: 'location',headerName: 'Lacation', width: 200, },
   { field: 'latestStatus', headerName: 'Status', width: 250, },
 ]
@@ -19,7 +19,7 @@ export default function ParcelSelectTable({ onSelectParcel, status }) {
         ParcelService.getAllParcel()
         .then((response) => {
             let filter_parcel = []
-            if(status !== 'delete'){
+            if(status === 'delete'){
                 filter_parcel = response.data.payload
             }
             else {
