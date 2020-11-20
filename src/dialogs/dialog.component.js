@@ -6,7 +6,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import { connect } from 'react-redux'
 import { dialog_state } from '../actions/dialog'
 import { edit_user, delete_user, select_user } from '../actions/admin'
-import { /*edit_parcel, , delete_parcel*/ add_parcel} from '../actions/parcel'
+import { delete_parcel, edit_parcel, edit_status ,add_parcel} from '../actions/parcel'
 import { SET_MESSAGE } from '../actions/types'
 import {add_warehouse} from '../actions/warehouses'
 
@@ -123,6 +123,48 @@ function QuestionDialog({ dispatch, dialog_state:state, topic, data,message }) {
             setLoading(false);
           });
         break;
+      
+      case 'edit-parcel':
+          dispatch(edit_parcel(data.parcelId, data.optional))
+          .then(() => {
+            dispatch(dialog_state(prevState + 1))
+          })
+          .catch(() => {
+            setLoading(false)
+          })
+
+          break
+      
+      case 'delete-parcel':
+          const deleted_parcel = data.parcelId
+          dispatch(add_parcel(deleted_parcel))
+          .then(() => {
+            dispatch(dialog_state(prevState + 1))
+          })
+          .catch(() => {
+            setLoading(false)
+          })
+
+          break
+      
+      case 'store' :
+        var { status, updateBy, parcels} = data
+        dispatch(edit_status(status, updateBy, parcels)).then(() => {
+          dispatch(dialog_state(prevState + 1))
+        })
+        .catch(() => {
+          setLoading(false)
+        })
+        break
+      
+      case 'export' :
+        dispatch(edit_status(data.status, data.updateBy, data.parcels)).then(() => {
+          dispatch(dialog_state(prevState + 1))
+        })
+        .catch(() => {
+          setLoading(false)
+        })
+        break
 
       case "add":
         var {
@@ -158,27 +200,6 @@ function QuestionDialog({ dispatch, dialog_state:state, topic, data,message }) {
             setLoading(false);
           });
         break;
-
-      /*
-          case 'edit-parcel':
-            const edited_parcel = data
-            dispatch(edit_parcel())
-            .then(() => {
-              dispatch(dialog_state(prevState + 1))
-            })
-            .catch(() => {
-              setLoading(false)
-            })
-          
-            case 'delete-parcel':
-              const deleted_parcel = data
-              dispatch(add_parcel())
-              .then(() => {
-                dispatch(dialog_state(prevState + 1))
-              })
-              .catch(() => {
-                setLoading(false)
-              })*/
 
       default:
         dispatch(dialog_state(prevState + 1));

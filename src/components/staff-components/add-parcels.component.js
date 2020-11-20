@@ -83,6 +83,9 @@ class AddParcel extends Component {
 
     componentDidMount() {
         this.props.dispatch(dialog_state(0))
+        this.setState({
+            fromWarehouseId: this.props.userData.warehouseId
+        })
     }
 
     handleChange (e) {
@@ -128,7 +131,6 @@ class AddParcel extends Component {
         return (
             <div>
                 <h2>Add New Parcel</h2>
-                <button onClick={() => console.log(typeof(parseInt(width)), typeof(parseFloat(weight)))}>Click</button>
                 <div id='outer'>
                     <div className='inner'>
                         <Link to="/add-parcel">
@@ -245,11 +247,9 @@ class AddParcel extends Component {
                                                     onChange={this.handleChange}
                                                     validations= {[required]}
                                                     className='form-control'
-                        
+                                                    disabled
                                             >
-                                                <option value=''>Choose Origin</option>
-                                                <option value='WH001'>WH001</option>
-                                                <option value='WH002'>WH002</option>
+                                                <option value={this.state.fromWarehouseId}>{this.state.fromWarehouseId}</option>
                                             </Select>
                                         </div>
                                         <div className="form-group">
@@ -315,9 +315,11 @@ class AddParcel extends Component {
 function mapStateToProp(state) {
     const { user } = state.auth
     const { dialog_state } = state.dialog
+    const { userData } = state.currentUser
     return {
         user,
-        dialog_state
+        dialog_state,
+        userData,
     }
 }
 

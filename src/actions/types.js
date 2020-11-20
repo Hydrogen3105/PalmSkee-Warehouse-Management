@@ -25,3 +25,4 @@ export const EDIT_USER = "EDIT_USER"
 export const DELETE_USER = "DELETE_USER"
 
 export const LOGIN_STATUS = "LOGIN_STATUS"
+export const CURRENT_USER = "CURRENT_USER"

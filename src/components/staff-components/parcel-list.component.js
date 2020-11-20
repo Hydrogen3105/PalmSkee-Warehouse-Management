@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Redirect , Link } from 'react-router-dom'
 import { Button } from '@material-ui/core'
 import { history } from '../../helpers/history'
-import { select_parcel } from '../../actions/parcel' 
+
 import DeleteIcon from '@material-ui/icons/Delete'
 
 import ParcelsTable from './parcels-table.component'

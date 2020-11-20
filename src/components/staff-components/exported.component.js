@@ -27,6 +27,7 @@ class ExportedParcels extends Component {
             showParcels: [],
             selectedParcels: [],
             isLoading: true,
+            searchText: "",
         }
 
         this.handleBack = this.handleBack.bind(this)
@@ -37,13 +38,14 @@ class ExportedParcels extends Component {
         this.props.dispatch(dialog_state(0))
         ParcelService.getAllParcel()
         .then((response) => {
-            const filtered =  response.data.payload.filter((parcel) => parcel.status === 'stored')
+            const filtered =  response.data.payload.filter((parcel) => parcel.latestStatus === 'stored')
             const unexported = filtered.map((parcel) => {
                 return {
                     ...parcel,
                     id: parcel.parcelId
                 }
             })
+            console.log('export page',unexported)
             this.setState({
                 storedParcels: unexported,
                 showParcels: unexported,
@@ -68,7 +70,14 @@ class ExportedParcels extends Component {
         this.props.dispatch(dialog_state(1))
     }
 
-    handleSearch = (storedParcels) => {
+    handleChange = (e) => {
+        const { name, value } = e.target
+        this.setState({
+            [name]: value
+        })
+    }
+
+    handleSearch(storedParcels) {
         this.setState({
             isLoading: true
         })
@@ -106,6 +115,8 @@ class ExportedParcels extends Component {
         }else if(currentUser.payload[0].position !== "staff" && currentUser.payload[0].position !== "manager"){
             return <Redirect to="/home" />
         }
+
+        const payload_data = { status: 'exported', updateBy: currentUser.payload[0].userId, parcels: this.state.selectedParcels }
 
         return (
             <div>
@@ -188,10 +199,13 @@ class ExportedParcels extends Component {
                             </div>
                             
                         </div>
-                    {/*Above Table */}
-                    <div style={{marginBottom: 15}}>
-                        <ParcelSelectTable parcels={this.state.showParcels} onSelectParcel={this.onSelectParcel} />
-                    </div>
+                    {
+                        !this.state.isLoading &&
+                        <div style={{marginBottom: 15}}>
+                            <ParcelSelectTable parcels={this.state.showParcels} onSelectParcel={this.onSelectParcel} />
+                        </div>
+                    }
+                    
                 </div>
                 { this.state.isLoading && (
                     <Dialog
@@ -208,7 +222,7 @@ class ExportedParcels extends Component {
                 }
                 {
                     this.props.dialog_state === 1 ? 
-                    <QuestionDialog topic='export' /> :
+                    <QuestionDialog topic='export' data={payload_data}/> :
                     this.props.dialog_state === 2 && 
                     <ConfirmedDialog topic='export' />
                 }

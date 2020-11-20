@@ -7,6 +7,7 @@ import report from './report'
 import dialog from './dialog'
 import user from './user'
 import status from './status'
+import currentUser from './current_user'
 
 export default combineReducers({
   auth,
@@ -16,5 +17,6 @@ export default combineReducers({
   report,
   dialog,
   user,
-  status
+  status,
+  currentUser,
 });

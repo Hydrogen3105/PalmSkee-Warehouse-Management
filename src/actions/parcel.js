@@ -34,8 +34,8 @@ export const add_parcel = ( senderId, fromWarehouseId, toWarehouseId, width, len
         )
 }
 
-export const edit_parcel = () => (dispatch) => {
-    return  ParcelService.editParcel()
+export const edit_parcel = (parcelId, optional) => (dispatch) => {
+    return  ParcelService.editParcel(parcelId, optional)
             .then( (response) => {
                 dispatch({
                     type: SET_MESSAGE,
@@ -89,3 +89,31 @@ export const delete_parcel = (parcelId) => (dispatch) => {
             }
         )
 }
+
+export const edit_status = (status, updateBy, parcels) => (dispatch) => {
+    return  ParcelService.editStatus(status, updateBy, parcels)
+    .then( (response) => {
+        dispatch({
+            type: SET_MESSAGE,
+            payload: response.data.success
+        })
+
+        return Promise.resolve()
+    },
+    (error) => {
+        const message =
+        (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+        error.message ||
+        error.toString()
+        
+        dispatch({
+            type: SET_MESSAGE,
+            payload: message,
+          });
+
+        return Promise.reject()
+        }
+    )
+} 

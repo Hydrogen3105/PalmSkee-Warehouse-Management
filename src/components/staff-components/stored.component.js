@@ -116,6 +116,8 @@ class StoredParcels extends Component {
             return <Redirect to="/home" />
         }
 
+        const payload_data = { status: 'stored', updateBy: currentUser.payload[0].userId, parcels: this.state.selectedParcels }
+
         return (
             <div>
                 <h2>Parcels list for storing</h2>
@@ -220,7 +222,7 @@ class StoredParcels extends Component {
                 }
                 {
                     this.props.dialog_state === 1 ? 
-                    <QuestionDialog topic='store' /> :
+                    <QuestionDialog topic='store' data={payload_data}/> :
                     this.props.dialog_state === 2 && 
                     <ConfirmedDialog topic='store' />
                 }
