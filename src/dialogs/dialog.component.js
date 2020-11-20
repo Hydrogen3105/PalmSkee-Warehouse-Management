@@ -8,6 +8,7 @@ import { dialog_state } from '../actions/dialog'
 import { edit_user, delete_user, select_user } from '../actions/admin'
 import { /*edit_parcel, , delete_parcel*/ add_parcel} from '../actions/parcel'
 import { SET_MESSAGE } from '../actions/types'
+import {add_warehouse} from '../actions/warehouses'
 
 
 function QuestionDialog({ dispatch, dialog_state:state, topic, data,message }) {
