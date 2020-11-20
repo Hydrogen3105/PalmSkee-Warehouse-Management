@@ -100,7 +100,8 @@ class EditParcel extends Component {
                                                     </span>
                                                 </MenuItem>
                                         })*/}
-                                        <MenuItem value="WH112">WH112 O-Koi</MenuItem>
+                                        <MenuItem value="WH001">WH001 O-Koi</MenuItem>
+                                        <MenuItem value="WH002">WH002 O-Koi</MenuItem>
                                     </Select>
                                 </FormControl>
                             </div>

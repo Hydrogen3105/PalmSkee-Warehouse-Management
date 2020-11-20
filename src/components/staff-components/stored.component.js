@@ -23,29 +23,46 @@ class StoredParcels extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            pickedUpParcels: [],
             showParcels: [],
             isLoading: true,
             selectedParcels: [],
+            searchText: "",
         }
 
         this.handleBack = this.handleBack.bind(this)
         this.handleStored = this.handleStored.bind(this)
+        this.handleSearch = this.handleSearch.bind(this)
     }
 
     componentDidMount() {
         this.props.dispatch(dialog_state(0))
         ParcelService.getAllParcel()
         .then((response) => {
-            const unstored =  response.data.payload.filter((parcel) => parcel.latestStatus === 'picked up')
+            const filtered =  response.data.payload.filter((parcel) => parcel.latestStatus === 'picked up')
+            const unstored = filtered.map((parcel) => {
+                return {
+                    ...parcel,
+                    id: parcel.parcelId
+                }
+            })
             this.setState({
+                pickedUpParcels: unstored,
                 showParcels: unstored,
                 isLoading: false
             })
         })
     }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(prevState.showParcels !== this.state.showParcels){
+            this.setState({
+                isLoading: false
+            })
+        }
+    }
     
     handleBack() {
-        
         history.push('/parcels')
     }
 
@@ -53,10 +70,41 @@ class StoredParcels extends Component {
         this.props.dispatch(dialog_state(1))
     }
 
+    handleChange = (e) => {
+        const {name, value} = e.target
+        this.setState({
+            [name]: value
+        })
+    }
+
     onSelectParcel = (parcelsList) => {
         this.setState({
             selectedParcels: parcelsList
         })
+    }
+
+    handleSearch(pickedUpParcels) {
+        this.setState({
+            isLoading: true
+        })
+        
+        if(this.state.searchText !== ''){
+            const searchData = pickedUpParcels.filter(parcel => {
+                const regex = new RegExp(  '^' + this.state.searchText,'gi',)
+                return regex.test(parcel.parcelId)
+            })
+            console.log(searchData)
+            this.setState({
+                showParcels: searchData,
+                searchText: '',
+            })  
+        }
+        else {
+            this.setState({
+                showParcels: pickedUpParcels,
+                isLoading: false
+            })  
+        }
     }
 
     render () {
@@ -139,7 +187,7 @@ class StoredParcels extends Component {
                                         <IconButton color="primary" 
                                                     aria-label="search" 
                                                     component="span" 
-                                                    onClick={() => this.handleSearch(this.state.allUser)}
+                                                    onClick={() => this.handleSearch(this.state.pickedUpParcels)}
                                         >
                                             <SearchIcon />
                                         </IconButton>
@@ -150,10 +198,12 @@ class StoredParcels extends Component {
                             
                         </div>
                     {/*Above Table */}
-                    <div style={{marginBottom: 15}}>
-                        <ParcelSelectTable onSelectParcel={this.onSelectParcel} status='picked up'/>
-                    </div>
-                    
+                    {   !this.state.isLoading &&
+                        <div style={{marginBottom: 15}}>
+                            <ParcelSelectTable parcels={this.state.showParcels} onSelectParcel={this.onSelectParcel} status='picked up'/>
+                        </div>
+                    }
+
                 </div>
                 { this.state.isLoading && (
                     <Dialog
@@ -174,7 +224,6 @@ class StoredParcels extends Component {
                     this.props.dialog_state === 2 && 
                     <ConfirmedDialog topic='store' />
                 }
-                <br />
                 <div className='button-back-comfirm'>
                     <div>
                         <button className="btn btn-danger btn-block" 

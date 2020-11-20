@@ -59,7 +59,7 @@ class WarehousesTable extends Component {
     render () {
       
         return (
-            <Paper style={{width: 790}}>
+            <Paper style={{width: 700}}>
             <TableContainer  >
               <Table stickyHeader aria-label="sticky table" >
                 <TableHead>

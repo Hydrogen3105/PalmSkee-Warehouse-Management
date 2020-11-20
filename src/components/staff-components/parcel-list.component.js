@@ -23,32 +23,73 @@ class Parcels extends Component {
             allParcel: [],
             showParcel: [],
             isLoading: true,
+            searchText: "",
         }
 
         this.handleBack = this.handleBack.bind(this)
-        this.handleMock = this.handleMock.bind(this)
+        this.handleChange = this.handleChange.bind(this)
     }
 
     componentDidMount() {
         ParcelService.getAllParcel()
         .then((response) => {
+            const parcelsInTable = response.data.payload.map((parcel) => {
+                return {
+                    ...parcel,
+                    id: parcel.parcelId
+                }
+            })
             this.setState({
-                allParcel: response.data.payload,
-                showParcel: response.data.payload,
+                allParcel: parcelsInTable,
+                showParcel: parcelsInTable,
                 isLoading: false
             })
         })
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(prevState.showParcel !== this.state.showParcel){
+            this.setState({
+                isLoading: false
+            })
+        }
     }
 
     handleBack () {
         history.push('/home')
     }
 
-    handleMock() {
-        this.props.dispatch(select_parcel('JPN101'))
-
-        history.push('/parcel-detail')
+    handleChange(e) {
+        const { name, value } = e.target
+        this.setState({
+            [name]: value
+        })
     }
+
+    handleSearch(allParcels) {
+        this.setState({
+            isLoading: true
+        })
+        
+        if(this.state.searchText !== ''){
+            const searchData = allParcels.filter(parcel => {
+                const regex = new RegExp(  '^' + this.state.searchText,'gi')
+                return regex.test(parcel.parcelId)
+            })
+            console.log(searchData)
+            this.setState({
+                showParcel: searchData,
+                searchText: '',
+            })  
+        }
+        else {
+            this.setState({
+                showParcel: allParcels,
+                isLoading: false
+            })  
+        }
+    }
+
     render () {
         const { user: currentUser } = this.props
 
@@ -129,7 +170,7 @@ class Parcels extends Component {
                                         <IconButton color="primary" 
                                                     aria-label="search" 
                                                     component="span" 
-                                                    onClick={() => this.handleSearch(this.state.allUser)}
+                                                    onClick={() => this.handleSearch(this.state.allParcel)}
                                         >
                                             <SearchIcon />
                                         </IconButton>
@@ -140,7 +181,12 @@ class Parcels extends Component {
                             
                         </div>
                     {/*Above Table */}
-                    <ParcelsTable parcels={this.state.showParcel}/>
+                    {
+                        !this.state.isLoading &&
+                        <div style={{marginBottom: 10}}>
+                            <ParcelsTable parcels={this.state.showParcel}/>
+                        </div>
+                    }
                 </div>
                 { this.state.isLoading && (
                     <Dialog
@@ -155,7 +201,6 @@ class Parcels extends Component {
                     </Dialog>
                     )
                 }
-                <br />
                 <div className='button-back-comfirm'>
                     <div>
                         <button className="btn btn-danger btn-block" 

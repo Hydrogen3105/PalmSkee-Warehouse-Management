@@ -8,6 +8,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import UserService from "../services/user.service";
+import { textFieldStyle } from '../styles/material-style'
 
 import { login_status } from "../actions/auth";
 import { clearMessage } from "../actions/message";
@@ -20,6 +21,8 @@ function LoginDialog({ isOpen, dispatch, userId, password }) {
   const [error,setError] = React.useState(false);
   const [samePasswordError, setSamePasswordError] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(false)
+  const [blankNew, setBlankNew] = React.useState(false)
+  const [blankConfirmNew, setBlankConfirmNew] = React.useState(false)
 
   React.useEffect(() => {
     if (isOpen) {
@@ -37,7 +40,10 @@ function LoginDialog({ isOpen, dispatch, userId, password }) {
     setError(false)
     setSamePasswordError(false)
     setIsLoading(true)
-    if ((newPassword === confirmPassword) && (newPassword !== password)) {
+    setBlankNew(false)
+    setBlankConfirmNew(false)
+
+    if ((newPassword === confirmPassword) && (newPassword !== password) && (newPassword !== "") && (confirmPassword !== "")) {
       const oldPassword = password;
       UserService.changePassword(userId, oldPassword, newPassword)
       .then(() => {
@@ -51,10 +57,20 @@ function LoginDialog({ isOpen, dispatch, userId, password }) {
     } else if((newPassword === confirmPassword) && (newPassword === password)){
       setIsLoading(false)
       setSamePasswordError(true)
-    } else {
+    } else if( newPassword === "" && confirmPassword === ""){
+      setIsLoading(false)
+      setBlankNew(true)
+      setBlankConfirmNew(true)
+    } else if(newPassword === ""){
+      setIsLoading(false)
+      setBlankNew(true)
+    } else if(confirmPassword === ""){
+      setIsLoading(false)
+      setBlankConfirmNew(true)
+    } else if(newPassword !== confirmPassword){
       setIsLoading(false)
       setError(true)
-    }
+    } 
   };
 
   return (
@@ -72,37 +88,59 @@ function LoginDialog({ isOpen, dispatch, userId, password }) {
           {
             error ? 
             <DialogContentText>
-              <span style={{color: "red"}}>Both passwords mismatched</span>
+              <div className="form-group">
+                <div className="alert alert-danger" role="alert">
+                    Both password mismatched!
+                </div>
+              </div>
             </DialogContentText> :
             samePasswordError && 
             <DialogContentText>
-              <span style={{color: "red"}}>Password is same with old password, please change</span>
+              <div className="form-group">
+                <div className="alert alert-danger" role="alert">
+                    This new password is samw as previous password!
+                </div>
+              </div>
             </DialogContentText>
           }
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Password"
-            type="password"
-            name="new"
-            value={newPassword}
-            onChange={(event) => {
-              setNewPassword(event.target.value);
-            }}
-            fullWidth
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Confirm Password"
-            type="password"
-            name="confirm"
-            value={confirmPassword}
-            onChange={(event) => {
-              setConfirmPassword(event.target.value);
-            }}
-            fullWidth
-          />
+          <div className='form-group'>
+            <label>Password
+              <input  type="password"
+                      name="new"
+                      className="form-control"
+                      value={newPassword}
+                      onChange={(event) => {
+                        setNewPassword(event.target.value);
+                      }}
+              />
+            </label>
+            {
+              newPassword === "" && blankNew &&
+              <div className="form-group">
+                <div className="alert alert-danger" role="alert">
+                    This field is required!
+                </div>
+              </div>
+            }
+            <label>Confirm Password
+              <input  type="password"
+                      name="confirm"
+                      className="form-control"
+                      value={confirmPassword}
+                      onChange={(event) => {
+                        setConfirmPassword(event.target.value);
+                      }}
+              />
+            </label>
+            {
+              confirmPassword === "" && blankConfirmNew &&
+              <div className="form-group">
+                <div className="alert alert-danger" role="alert">
+                  This field is required!
+                </div>
+              </div>
+            }
+          </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">

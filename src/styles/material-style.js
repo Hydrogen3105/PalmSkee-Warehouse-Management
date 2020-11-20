@@ -18,3 +18,32 @@ export const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export const navBarUseStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+  login: {
+    textAlign: "right",
+  },
+}));
+
+export const profileButton = makeStyles((theme) => ({
+  root: {
+
+  }
+}))
+
+export const textFieldStyle = makeStyles((theme) => ({
+  root: {
+    '& > *': {
+      margin: theme.spacing(1),
+      width: '25ch',
+    },
+  },
+}));
