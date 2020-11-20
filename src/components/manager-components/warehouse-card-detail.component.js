@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import { connect } from 'react-redux'
 
 class WarehouseCardDetail extends Component {
     constructor(props){
@@ -16,7 +17,7 @@ class WarehouseCardDetail extends Component {
         return (
             <div>
                 <div className='warehouse-more-detail card-warehouse-more-detail'>
-                    <h4>Palm</h4>
+                    <h4>{this.props.warehouseId}</h4>
                     <div className='detail-card'>
 
                     </div>
@@ -28,4 +29,14 @@ class WarehouseCardDetail extends Component {
 
 }
 
-export default WarehouseCardDetail
+function mapStateToProp(state) {
+    const { user } = state.auth
+    const { warehouseId } = state.warehouse
+
+    return {
+        user,
+        warehouseId,
+    }
+}
+
+export default connect(mapStateToProp)(WarehouseCardDetail)

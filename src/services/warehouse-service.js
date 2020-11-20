@@ -40,6 +40,15 @@ class WarehouseService {
   deleteWarehouse(parcelId) {
     return axios.delete(API_URL + "", { parcelId }, { headers: authHeader() });
   }
+
+  getAllWarehouses(){
+    return axios.get( API_URL + "warehouses", { headers: authHeader() })
+  }
+
+  getWarehouseById(warehouseId){
+
+  }
+
 }
 
 export default new WarehouseService();

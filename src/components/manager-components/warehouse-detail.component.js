@@ -22,6 +22,7 @@ class WarehouseDetail extends Component {
     }
 
     handleBack() {
+        this.props.dispatch(select_warehouse(''))
         history.push('/home')
     }
 
@@ -104,45 +105,6 @@ class WarehouseDetail extends Component {
                         <div className='item-manage-user'>
                             <ManagerProfile user={currentUser} />
                         </div>
-                        <div className='item-manage-user'>
-                            <Link to="/warehouse-detail">
-                                <Button variant='contained'
-                                        color= 'secondary'
-                                        onClick={this.handleMock}        
-                                >
-                                    Mock select warehouse
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>
-                            <Link to="/parcels">
-                                <Button variant='contained' style={{width: 235}}>
-                                    Warehouse Parcels
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>   
-                            <Link to="/stored-parcels"> 
-                                <Button variant='contained' style={{width: 235}}>
-                                Confirm stored
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>
-                            <Link to="/exported-parcels">
-                                <Button variant='contained' style={{width: 235}}>
-                                    Confirm exported
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>
-                            <Link to="/request-report">
-                                <Button variant='contained' style={{width: 235}}>
-                                    Request Report
-                                </Button>
-                            </Link>
-                        </div>
-
                     </div>
 
                 </div>
