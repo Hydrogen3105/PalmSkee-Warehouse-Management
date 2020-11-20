@@ -105,7 +105,9 @@ class App extends Component {
                     <MenuIcon />
                 </IconButton>
                   <Typography variant="h6" >
+                  <Link to="/home" className="backToHome">
                     My PWS
+                   </Link> 
                   </Typography>
                 { currentUser && (
                   <div className="navbar-nav ml-auto navbar-expand">

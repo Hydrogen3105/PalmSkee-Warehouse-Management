@@ -7,6 +7,8 @@ import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 
+import WarehouseService from '../../services/warehouse-service'
+
 import { history } from '../../helpers/history'
 import { dialog_state } from '../../actions/dialog'
 import QuestionDialog from '../../dialogs/dialog.component'
@@ -19,14 +21,16 @@ class AddWarehouse extends Component {
         super(props)
         this.state = {
             allUser: [],
-            warehouse_name: "",
-            warehouse_address: "",
-            warehouse_zip: "",
-            warehouse_city: "",
-            warehouse_country: "",
-            capacity: 0,
-            contact: "",
+            name: "",
+            address: "",
+            zipCode: "",
+            city: "",
+            country: "",
+            coordinates:{lat:"",lng:""},
+            phone: "",
             number_staffs: 0,
+            status:"",
+            type:"",
             manager_id: "",
         }
 
@@ -81,8 +85,8 @@ class AddWarehouse extends Component {
                             <div className='form-group'>
                                 <h5>Warehouse name</h5>
                                 <input  type='text'
-                                        name='warehouse_name'
-                                        value={this.state.warehouse_name}
+                                        name='name'
+                                        value={this.state.name}
                                         onChange={this.handleChange}
                                         className='form-control'
                                 />
@@ -92,46 +96,54 @@ class AddWarehouse extends Component {
                                 <h5>Warehouse Address</h5>
                                 <textarea type='text'
                                         style= {{width: 300}}
-                                        name='warehouse_address'
+                                        name='address'
                                         placeholder='Address Detail...'
-                                        value={this.state.warehouse_address}
+                                        value={this.state.address}
                                         onChange={this.handleChange}
                                         className='form-control'
                                 />
                                 <br />
                                 <input  type='text'
-                                        name='warehouse_zip'
+                                        name='zipCode'
                                         style= {{width: 300}}
                                         placeholder='Zip Code'
-                                        value={this.state.warehouse_zip}
+                                        value={this.state.zipCode}
                                         onChange={this.handleChange}
                                         className='form-control'
                                 />
                                 <br />
                                 <input  type='text'
-                                        name='warehouse_city'
+                                        name='city'
                                         style= {{width: 300}}
                                         placeholder='City'
-                                        value={this.state.warehouse_city}
+                                        value={this.state.city}
                                         onChange={this.handleChange}
                                         className='form-control'
                                 />
                                 <br />
                                 <input  type='text'
-                                        name='warehouse_country'
+                                        name='country'
                                         style= {{width: 300}}
                                         placeholder='Country'
-                                        value={this.state.warehouse_country}
+                                        value={this.state.country}
                                         onChange={this.handleChange}
                                         className='form-control'
                                 />
                             </div>
 
                             <div className='form-group'>
-                                <h5>Warehouse capacity</h5>
+                                <h5>Coordinate</h5>
                                 <input  type='number'
-                                        name='capacity'
-                                        value={this.state.capacity}
+                                        name='coordinates'
+                                        placeholder="lat"
+                                        value={this.state.coordinates.lat}
+                                        onChange={this.handleChange}
+                                        className='form-control'
+                                />
+                                <input  type='number'
+                                        name='coordinates'
+                                        placeholder="lng"
+                                        value={this.state.coordinates.lng}
                                         onChange={this.handleChange}
                                         className='form-control'
                                 />
@@ -140,16 +152,16 @@ class AddWarehouse extends Component {
                             <div className='form-group'>
                                 <h5>Warehouse contact</h5>
                                 <input  type='tel'
-                                        name='contact'
+                                        name='phone'
                                         pattern="[0-9]{10}"
                                         placeholder="0827400474"
-                                        value={this.state.contact}
+                                        value={this.state.phone}
                                         onChange={this.handleChange}
                                         className='form-control'
                                 />
                             </div>
 
-                            <div className='form-group'>
+                            {/* <div className='form-group'>
                                 <h5>Number of Staffs</h5>
                                 <input  type='number'
                                         name='number_staffs'
@@ -157,6 +169,42 @@ class AddWarehouse extends Component {
                                         onChange={this.handleChange}
                                         className='form-control'
                                 />
+                            </div> */}
+
+                            <div className='form-group'>
+                                <h5>Type of Warehouse</h5>
+                                <Select 
+                                        name='type'
+                                        value={this.state.type}
+                                        onChange={this.handleChange}
+                                        className='form-control'
+                                ><MenuItem value="1" > <span>
+                                                 1
+                                            </span>
+                                </MenuItem>
+                                <MenuItem value="2" > <span>
+                                                 2
+                                            </span>
+                                </MenuItem>
+                                </Select>
+                            </div>
+
+                            <div className='form-group'>
+                                <h5>Status</h5>
+                                <Select 
+                                        name='status'
+                                        value={this.state.status}
+                                        onChange={this.handleChange}
+                                        className='form-control'
+                                ><MenuItem value="open" > <span>
+                                                 Open
+                                            </span>
+                                </MenuItem>
+                                <MenuItem value="close" > <span>
+                                                 Close
+                                            </span>
+                                </MenuItem>
+                                </Select>
                             </div>
 
                             <div className="form-group">
@@ -169,11 +217,11 @@ class AddWarehouse extends Component {
                                     >
                                     { 
                                         allManagers.map(user => {
-                                        return <MenuItem    key={user.user_id} 
-                                                            value={user.user_id}
+                                        return <MenuItem    key={user.userId} 
+                                                            value={user.userId}
                                                 >
                                                     <span>
-                                                        <strong>{user.user_id}</strong> {user.first_name} {user.last_name}
+                                                        <strong>{user.userId}</strong> {user.firstName} {user.lastName}
                                                     </span>
                                                 </MenuItem>
                                         })
@@ -183,7 +231,13 @@ class AddWarehouse extends Component {
                             </div>
                         </form>
                         {   this.props.dialog_state === 1 ? 
-                            <QuestionDialog topic='add' /> :
+                            <QuestionDialog topic='add' 
+                                            data={{name:this.state.name,address:this.state.address,
+                                            zipCode:this.state.zipCode,city:this.state.city,
+                                            country:this.state.country,phone:this.state.phone,
+                                            type:this.state.type,
+                                            status:this.state.status,managerId:this.state.manager_id,
+                                            coordinates:this.state.coordinates}} /> :
                             this.props.dialog_state === 2 && 
                             <ComfirmedDialog topic='add' />
                         }
