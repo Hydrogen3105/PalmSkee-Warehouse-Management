@@ -13,6 +13,11 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import Select from "react-validation/build/select";
 
+import WarehouseService from '../../services/warehouse-service'
+import SearchService from '../../services/sender-service'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+
 const required = (value) => {
     if (!value) {
       return (
@@ -58,8 +63,6 @@ const vweight = (value) => {
     }
 }
 
-
-
 class AddParcel extends Component {
     constructor(props) {
         super(props)
@@ -74,6 +77,8 @@ class AddParcel extends Component {
             senderId: "",
             isLoading: true,
             isSameLocation: false,
+            allWarehouses: [],
+            allSenders: []
         }
         
         this.handleBack = this.handleBack.bind(this)
@@ -84,8 +89,20 @@ class AddParcel extends Component {
     componentDidMount() {
         this.props.dispatch(dialog_state(0))
         this.setState({
-            fromWarehouseId: this.props.userData.warehouseId
+            fromWarehouseId: this.props.userData.warehouseId,
         })
+        SearchService.searchSender().then((response) => {
+            this.setState({
+                allSenders: response.data.payload,
+                isLoading: false,
+            })
+        })
+        /*WarehouseService.getAllWarehouses((response) => {
+            this.setState({
+                allWarehouse: response.data.payload,
+                isLoading: false,
+            })
+        })*/
     }
 
     handleChange (e) {
@@ -260,9 +277,8 @@ class AddParcel extends Component {
                                                     className='form-control'
                         
                                             >
-                                                <option value=''>Choose Destination</option>
-                                                <option value='WH001'>WH001</option>
-                                                <option value='WH002'>WH002</option>
+                                                <option value="WH001">WH001</option>
+                                                <option value="WH002">WH002</option>
                                             </Select>
                                         </div>
                                         {""}
@@ -299,7 +315,19 @@ class AddParcel extends Component {
                         </div>
                     </div>
                 </div>
-                
+                { this.state.isLoading && (
+                    <Dialog
+                        open={this.state.isLoading}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">
+                            <span className="spinner-border spinner-border-sm"></span>
+                            Loading...
+                        </DialogTitle>
+                    </Dialog>
+                    )
+                }
                 {
                     this.props.dialog_state === 1 ? 
                     <QuestionDialog topic='add-parcel' data={payload_data}/> :

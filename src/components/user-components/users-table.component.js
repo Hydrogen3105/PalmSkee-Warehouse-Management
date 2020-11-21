@@ -33,4 +33,19 @@ function UsersTable({ dispatch, users }) {
   );
 }
 
-export default connect()(UsersTable);
+export default connect()(UsersTable)
+
+const column_mini = [
+  { field: 'userId', headerName: 'User ID', width: 200 },
+  { field: 'firstName', headerName: 'First Name', width: 200 },
+  { field: 'lastName', headerName: 'Last Name', width: 200 },
+]
+
+export function MiniUsersTable({ users }) {
+
+  return (
+      <div style={{ height: 200, width: '100%' }}>
+          <DataGrid  rows={users} columns={column_mini} pageSize={10} />
+      </div>
+  );
+}

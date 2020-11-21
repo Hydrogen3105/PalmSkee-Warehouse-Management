@@ -159,16 +159,6 @@ class ManagerMain extends Component {
                         <div className='item-manage-user'>
                             <ManagerProfile user={currentUser} />
                         </div>
-                        <div className='item-manage-user'>
-                            <Link to="/warehouse-detail">
-                                <Button variant='contained'
-                                        color= 'secondary'
-                                        onClick={this.handleMock}        
-                                >
-                                    Mock select warehouse
-                                </Button>
-                            </Link>
-                        </div>
 
                     </div>
                 </div>

@@ -46,7 +46,7 @@ class WarehouseService {
   }
 
   getWarehouseById(warehouseId){
-
+    return axios.get( API_URL + `warehouses/${warehouseId}`, { headers: authHeader() })
   }
 
 }
