@@ -8,6 +8,8 @@ import SearchIcon from '@material-ui/icons/Search'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import WarehousesTable from "../manager-components/warehouses-table.component"
 import AdminProfile from "../profile.components/admin-profile.component"
+import warehouseService from '../../services/warehouse-service'
+
 
 
 import { history } from '../../helpers/history'
@@ -16,7 +18,9 @@ class ManageWarehouse extends Component {
     constructor(props){
         super(props)
         this.state = {
-            showWarehouses: []
+            allWarehouse:[],
+            showWarehouses: [],
+            isLoading: true
         }
 
     }
@@ -24,6 +28,37 @@ class ManageWarehouse extends Component {
     handleBack() {
         history.push('/home')
     }
+
+    componentDidMount(){
+        warehouseService.getAllWarehouses()
+        .then((response) => {
+            const all_warehouse = response.data.payload.map(warehouse => {
+                return {
+                    ...warehouse,
+                    id: warehouse.warehouseId 
+                }
+            })
+            this.setState({
+                allwarehouse: all_warehouse,
+                showWarehouses: all_warehouse,
+                isLoading: false,
+            })
+        })
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(prevState.showWarehouses !== this.state.showWarehouses){
+            this.setState({
+                isLoading: false
+            })
+        }}
+
+    handleChange(e) {
+            const { name , value } = e.target
+            this.setState({
+                [name]: value
+            })
+        }
 
     render () {
         const { user: currentUser } = this.props
@@ -62,6 +97,14 @@ class ManageWarehouse extends Component {
                                 </Button>
                             </Link>
                         </div>
+                        <div className='inner'>
+                        <button className="btn btn-danger btn-block" 
+                                    style={{width: 150}}
+                                    onClick={() => console.log(this.state.allWarehouse)}
+                            >
+                                    Data
+                        </button>
+                    </div>
                     </div>
                 </div>
                 
