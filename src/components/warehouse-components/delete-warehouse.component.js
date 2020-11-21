@@ -2,6 +2,7 @@ import React , { Component } from 'react'
 import { connect } from 'react-redux'
 import { history } from '../../helpers/history'
 import { Redirect } from 'react-router-dom'
+import warehouseService from '../../services/warehouse-service'
 
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
