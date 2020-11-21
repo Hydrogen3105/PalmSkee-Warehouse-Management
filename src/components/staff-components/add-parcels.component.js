@@ -15,6 +15,8 @@ import Select from "react-validation/build/select";
 
 import WarehouseService from '../../services/warehouse-service'
 import SearchService from '../../services/sender-service'
+import SendersTable from './sender-table.component'
+
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
@@ -92,17 +94,36 @@ class AddParcel extends Component {
             fromWarehouseId: this.props.userData.warehouseId,
         })
         SearchService.searchSender().then((response) => {
-            this.setState({
-                allSenders: response.data.payload,
-                isLoading: false,
+            const all_senders = response.data.payload.map((sender) => {
+                return {
+                    ...sender,
+                    id: sender.senderId
+                }
             })
+            this.setState({
+                allSenders: all_senders,
+
+            })
+        }).then(() => {
+            SearchService.searchWarehouses().then(response => {
+                this.setState({
+                    allWarehouses: response.data.payload,
+                    isLoading: false
+                })
+                },(error) => {
+                    this.setState({
+                        isLoading: false
+                    })
+                }
+            )
         })
-        /*WarehouseService.getAllWarehouses((response) => {
-            this.setState({
-                allWarehouse: response.data.payload,
-                isLoading: false,
-            })
-        })*/
+        
+    }
+
+    onSelectSender = (senderId) => {
+        this.setState({
+            senderId
+        })
     }
 
     handleChange (e) {
@@ -247,8 +268,9 @@ class AddParcel extends Component {
                                                     value={this.state.senderId}
                                                     onChange={this.handleChange}
                                                     validations = {[required]}
-                                                    style={{width: 350}}
+                                                    style={{width: 350,marginBottom: 10}}
                                             />
+                                            { !this.state.isLoading && <SendersTable senders={this.state.allSenders} onSelectSender={this.onSelectSender}/>} 
                                         </div>
                                         <h4 style={{marginBottom: 15}}>Destination</h4>
                                         { this.state.fromWarehouseId === this.state.toWarehouseId && this.state.isSameLocation && 
@@ -277,8 +299,10 @@ class AddParcel extends Component {
                                                     className='form-control'
                         
                                             >
-                                                <option value="WH001">WH001</option>
-                                                <option value="WH002">WH002</option>
+                                                <option value=''>Choose parcel's destination</option>
+                                                { this.state.allWarehouses.map(warehouse => {
+                                                    return <option key={warehouse.warehouseId} value={warehouse.warehouseId}>{warehouse.warehouseId} {warehouse.name}</option>
+                                                })}
                                             </Select>
                                         </div>
                                         {""}

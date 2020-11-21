@@ -12,13 +12,32 @@ import FilterListIcon from '@material-ui/icons/FilterList'
 import ManagerProfile from '../profile.components/manager-profile.component'
 import WarehouseCardDetail from './warehouse-card-detail.component'
 
+import WarehouseService from '../../services/warehouse-service'
+
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+
 class WarehouseDetail extends Component {
     constructor(props) {
         super(props)
         this.state = {
-
+            warehouseData: {},
+            isLoading: true,
         }
         this.handleBack = this.handleBack.bind(this)
+    }
+
+    componentDidMount() {
+        WarehouseService.getWarehouseById(this.props.warehouseId).then((response) => {
+            this.setState({
+                warehouseData: response.data.payload[0],
+                isLoading: false
+            })
+        },(error) => {
+            this.setState({
+                isLoading: false
+            })
+        })
     }
 
     handleBack() {
@@ -86,10 +105,14 @@ class WarehouseDetail extends Component {
                                     
                         </div>
                         {/*Above Table */}
-                        <div>
-                            <WarehouseCardDetail warehouseId= {this.props.warehouseId} />
-                        </div>
-                        <div className='button-back-comfirm' style={{marginTop: 20,}}>
+                        {
+                            !this.state.isLoading &&
+                            <div>
+                                <WarehouseCardDetail data={this.state.warehouseData} isLoading={this.state.isLoading}/>
+                            </div>
+                        }
+                        
+                        <div className='button-back-comfirm' style={{marginTop: 0,}}>
                             <Button variant='contained' style={{width: 100}} onClick={this.handleBack}>
                                     Back
                             </Button>
@@ -109,7 +132,19 @@ class WarehouseDetail extends Component {
 
                 </div>
                 
-
+                { this.state.isLoading && (
+                    <Dialog
+                        open={this.state.isLoading}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">
+                            <span className="spinner-border spinner-border-sm"></span>
+                            Loading...
+                        </DialogTitle>
+                    </Dialog>
+                    )
+                }
             </div>
         )
     }

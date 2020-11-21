@@ -1,13 +1,13 @@
 import { createMuiTheme, withStyles, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { green, purple, red } from '@material-ui/core/colors';
+import { green, purple, red,white } from '@material-ui/core/colors';
 
 export const ColorButton = withStyles((theme) => ({
     root: {
-      color: theme.palette.getContrastText(red[500]),
+      color: theme.palette.getContrastText(red[900]),
       backgroundColor: red[500],
       '&:hover': {
-        backgroundColor: red[700],
+        backgroundColor: red[900],
       },
     },
 }))(Button);
@@ -47,3 +47,9 @@ export const textFieldStyle = makeStyles((theme) => ({
     },
   },
 }));
+
+export const sendersTable = makeStyles((theme) => ({
+  root: {
+    backgroundColor: red[50]
+  }
+}))
