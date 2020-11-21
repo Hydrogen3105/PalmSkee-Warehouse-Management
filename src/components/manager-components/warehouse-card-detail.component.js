@@ -1,16 +1,20 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
+import { MiniUsersTable } from '../user-components/users-table.component'
+import WarehouseService from '../../services/warehouse-service'
 
 class WarehouseCardDetail extends Component {
     constructor(props){
         super(props)
         this.state = {
-
+            allUser: [],
+            warehouseData: {},
+            isLoading: true,
         }
     }
 
     componentDidMount() {
-
+        //WarehouseService.getWarehouseById(this.props.warehouseId).then
     }
 
     render () {
