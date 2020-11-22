@@ -18,15 +18,26 @@ class DeleteWarehouse extends Component {
         super(props)
         this.state = {
             warehouseId: "",
+            loading: false,
+            allWarehouse:[],
+            open_warning: false,
+            
         }
 
         this.handleBack = this.handleBack.bind(this)
         this.handleDialog = this.handleDialog.bind(this)
+        this.handleDelete = this.handleDelete.bind(this)
         this.handleChange = this.handleChange.bind(this)
     }
 
     componentDidMount() {
         this.props.dispatch(dialog_state(0))
+        warehouseService.getAllWarehouses()
+        .then((response) => {
+            this.setState({
+                allWarehouse: response.data.payload
+            })
+        })
     }
 
     handleBack() {
@@ -42,6 +53,30 @@ class DeleteWarehouse extends Component {
 
     handleDialog() {
         this.props.dispatch(dialog_state(1))
+    }
+
+    handleDelete() {
+        this.setState({
+            open_warning: false
+        })
+
+        if(this.state.warehouseId !== ''){
+            this.props.dispatch(dialog_state(1))
+            this.setState({
+                open_warning: false
+            })
+        }
+        else{
+            this.setState({
+                open_warning: true
+            })
+        }
+    }
+
+    handleClose() {
+        this.setState({
+            open_warning: false
+        })
     }
 
     render () {
@@ -68,16 +103,16 @@ class DeleteWarehouse extends Component {
                                         onChange={this.handleChange}
                                         style={{ width: 250}}
                                 >
-                                {/* this.state.allUser.map(user => {
-                                    return <MenuItem    key={user.user_id} 
-                                                        value={user.user_id}
+                                { this.state.allWarehouse.map(warehouse => {
+                                    return <MenuItem    key={warehouse.warehouseId} 
+                                                        value={warehouse.warehouseId}
                                             >
                                                 <span>
-                                                    <strong>{user.user_id}</strong> {user.first_name} {user.last_name}
+                                                    <strong>{warehouse.warehouseId}</strong> {warehouse.name} 
                                                 </span>
                                             </MenuItem>
-                                    })*/}
-                                    <MenuItem value='WH006'><strong>WH006</strong> Sia O Warehouse</MenuItem>
+                                    })}
+                                    {/* <MenuItem value='WH006'><strong>WH006</strong> Sia O Warehouse</MenuItem> */}
                                 </Select>
                             </FormControl>
                         </div>
@@ -114,7 +149,7 @@ class DeleteWarehouse extends Component {
                 </div>
                 
                 {   this.props.dialog_state === 1 ? 
-                    <QuestionDialog topic='delete' /> :
+                    <QuestionDialog topic='delete' data={this.state.warehouseId}/> :
                     this.props.dialog_state === 2 && 
                     <ComfirmedDialog topic='delete' />
                 }

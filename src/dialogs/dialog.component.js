@@ -8,7 +8,7 @@ import { dialog_state } from '../actions/dialog'
 import { edit_user, delete_user, select_user } from '../actions/admin'
 import { delete_parcel, edit_parcel, edit_status ,add_parcel} from '../actions/parcel'
 import { SET_MESSAGE } from '../actions/types'
-import {add_warehouse} from '../actions/warehouses'
+import {add_warehouse,delete_warehouse} from '../actions/warehouses'
 
 
 function QuestionDialog({ dispatch, dialog_state:state, topic, data,message }) {
@@ -200,6 +200,18 @@ function QuestionDialog({ dispatch, dialog_state:state, topic, data,message }) {
             setLoading(false);
           });
         break;
+
+      case "delete":
+      var select_warehouse = data;
+          dispatch(delete_warehouse(select_warehouse))
+          .then(() => {
+            dispatch(dialog_state(prevState + 1))
+          })
+          .catch(() => {
+            setLoading(false)
+          })
+
+          break
 
       default:
         dispatch(dialog_state(prevState + 1));
