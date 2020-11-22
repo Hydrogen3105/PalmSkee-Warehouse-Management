@@ -40,8 +40,9 @@ label {
 
   .detail-card {
     background-color: #ffffff;
-    width: 480px;
-    height: 200px;
+    width: 500px;
+    height: 300px;
+    padding: 15px 10px 10px 15px;
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
     border-radius: 2px;
@@ -52,7 +53,7 @@ label {
   
   .warehouse-more-detail {
     background-color: #f7f7f7;
-    padding: 20px 25px 30px;
+    padding: 20px 10px 20px 10px;
     margin: 0 auto 25px;
     margin-top: 15px;
     -moz-border-radius: 2px;
@@ -84,6 +85,18 @@ label {
     background-color: #f7f7f7;
     padding: 20px 25px 30px;
     margin: 0 auto 25px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .register-card-2 {
+    background-color: #f7f7f7;
+    padding: 20px 25px 30px;
+    margin: 0 auto 0;
     -moz-border-radius: 2px;
     -webkit-border-radius: 2px;
     border-radius: 2px;

@@ -22,7 +22,6 @@ class StaffMain extends Component {
 
     componentDidMount() {
         WarehouseService.getWarehouseById(this.props.userData.warehouseId).then((response) => {
-            console.log(response.data.payload[0])
             this.setState({
                 warehouseData: response.data.payload[0],
                 isLoading: false
