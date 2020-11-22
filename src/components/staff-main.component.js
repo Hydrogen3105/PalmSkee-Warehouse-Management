@@ -9,6 +9,11 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 
 import Chart from 'react-google-charts'
 
+import { BlueButton ,useStyles, PurpleButton, LightBlueButton } from '../styles/material-style'
+import CardGiftcardIcon from '@material-ui/icons/CardGiftcard'
+import InputIcon from '@material-ui/icons/Input'
+import FlightTakeoffIcon from '@material-ui/icons/FlightTakeoff'
+
 class StaffMain extends Component {
     constructor(props) {
         super(props)
@@ -91,23 +96,23 @@ class StaffMain extends Component {
                         <div className='staff-main-button' >
                             <div>
                                 <Link to="/parcels">
-                                    <Button variant='contained' style={{ width: 250, height: 100 }}>
+                                    <LightBlueButton variant='contained' color='primary' startIcon={<CardGiftcardIcon />} className={useStyles.margin} style={{ width: 250, height: 100, fontSize: 20 }}>
                                         Parcels
-                                    </Button>
+                                    </LightBlueButton>
                                 </Link>
                             </div>
                             <div>
                                 <Link to="/stored-parcels">
-                                    <Button variant='contained' style={{ width: 250, height: 100 }}>
-                                        Confirm stored
-                                    </Button>
+                                    <BlueButton variant='contained' color='primary' startIcon={<InputIcon />} className={useStyles.margin} style={{ width: 250, height: 100, fontSize: 20 }}>
+                                        Store
+                                    </BlueButton>
                                 </Link>
                             </div>
                             <div>
                                 <Link to="/exported-parcels">
-                                    <Button variant='contained' style={{ width: 250, height: 100 }}>
-                                        Confirm exported
-                                    </Button>
+                                    <PurpleButton variant='contained' color='primary' startIcon={<FlightTakeoffIcon />} className={useStyles.margin} style={{ width: 250, height: 100, fontSize: 20 }}>
+                                        Export
+                                    </PurpleButton>   
                                 </Link>
                             </div>
                         </div>

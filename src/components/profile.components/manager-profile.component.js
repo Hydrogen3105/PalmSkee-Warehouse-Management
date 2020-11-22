@@ -2,6 +2,8 @@ import React from "react";
 import { Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
+import { BlueButton, PurpleButton, LightBlueButton, DarkPurpleButton ,useStyles} from '../../styles/material-style'
+
 function ManagerProfile({ user }) {
   return (
     <div>
@@ -15,30 +17,30 @@ function ManagerProfile({ user }) {
             </div>
             <div className="item-manage-user">
                 <Link to="/parcels">
-                    <Button variant="contained" style={{ width: 300 }}>
+                    <LightBlueButton variant="contained" color='primary' className={useStyles.margin} style={{ width: 300 }}>
                     Warehouse Parcels
-                    </Button>
+                    </LightBlueButton>
                 </Link>
             </div>
             <div className="item-manage-user">
                 <Link to="/stored-parcels">
-                    <Button variant="contained" style={{ width: 300 }}>
+                    <BlueButton variant="contained" color='primary' className={useStyles.margin} style={{ width: 300 }}>
                     Confirm stored
-                    </Button>
+                    </BlueButton>
                 </Link>
             </div>
             <div className="item-manage-user">
                 <Link to="/exported-parcels">
-                    <Button variant="contained" style={{ width: 300 }}>
+                    <PurpleButton variant="contained" color='primary' className={useStyles.margin} style={{ width: 300 }}>
                     Confirm exported
-                    </Button>
+                    </PurpleButton>
                 </Link>
             </div>
             <div className="item-manage-user">
                 <Link to="/request-report">
-                    <Button variant="contained" style={{ width: 300 }}>
+                    <DarkPurpleButton variant="contained" color='primary' className={useStyles.margin} style={{ width: 300 }}>
                     Request Report
-                    </Button>
+                    </DarkPurpleButton>
                 </Link>
             </div>
         </div>
