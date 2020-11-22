@@ -34,11 +34,11 @@ class WarehouseService {
   }
 
   editWarehouse() {
-    return axios.put(API_URL + "", {}, { headers: authHeader() });
+    return axios.put(API_URL + "warehouses", {}, { headers: authHeader() });
   }
 
-  deleteWarehouse(parcelId) {
-    return axios.delete(API_URL + "", { parcelId }, { headers: authHeader() });
+  deleteWarehouse(warehouseId) {
+    return axios.delete(API_URL + `warehouses/${warehouseId}`, { headers: authHeader() });
   }
 
   getAllWarehouses(){

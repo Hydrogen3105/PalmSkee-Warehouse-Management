@@ -162,16 +162,6 @@ class AddWarehouse extends Component {
                                 />
                             </div>
 
-                            {/* <div className='form-group'>
-                                <h5>Number of Staffs</h5>
-                                <input  type='number'
-                                        name='number_staffs'
-                                        value={this.state.number_staffs}
-                                        onChange={this.handleChange}
-                                        className='form-control'
-                                />
-                            </div> */}
-
                             <div className='form-group'>
                                 <h5>Type of Warehouse</h5>
                                 <Select 

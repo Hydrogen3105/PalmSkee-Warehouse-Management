@@ -16,6 +16,7 @@ import ConfirmedDialog from '../../dialogs/dialog-confirmed.component'
 import { dialog_state } from '../../actions/dialog'
 import { Button, Dialog, DialogActions, DialogTitle } from '@material-ui/core'
 
+
 class DeleteUser extends Component {
     constructor(props) {
         super(props)
@@ -175,5 +176,5 @@ function mapStateToProps(state) {
         dialog_state,
     }
   }
-  
+
 export default connect(mapStateToProps)(DeleteUser)
