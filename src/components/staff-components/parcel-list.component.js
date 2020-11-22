@@ -16,6 +16,8 @@ import ParcelService from '../../services/parcel-service'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
+import { BlueButton, GreenButton, AmberButton, ColorButton ,useStyles} from '../../styles/material-style'
+
 class Parcels extends Component {
     constructor(props) {
         super(props)
@@ -106,33 +108,34 @@ class Parcels extends Component {
                     <div id='outer'>
                         <div className='inner'>
                             <Link to="/add-parcel">
-                                <Button variant="contained" color="primary">
+                                <BlueButton variant="contained" color="primary" className={useStyles.margin}>
                                     New
-                                </Button>
+                                </BlueButton>
                             </Link>
                         </div>
                         <div className='inner'>
                             <Link to="/stored-parcels">
-                                <Button variant="contained" color="secondary">
+                                <AmberButton variant="contained" color="secondary" className={useStyles.margin}>
                                     Stored
-                                </Button>
+                                </AmberButton>
                             </Link>
                         </div>
                         <div className='inner'>
                             <Link to="/exported-parcels">
-                                <Button variant="contained" color="primary">
+                                <GreenButton variant="contained" color="primary" className={useStyles.margin}>
                                     Exported
-                                </Button>
+                                </GreenButton>
                             </Link>
                         </div>
                         {   currentUser.payload[0].position === "manager" &&
                         <div className='inner'>
                             <Link to="/delete-parcel">
-                                <Button variant="contained" 
+                                <ColorButton variant="contained" 
                                         startIcon={ <DeleteIcon /> }
+                                        color="primary" className={useStyles.margin}
                                 >
                                     Delete Parcel
-                                </Button>
+                                </ColorButton>
                             </Link>
                         </div>
                         }

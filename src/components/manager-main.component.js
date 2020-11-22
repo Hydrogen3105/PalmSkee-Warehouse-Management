@@ -14,6 +14,8 @@ import WarehouseService from '../services/warehouse-service'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
+import { AmberButton ,useStyles} from '../styles/material-style'
+
 class ManagerMain extends Component {
     constructor(props) {
         super(props)
@@ -33,15 +35,21 @@ class ManagerMain extends Component {
                 return {
                     ...warehouse,
                     id: warehouse.warehouseId
+                    }
                 }
-            })
+            )
             this.setState({
                 allWarehouses: warehouses,
                 showWarehouses: warehouses,
                 isLoading: false,
             })
 
-        })
+            },(error) =>{
+                this.setState({
+                    isLoading: false,
+                })
+            }
+        )
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -148,9 +156,9 @@ class ManagerMain extends Component {
                         
                         <div style={{marginTop: 20, textAlign: 'right'}}>
                             <Link to="/show-report">
-                                <Button variant='contained' style={{width: 235}}>
+                                <AmberButton variant='contained' color='primary' className={useStyles.margin} style={{width: 235}}>
                                     Show Analysis Report
-                                </Button>
+                                </AmberButton>
                             </Link>
                         </div>
                     </div>
