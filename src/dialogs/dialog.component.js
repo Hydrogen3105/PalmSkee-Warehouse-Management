@@ -1,19 +1,34 @@
-import React from 'react'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import { connect } from 'react-redux'
-import { dialog_state } from '../actions/dialog'
-import { edit_user, delete_user, select_user } from '../actions/admin'
-import { delete_parcel, edit_parcel, edit_status ,add_parcel} from '../actions/parcel'
-import { SET_MESSAGE } from '../actions/types'
-import {add_warehouse,delete_warehouse} from '../actions/warehouses'
+import React from "react";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import { connect } from "react-redux";
+import { dialog_state } from "../actions/dialog";
+import { edit_user, delete_user, select_user } from "../actions/admin";
+import {
+  delete_parcel,
+  edit_parcel,
+  edit_status,
+  add_parcel,
+} from "../actions/parcel";
+import { SET_MESSAGE } from "../actions/types";
+import {
+  add_warehouse,
+  delete_warehouse,
+  edit_warehouse,
+  select_warehouse,
+} from "../actions/warehouses";
 
-
-function QuestionDialog({ dispatch, dialog_state:state, topic, data,message }) {
-  const [open, setOpen] = React.useState(false)
-  const [loading, setLoading] = React.useState(false)
+function QuestionDialog({
+  dispatch,
+  dialog_state: state,
+  topic,
+  data,
+  message,
+}) {
+  const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     state === 1 && setOpen(true);
@@ -103,16 +118,18 @@ function QuestionDialog({ dispatch, dialog_state:state, topic, data,message }) {
             optional
           )
         )
-          .then(() => {
-            dispatch(dialog_state(prevState + 1))
-          },(error) => {
-            const message =
-              (error.response &&
-                error.response.data &&
-                error.response.data.success) ||
-              error.message ||
-              error.toString();
-        
+          .then(
+            () => {
+              dispatch(dialog_state(prevState + 1));
+            },
+            (error) => {
+              const message =
+                (error.response &&
+                  error.response.data &&
+                  error.response.data.success) ||
+                error.message ||
+                error.toString();
+
               dispatch({
                 type: SET_MESSAGE,
                 payload: message,
@@ -123,48 +140,50 @@ function QuestionDialog({ dispatch, dialog_state:state, topic, data,message }) {
             setLoading(false);
           });
         break;
-      
-      case 'edit-parcel':
-          dispatch(edit_parcel(data.parcelId, data.optional))
+
+      case "edit-parcel":
+        dispatch(edit_parcel(data.parcelId, data.optional))
           .then(() => {
-            dispatch(dialog_state(prevState + 1))
+            dispatch(dialog_state(prevState + 1));
           })
           .catch(() => {
-            setLoading(false)
-          })
+            setLoading(false);
+          });
 
-          break
-      
-      case 'delete-parcel':
-          const deleted_parcel = data.parcelId
-          dispatch(add_parcel(deleted_parcel))
+        break;
+
+      case "delete-parcel":
+        const deleted_parcel = data.parcelId;
+        dispatch(add_parcel(deleted_parcel))
           .then(() => {
-            dispatch(dialog_state(prevState + 1))
+            dispatch(dialog_state(prevState + 1));
           })
           .catch(() => {
-            setLoading(false)
-          })
+            setLoading(false);
+          });
 
-          break
-      
-      case 'store' :
-        var { status, updateBy, parcels} = data
-        dispatch(edit_status(status, updateBy, parcels)).then(() => {
-          dispatch(dialog_state(prevState + 1))
-        })
-        .catch(() => {
-          setLoading(false)
-        })
-        break
-      
-      case 'export' :
-        dispatch(edit_status(data.status, data.updateBy, data.parcels)).then(() => {
-          dispatch(dialog_state(prevState + 1))
-        })
-        .catch(() => {
-          setLoading(false)
-        })
-        break
+        break;
+
+      case "store":
+        var { status, updateBy, parcels } = data;
+        dispatch(edit_status(status, updateBy, parcels))
+          .then(() => {
+            dispatch(dialog_state(prevState + 1));
+          })
+          .catch(() => {
+            setLoading(false);
+          });
+        break;
+
+      case "export":
+        dispatch(edit_status(data.status, data.updateBy, data.parcels))
+          .then(() => {
+            dispatch(dialog_state(prevState + 1));
+          })
+          .catch(() => {
+            setLoading(false);
+          });
+        break;
 
       case "add":
         var {
@@ -202,16 +221,54 @@ function QuestionDialog({ dispatch, dialog_state:state, topic, data,message }) {
         break;
 
       case "delete":
-      var select_warehouse = data;
-          dispatch(delete_warehouse(select_warehouse))
+        var select_warehouse = data;
+        dispatch(delete_warehouse(select_warehouse))
           .then(() => {
-            dispatch(dialog_state(prevState + 1))
+            dispatch(dialog_state(prevState + 1));
           })
           .catch(() => {
-            setLoading(false)
-          })
+            setLoading(false);
+          });
 
-          break
+        break;
+
+      case "edit":
+        var {
+          warehouseId,
+          name,
+          address,
+          zipCode,
+          country,
+          city,
+          coordinates,
+          phone,
+          type,
+          managerId,
+          status,
+        } = data;
+        dispatch(
+          edit_warehouse(
+            warehouseId,
+            name,
+            address,
+            zipCode,
+            country,
+            city,
+            coordinates,
+            phone,
+            type,
+            managerId,
+            status
+          )
+        )
+          .then(() => {
+            dispatch(dialog_state(prevState + 1));
+            dispatch(select_warehouse(""));
+          })
+          .catch(() => {
+            setLoading(false);
+          });
+        break;
 
       default:
         dispatch(dialog_state(prevState + 1));
@@ -259,7 +316,12 @@ function QuestionDialog({ dispatch, dialog_state:state, topic, data,message }) {
           <Button onClick={handleClose} color="primary">
             Back
           </Button>
-          <Button onClick={() => {console.log(data, message)}} color="primary">
+          <Button
+            onClick={() => {
+              console.log(data, message);
+            }}
+            color="primary"
+          >
             Data
           </Button>
           <Button onClick={handleConfirm} color="primary" autoFocus>
@@ -275,14 +337,14 @@ function QuestionDialog({ dispatch, dialog_state:state, topic, data,message }) {
 }
 
 function mapStateToProp(state) {
-    const {dialog_state} = state.dialog
-    const {userId} = state.user
-    const {message} = state.message
-    return {
-        dialog_state,
-        userId,
-        message
-    }
+  const { dialog_state } = state.dialog;
+  const { userId } = state.user;
+  const { message } = state.message;
+  return {
+    dialog_state,
+    userId,
+    message,
+  };
 }
 
 export default connect(mapStateToProp)(QuestionDialog);

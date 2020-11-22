@@ -7,16 +7,17 @@ export const select_warehouse = (warehouseId) => ({
 });
 
 export const add_warehouse = (
-    name,
-    address,
-    zipCode,
-    country,
-    city,
-    coordinates,
-    phone,
-    type,
-    managerId,
-    status) => (dispatch) => {
+  name,
+  address,
+  zipCode,
+  country,
+  city,
+  coordinates,
+  phone,
+  type,
+  managerId,
+  status
+) => (dispatch) => {
   return WarehouseService.addWarehouse(
     name,
     address,
@@ -27,7 +28,8 @@ export const add_warehouse = (
     phone,
     type,
     managerId,
-    status).then(
+    status
+  ).then(
     (response) => {
       dispatch({
         type: SET_MESSAGE,
@@ -54,8 +56,32 @@ export const add_warehouse = (
   );
 };
 
-export const edit_warehouse = () => (dispatch) => {
-  return WarehouseService.editWarehouse().then(
+export const edit_warehouse = (
+  warehouseId,
+  name,
+  address,
+  zipCode,
+  country,
+  city,
+  coordinates,
+  phone,
+  type,
+  managerId,
+  status
+) => (dispatch) => {
+  return WarehouseService.editWarehouse(
+    warehouseId,
+    name,
+    address,
+    zipCode,
+    country,
+    city,
+    coordinates,
+    phone,
+    type,
+    managerId,
+    status
+  ).then(
     (response) => {
       dispatch({
         type: SET_MESSAGE,
