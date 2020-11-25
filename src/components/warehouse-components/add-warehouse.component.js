@@ -49,9 +49,27 @@ class AddWarehouse extends Component {
 
     handleChange(e) {
         const { name, value } = e.target
-        this.setState({
-            [name]: value
-        })
+        if(name === 'coordinatesLat'){
+            this.setState({
+                coordinates: {
+                    ...this.state.coordinates,
+                    lat: value
+                }
+            })
+        }
+        else if(name === 'coordinatesLng'){
+            this.setState({
+                coordinates: {
+                    ...this.state.coordinates,
+                    lng: value
+                }
+            })
+        }
+        else {
+            this.setState({
+                [name]: value
+            })
+        } 
     }
 
     handleBack() {
@@ -134,15 +152,15 @@ class AddWarehouse extends Component {
                             <div className='form-group'>
                                 <h5>Coordinate</h5>
                                 <input  type='number'
-                                        name='coordinates'
-                                        placeholder="lat"
+                                        name='coordinatesLat'
+                                        placeholder="latitude"
                                         value={this.state.coordinates.lat}
                                         onChange={this.handleChange}
                                         className='form-control'
                                 />
                                 <input  type='number'
-                                        name='coordinates'
-                                        placeholder="lng"
+                                        name='coordinatesLng'
+                                        placeholder="longtitude"
                                         value={this.state.coordinates.lng}
                                         onChange={this.handleChange}
                                         className='form-control'
@@ -199,11 +217,12 @@ class AddWarehouse extends Component {
 
                             <div className="form-group">
                                 <FormControl>
-                                    <InputLabel>Manager</InputLabel>
+                                    <h5>Manager</h5>
                                     <Select name="manager_id"
                                             value={this.state.manager_id}
                                             onChange={this.handleChange}
                                             style={{ width: 300}}
+                                            className="form-control"
                                     >
                                     { 
                                         allManagers.map(user => {

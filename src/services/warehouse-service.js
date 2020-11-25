@@ -27,28 +27,59 @@ class WarehouseService {
         phone,
         type,
         managerId,
-        status
+        status,
       },
       { headers: authHeader() }
     );
   }
 
-  editWarehouse() {
-    return axios.put(API_URL + "warehouses", {}, { headers: authHeader() });
+  editWarehouse(
+    warehouseId,
+    name,
+    address,
+    zipCode,
+    country,
+    city,
+    coordinates,
+    phone,
+    type,
+    managerId,
+    status
+  ) {
+    return axios.put(
+      API_URL + `warehouses/${warehouseId}`,
+      {
+        warehouseId,
+        name,
+        address,
+        zipCode,
+        country,
+        city,
+        coordinates,
+        phone,
+        type,
+        managerId,
+        status,
+      },
+      { headers: authHeader() }
+    );
   }
 
   deleteWarehouse(warehouseId) {
-    return axios.delete(API_URL + `warehouses/${warehouseId}`, { headers: authHeader() });
+    return axios.delete(API_URL + `warehouses/${warehouseId}`, {
+      headers: authHeader(),
+    });
   }
 
-  getAllWarehouses(){
-    return axios.get( API_URL + "warehouses", { headers: authHeader() })
+  getAllWarehouses() {
+    return axios.get(API_URL + "warehouses", { headers: authHeader() });
   }
 
-  getWarehouseById(warehouseId){
-    return axios.get( API_URL + `warehouses/${warehouseId}`, { headers: authHeader() })
+  getWarehouseById(warehouseId) {
+    return axios.get(API_URL + `warehouses/${warehouseId}`, {
+      headers: authHeader(),
+    });
   }
-
 }
 
 export default new WarehouseService();
