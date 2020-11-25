@@ -8,19 +8,23 @@ import SearchIcon from '@material-ui/icons/Search'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import WarehousesTable from "../manager-components/warehouses-table.component"
 import AdminProfile from "../profile.components/admin-profile.component"
-import warehouseService from '../../services/warehouse-service'
-
-
+import WarehouseService from '../../services/warehouse-service'
 
 import { history } from '../../helpers/history'
 
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+
+import { ColorButton, BlueButton, GreenButton, useStyles } from '../../styles/material-style'
+
 class ManageWarehouse extends Component {
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state = {
-            allWarehouse:[],
+            allWarehouses: [],
             showWarehouses: [],
-            isLoading: true
+            isLoading: true,
+            searchText: "",
         }
 
     }
@@ -29,94 +33,111 @@ class ManageWarehouse extends Component {
         history.push('/home')
     }
 
-    componentDidMount(){
-        warehouseService.getAllWarehouses()
-        .then((response) => {
-            const all_warehouse = response.data.payload.map(warehouse => {
-                return {
-                    ...warehouse,
-                    id: warehouse.warehouseId 
-                }
+    componentDidMount() {
+        WarehouseService.getAllWarehouses()
+            .then((response) => {
+                const all_warehouse = response.data.payload.map(warehouse => {
+                    return {
+                        ...warehouse,
+                        id: warehouse.warehouseId
+                    }
+                })
+                this.setState({
+                    allWarehouses: all_warehouse,
+                    showWarehouses: all_warehouse,
+                    isLoading: false,
+                })
             })
-            this.setState({
-                allwarehouse: all_warehouse,
-                showWarehouses: all_warehouse,
-                isLoading: false,
-            })
-        })
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if(prevState.showWarehouses !== this.state.showWarehouses){
+        if (prevState.showWarehouses !== this.state.showWarehouses) {
             this.setState({
                 isLoading: false
             })
-        }}
+        }
+    }
 
-    handleChange(e) {
-            const { name , value } = e.target
+    handleSearch = (allWarehouses) => {
+        this.setState({
+            isLoading: true
+        })
+
+        if (this.state.searchText !== '') {
+            const searchData = allWarehouses.filter(warehouse => {
+                const regex = new RegExp('^' + this.state.searchText, 'gi')
+                return regex.test(warehouse.warehouseId)
+            })
             this.setState({
-                [name]: value
+                showWarehouses: searchData,
+                searchText: ''
             })
         }
+        else {
+            this.setState({
+                showWarehouses: allWarehouses,
+                isLoading: false
+            })
+        }
+    }
 
-    render () {
+    handleChange = (e) => {
+        const { name, value } = e.target
+        this.setState({
+            [name]: value
+        })
+    }
+
+    render() {
         const { user: currentUser } = this.props
         const { position } = currentUser.payload[0]
 
-        if(!currentUser) {
+        if (!currentUser) {
             return <Redirect to='/login' />
         }
-        else if(position !== 'admin'){
+        else if (position !== 'admin') {
             return <Redirect to='/home' />
         }
 
+        
         return (
             <div>
                 <h2>Manage Warehouse</h2>
                 <div>
                     <div id='outer'>
                         <div className='inner'>
-                        <Link to="/add-warehouse">
-                            <Button variant="contained">
-                                Add
-                            </Button>
-                        </Link>
+                            <Link to="/add-warehouse">
+                                <BlueButton variant="contained" color='primary' className={useStyles.margin} style={{width: 100}}>
+                                    Add
+                                </BlueButton>
+                            </Link>
                         </div>
                         <div className='inner'>
                             <Link to="/edit-warehouse">
-                                <Button variant="contained">
+                                <GreenButton variant="contained" color='primary' className={useStyles.margin} style={{width: 100}}>
                                     Edit
-                                </Button>
+                                </GreenButton>
                             </Link>
                         </div>
                         <div className='inner'>
                             <Link to="/delete-warehouse">
-                                <Button variant="contained">
+                                <ColorButton variant="contained" color='primary' className={useStyles.margin} style={{width: 100}}>
                                     Delete
-                                </Button>
+                                </ColorButton>
                             </Link>
                         </div>
-                        <div className='inner'>
-                        <button className="btn btn-danger btn-block" 
-                                    style={{width: 150}}
-                                    onClick={() => console.log(this.state.allWarehouse)}
-                            >
-                                    Data
-                        </button>
-                    </div>
                     </div>
                 </div>
-                
+
                 <div className='container-manage-user'>
                     <div>
                         <div className='search-bar'>
                             <div className='search-bar-container'>
                                 <div className='filter-container'>
                                     <div>
-                                        <IconButton color="primary" 
-                                                    aria-label="search" 
-                                                    component="span" 
+                                        <IconButton color="primary"
+                                            aria-label="search"
+                                            component="span"
 
                                         >
                                             <FilterListIcon />
@@ -124,36 +145,40 @@ class ManageWarehouse extends Component {
                                     </div>
                                 </div>
 
-                                <div className='search-container'> 
+                                <div className='search-container'>
                                     <div className='form-group'>
-                                        <input  type='text'
-                                                className='form-control'
-                                                name='searchText'
-                                                style= {{width: 250}}
-                                                placeholder='Search Here..'
-                                                value={this.state.searchText}
-                                                onChange={this.handleChange}
+                                        <input type='text'
+                                            className='form-control'
+                                            name='searchText'
+                                            style={{ width: 250 }}
+                                            placeholder='Search Here..'
+                                            value={this.state.searchText}
+                                            onChange={this.handleChange}
                                         />
                                     </div>
                                     <div>
-                                        <IconButton color="primary" 
-                                                    aria-label="search" 
-                                                    component="span" 
-                                                    onClick={() => this.handleSearch(this.state.allUser)}
+                                        <IconButton color="primary"
+                                            aria-label="search"
+                                            component="span"
+                                            onClick={() => this.handleSearch(this.state.allWarehouses)}
                                         >
                                             <SearchIcon />
                                         </IconButton>
                                     </div>
                                 </div>
-                                    
+
                             </div>
-                                
+
                         </div>
                         {/*Above Table */}
-                        <div>
-                            <WarehousesTable warehouses={this.state.showWarehouses} />
-                        </div>
-                        <div style={{marginTop: 10}}>
+                        {
+                            !this.state.isLoading &&
+                            <div>
+                                <WarehousesTable warehouses={this.state.showWarehouses} position='admin'/>
+                            </div>
+                        }
+
+                        <div style={{ marginTop: 10 }}>
                             <Link to='/home'>
                                 <Button variant='contained' onClick={this.handleBack}>
                                     Back
@@ -164,37 +189,23 @@ class ManageWarehouse extends Component {
                     {/** */}
                     <div>
                         <div className='item-manage-user'>
-                            <AdminProfile user={currentUser}/>
-                        </div>
-                        <div className='item-manage-user'>
-                            <Link to="/manage-user">
-                                <Button variant="contained"
-                                        style={{width: 230}}
-                                >
-                                    Manage User
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>
-                            <Link to='/manage-warehouse'>
-                                <Button variant="contained"
-                                        style={{width: 230}}
-                                >
-                                    Manage Warehouse
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>
-                            <Link to='/reports'>
-                                <Button variant="contained"
-                                        style={{width: 230}}
-                                >
-                                    View Requests
-                                </Button>
-                            </Link>
+                            <AdminProfile user={currentUser} />
                         </div>
                     </div>
                 </div>
+                { this.state.isLoading && (
+                    <Dialog
+                        open={this.state.isLoading}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">
+                            <span className="spinner-border spinner-border-sm"></span>
+                                Loading...
+                            </DialogTitle>
+                    </Dialog>
+                )
+                }
             </div>
         )
     }

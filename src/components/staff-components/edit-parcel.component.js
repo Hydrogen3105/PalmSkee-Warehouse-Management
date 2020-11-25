@@ -3,10 +3,6 @@ import { connect } from 'react-redux'
 import { Redirect , Link } from 'react-router-dom'
 import { history } from '../../helpers/history'
 
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
@@ -14,7 +10,6 @@ import QuestionDialog from '../../dialogs/dialog.component'
 import ConfirmedDialog from '../../dialogs/dialog-confirmed.component'
 import { dialog_state } from '../../actions/dialog'
 
-import { edit_parcel } from '../../actions/parcel'
 import ParcelService from '../../services/parcel-service'
 
 class EditParcel extends Component {

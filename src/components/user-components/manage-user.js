@@ -15,7 +15,7 @@ import IconButton from '@material-ui/core/IconButton'
 import SearchIcon from '@material-ui/icons/Search'
 import FilterListIcon from '@material-ui/icons/FilterList'
 
-import { ColorButton, useStyles } from '../../styles/material-style'
+import { ColorButton, BlueButton, GreenButton, useStyles } from '../../styles/material-style'
 
 
 class ManageUser extends Component {
@@ -109,32 +109,24 @@ class ManageUser extends Component {
                 <div id="outer">
                     <div className="inner">
                         <Link to="/register">
-                            <Button variant="contained">
+                            <BlueButton variant="contained" color='primary' className={useStyles.margin} style={{ width: 150 }}>
                                 Add User
-                            </Button>
+                            </BlueButton>
                         </Link>
                     </div>
                     <div className='inner'>
                         <Link to="/edit-user">
-                            <Button variant="contained">
+                            <GreenButton variant="contained" color='primary' className={useStyles.margin} style={{ width: 150 }}>
                                 Edit User
-                            </Button>
+                            </GreenButton>
                         </Link>
                     </div>
                     <div className='inner'>
                         <Link to="/delete-user">
-                            <Button variant="contained">
+                            <ColorButton variant="contained" color='primary' className={useStyles.margin} style={{ width: 150 }}>
                                 Delete User
-                            </Button>
+                            </ColorButton>
                         </Link>
-                    </div>
-                    <div className='inner'>
-                        <button className="btn btn-danger btn-block" 
-                                    style={{width: 150}}
-                                    onClick={() => console.log(this.state.allUser)}
-                            >
-                                    Data
-                        </button>
                     </div>
                 </div>
 

@@ -135,17 +135,17 @@ function QuestionDialog({ dispatch, dialog_state:state, topic, data,message }) {
 
           break
       
-      case 'delete-parcel':
-          const deleted_parcel = data.parcelId
-          dispatch(add_parcel(deleted_parcel))
-          .then(() => {
-            dispatch(dialog_state(prevState + 1))
-          })
-          .catch(() => {
-            setLoading(false)
-          })
+      // case 'delete-parcel':
+      //     const deleted_parcel = data.parcelId
+      //     dispatch(add_parcel(deleted_parcel))
+      //     .then(() => {
+      //       dispatch(dialog_state(prevState + 1))
+      //     })
+      //     .catch(() => {
+      //       setLoading(false)
+      //     })
 
-          break
+      //     break
       
       case 'store' :
         var { status, updateBy, parcels} = data
