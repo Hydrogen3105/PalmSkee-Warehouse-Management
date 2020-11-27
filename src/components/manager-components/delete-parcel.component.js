@@ -196,7 +196,7 @@ class DeleteParcel extends Component {
                 }
                 {
                     this.props.dialog_state === 1 ? 
-                    <QuestionDialog topic='delete-parcel' /> :
+                    <QuestionDialog topic='delete-parcel' data={{parcelId: this.state.selectedParcels}}/> :
                     this.props.dialog_state === 2 && 
                     <ConfirmedDialog topic='delete-parcel' />
                 }

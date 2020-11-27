@@ -1,114 +1,51 @@
-import React from 'react'
-import { connect } from "react-redux"
+import React from "react";
+import { connect } from "react-redux";
 
-import Paper from '@material-ui/core/Paper'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import TablePagination from '@material-ui/core/TablePagination'
-import TableRow from '@material-ui/core/TableRow'
-
-import { history } from '../../helpers/history'
-import { select_user } from '../../actions/admin'
+import { history } from "../../helpers/history";
+import { select_user } from "../../actions/admin";
+import { DataGrid } from "@material-ui/data-grid";
 
 const columns = [
-    { id: "userId" , label: "Staff ID" ,minWidth: 100},
-    { id: "firstName" , label: "First name" ,minWidth: 150},
-    { id: "lastName" , label: "Last name" ,minWidth: 150},
-    { id: "position" , label: "Position" ,minWidth: 100}
+  { field: "userId", headerName: "User ID", width: 200 },
+  { field: "firstName", headerName: "First Name", width: 200 },
+  { field: "lastName", headerName: "Last Name", width: 200 },
+  { field: "position", headerName: "Position", width: 200 },
+];
+
+function UsersTable({ dispatch, users }) {
+  const handleSelectUser = (userId) => {
+    dispatch(select_user(userId));
+    history.push("/edit-user");
+
+  };
+  return (
+    <div>
+    <div style={{ height: 500, width: 760 }}>
+      <DataGrid
+        rows={users}
+        columns={columns}
+        pageSize={10}
+        onRowClick={(row) => handleSelectUser(row.data.userId)}
+      />
+
+    </div>
+    </div>
+  );
+}
+
+export default connect()(UsersTable)
+
+const column_mini = [
+  { field: 'user_id', headerName: 'User ID', width: 100 },
+  { field: 'first_name', headerName: 'First Name', width: 150 },
+  /*{ field: 'last_name', headerName: 'Last Name', width: 100 },*/
 ]
 
-class UsersTable extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            page: 0,
-            rowPerPage: 10,
+export function MiniUsersTable({ users }) {
 
-        }
-        this.handleChangePage = this.handleChangePage.bind(this)
-        this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this)
-        this.handleSelectUser = this.handleSelectUser.bind(this)
-    }
-
-    handleChangePage = (newPage) => {
-        this.setState({
-            page: newPage
-        })
-    }
-    
-    handleChangeRowsPerPage = (event) => {
-        this.setState({
-            rowPerPage: +event.target.value
-        })
-
-        this.setState({
-            page: 0
-        })
-    }
-    
-    handleSelectUser(userId) {
-        this.props.dispatch(select_user(userId))
-        history.push('/edit-user')
-    }
-
-    render () {
-      
-        return (
-            <Paper style={{width: 780}}>
-            <TableContainer  >
-              <Table stickyHeader aria-label="sticky table" >
-                <TableHead>
-                  <TableRow>
-                    {columns.map((column) => (
-                      <TableCell
-                        key={column.id}
-                        style={{ minWidth: column.minWidth }}
-                      >
-                        {column.label}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {this.props.users.slice(this.state.page * this.state.rowPerPage, this.state.page * this.state.rowPerPage + this.state.rowPerPage).map((row) => {
-                    return (
-                            <TableRow hover role="checkbox" tabIndex={-1} key={row['userId']} name={row['userId']} onClick={() => this.handleSelectUser(row['userId'])} >
-                              {columns.map((column) => {
-                                const value = row[column.id]
-                                return (
-                                  <TableCell key={column.id} align={column.align}>
-                                      {value}
-                                  </TableCell>
-                                )
-                              })}
-                            </TableRow>
-                    )
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[10, 20, 30]}
-              component="div"
-              count={this.props.users.length}
-              rowsPerPage={this.state.rowPerPage}
-              page={this.state.page}
-              onChangePage={this.handleChangePage}
-              onChangeRowsPerPage={this.handleChangeRowsPerPage}
-            />
-          </Paper>
-        )
-    }
+  return (
+      <div style={{ height: 500, width: 250 }}>
+          <DataGrid  rows={users} columns={column_mini} pageSize={10} />
+      </div>
+  );
 }
-
-function mapStateToProp(state) {
-  const { userId } = state.user
-  return {
-      userId,
-  }
-}
-
-export default connect(mapStateToProp)(UsersTable)

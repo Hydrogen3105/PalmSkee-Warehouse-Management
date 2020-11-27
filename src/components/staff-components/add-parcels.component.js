@@ -13,6 +13,13 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import Select from "react-validation/build/select";
 
+import WarehouseService from '../../services/warehouse-service'
+import SearchService from '../../services/sender-service'
+import SendersTable from './sender-table.component'
+
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+
 const required = (value) => {
     if (!value) {
       return (
@@ -58,8 +65,6 @@ const vweight = (value) => {
     }
 }
 
-
-
 class AddParcel extends Component {
     constructor(props) {
         super(props)
@@ -74,6 +79,8 @@ class AddParcel extends Component {
             senderId: "",
             isLoading: true,
             isSameLocation: false,
+            allWarehouses: [],
+            allSenders: []
         }
         
         this.handleBack = this.handleBack.bind(this)
@@ -83,6 +90,40 @@ class AddParcel extends Component {
 
     componentDidMount() {
         this.props.dispatch(dialog_state(0))
+        this.setState({
+            fromWarehouseId: this.props.userData.warehouseId,
+        })
+        SearchService.searchSender().then((response) => {
+            const all_senders = response.data.payload.map((sender) => {
+                return {
+                    ...sender,
+                    id: sender.senderId
+                }
+            })
+            this.setState({
+                allSenders: all_senders,
+
+            })
+        }).then(() => {
+            SearchService.searchWarehouses().then(response => {
+                this.setState({
+                    allWarehouses: response.data.payload,
+                    isLoading: false
+                })
+                },(error) => {
+                    this.setState({
+                        isLoading: false
+                    })
+                }
+            )
+        })
+        
+    }
+
+    onSelectSender = (senderId) => {
+        this.setState({
+            senderId
+        })
     }
 
     handleChange (e) {
@@ -128,7 +169,6 @@ class AddParcel extends Component {
         return (
             <div>
                 <h2>Add New Parcel</h2>
-                <button onClick={() => console.log(typeof(parseInt(width)), typeof(parseFloat(weight)))}>Click</button>
                 <div id='outer'>
                     <div className='inner'>
                         <Link to="/add-parcel">
@@ -228,8 +268,9 @@ class AddParcel extends Component {
                                                     value={this.state.senderId}
                                                     onChange={this.handleChange}
                                                     validations = {[required]}
-                                                    style={{width: 350}}
+                                                    style={{width: 350,marginBottom: 10}}
                                             />
+                                            { !this.state.isLoading && <SendersTable senders={this.state.allSenders} onSelectSender={this.onSelectSender}/>} 
                                         </div>
                                         <h4 style={{marginBottom: 15}}>Destination</h4>
                                         { this.state.fromWarehouseId === this.state.toWarehouseId && this.state.isSameLocation && 
@@ -245,11 +286,9 @@ class AddParcel extends Component {
                                                     onChange={this.handleChange}
                                                     validations= {[required]}
                                                     className='form-control'
-                        
+                                                    disabled
                                             >
-                                                <option value=''>Choose Origin</option>
-                                                <option value='WH001'>WH001</option>
-                                                <option value='WH002'>WH002</option>
+                                                <option value={this.state.fromWarehouseId}>{this.state.fromWarehouseId}</option>
                                             </Select>
                                         </div>
                                         <div className="form-group">
@@ -260,9 +299,10 @@ class AddParcel extends Component {
                                                     className='form-control'
                         
                                             >
-                                                <option value=''>Choose Destination</option>
-                                                <option value='WH001'>WH001</option>
-                                                <option value='WH002'>WH002</option>
+                                                <option value=''>Choose parcel's destination</option>
+                                                { this.state.allWarehouses.map(warehouse => {
+                                                    return <option key={warehouse.warehouseId} value={warehouse.warehouseId}>{warehouse.warehouseId} {warehouse.name}</option>
+                                                })}
                                             </Select>
                                         </div>
                                         {""}
@@ -299,7 +339,19 @@ class AddParcel extends Component {
                         </div>
                     </div>
                 </div>
-                
+                { this.state.isLoading && (
+                    <Dialog
+                        open={this.state.isLoading}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">
+                            <span className="spinner-border spinner-border-sm"></span>
+                            Loading...
+                        </DialogTitle>
+                    </Dialog>
+                    )
+                }
                 {
                     this.props.dialog_state === 1 ? 
                     <QuestionDialog topic='add-parcel' data={payload_data}/> :
@@ -315,9 +367,11 @@ class AddParcel extends Component {
 function mapStateToProp(state) {
     const { user } = state.auth
     const { dialog_state } = state.dialog
+    const { userData } = state.currentUser
     return {
         user,
-        dialog_state
+        dialog_state,
+        userData,
     }
 }
 

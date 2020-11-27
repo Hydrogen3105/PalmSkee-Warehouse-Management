@@ -10,19 +10,89 @@ import FilterListIcon from '@material-ui/icons/FilterList'
 import WarehousesTable from './manager-components/warehouses-table.component'
 import ManagerProfile from './profile.components/manager-profile.component'
 
+import WarehouseService from '../services/warehouse-service'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+
+import { AmberButton ,useStyles} from '../styles/material-style'
+
 class ManagerMain extends Component {
     constructor(props) {
         super(props)
         this.state = {
             allWarehouses: [],
             showWarehouses: [],
+            isLoading: true,
+            searchText: "",
         }
         this.handleMock = this.handleMock.bind(this)
 
+    }  
+
+    componentDidMount(){
+        WarehouseService.getAllWarehouses().then((response) =>{
+            const warehouses = response.data.payload.map((warehouse) => {
+                return {
+                    ...warehouse,
+                    id: warehouse.warehouseId
+                    }
+                }
+            )
+            this.setState({
+                allWarehouses: warehouses,
+                showWarehouses: warehouses,
+                isLoading: false,
+            })
+
+            },(error) =>{
+                this.setState({
+                    isLoading: false,
+                })
+            }
+        )
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(prevState.showWarehouses !== this.state.showWarehouses){
+            this.setState({
+                isLoading: false
+            })
+        }
     }
 
     handleMock() {
         this.props.dispatch(select_warehouse('WH006'))
+    }
+
+    handleSearch(allWarehouses) {
+        this.setState({
+            isLoading: true
+        })
+        
+        if(this.state.searchText !== ''){
+            const searchData = allWarehouses.filter(warehouse => {
+                const regex = new RegExp(  '^' + this.state.searchText,'gi')
+                return regex.test(warehouse.warehouseId)
+            })
+            console.log(searchData)
+            this.setState({
+                showWarehouses: searchData,
+                searchText: ''
+            })
+        }
+        else {
+            this.setState({
+                showWarehouses: allWarehouses,
+                isLoading: false
+            })  
+        }
+    }
+    
+    handleChange = (e) => {
+        const { name , value } = e.target
+        this.setState({
+            [name]: value
+        })
     }
 
     render () {
@@ -67,7 +137,7 @@ class ManagerMain extends Component {
                                         <IconButton color="primary" 
                                                     aria-label="search" 
                                                     component="span" 
-                                                    onClick={() => this.handleSearch(this.state.allUser)}
+                                                    onClick={() => this.handleSearch(this.state.allWarehouses)}
                                         >
                                             <SearchIcon />
                                         </IconButton>
@@ -77,15 +147,18 @@ class ManagerMain extends Component {
                             </div>
                                 
                         </div>
-                        {/*Above Table */}
-                        <div>
-                            <WarehousesTable warehouses={this.state.showWarehouses} />
-                        </div>
+                        {
+                            !this.state.isLoading &&
+                            <div>
+                                <WarehousesTable warehouses={this.state.showWarehouses} />
+                            </div>
+                        }
+                        
                         <div style={{marginTop: 20, textAlign: 'right'}}>
                             <Link to="/show-report">
-                                <Button variant='contained' style={{width: 235}}>
+                                <AmberButton variant='contained' color='primary' className={useStyles.margin} style={{width: 235}}>
                                     Show Analysis Report
-                                </Button>
+                                </AmberButton>
                             </Link>
                         </div>
                     </div>
@@ -94,49 +167,22 @@ class ManagerMain extends Component {
                         <div className='item-manage-user'>
                             <ManagerProfile user={currentUser} />
                         </div>
-                        <div className='item-manage-user'>
-                            <Link to="/warehouse-detail">
-                                <Button variant='contained'
-                                        color= 'secondary'
-                                        onClick={this.handleMock}        
-                                >
-                                    Mock select warehouse
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>
-                            <Link to="/parcels">
-                                <Button variant='contained' style={{width: 235}}>
-                                    Warehouse Parcels
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>   
-                            <Link to="/stored-parcels"> 
-                                <Button variant='contained' style={{width: 235}}>
-                                Confirm stored
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>
-                            <Link to="/exported-parcels">
-                                <Button variant='contained' style={{width: 235}}>
-                                    Confirm exported
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>
-                            <Link to="/request-report">
-                                <Button variant='contained' style={{width: 235}}>
-                                    Request Report
-                                </Button>
-                            </Link>
-                        </div>
 
                     </div>
                 </div>
-                
-
+                { this.state.isLoading && (
+                        <Dialog
+                        open={this.state.isLoading}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                        >
+                            <DialogTitle id="alert-dialog-title">
+                                <span className="spinner-border spinner-border-sm"></span>
+                                Loading...
+                            </DialogTitle>
+                        </Dialog>
+                    )
+                }
             </div>
 
         )

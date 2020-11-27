@@ -19,17 +19,23 @@ class ParcelService {
         )
     }
 
-    editParcel() {
-        return axios.put(API_URL + 'parcels',
-        {},
+    editParcel(parcelId ,optional) {
+        return axios.put(API_URL + `parcels/${parcelId}`,
+        { optional },
         { headers: authHeader() }
         )
     }
 
     deleteParcel( parcelId ) {
-        return axios.delete(API_URL + 'parcels',
-        { parcelId },
+        return axios.delete(API_URL + `parcels/${parcelId}`,
         { headers: authHeader() }
+        )
+    }
+
+    editStatus(status, updateBy, parcels) {
+        return axios.put(API_URL + 'parcels/status',
+        { status, updateBy, parcels },
+        { headers: authHeader()}
         )
     }
 }

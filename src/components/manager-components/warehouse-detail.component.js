@@ -12,16 +12,36 @@ import FilterListIcon from '@material-ui/icons/FilterList'
 import ManagerProfile from '../profile.components/manager-profile.component'
 import WarehouseCardDetail from './warehouse-card-detail.component'
 
+import WarehouseService from '../../services/warehouse-service'
+
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+
 class WarehouseDetail extends Component {
     constructor(props) {
         super(props)
         this.state = {
-
+            warehouseData: {},
+            isLoading: true,
         }
         this.handleBack = this.handleBack.bind(this)
     }
 
+    componentDidMount() {
+        WarehouseService.getWarehouseById(this.props.warehouseId).then((response) => {
+            this.setState({
+                warehouseData: response.data.payload[0],
+                isLoading: false
+            })
+        },(error) => {
+            this.setState({
+                isLoading: false
+            })
+        })
+    }
+
     handleBack() {
+        this.props.dispatch(select_warehouse(''))
         history.push('/home')
     }
 
@@ -85,10 +105,14 @@ class WarehouseDetail extends Component {
                                     
                         </div>
                         {/*Above Table */}
-                        <div>
-                            <WarehouseCardDetail warehouseId= {this.props.warehouseId} />
-                        </div>
-                        <div className='button-back-comfirm' style={{marginTop: 20,}}>
+                        {
+                            !this.state.isLoading &&
+                            <div>
+                                <WarehouseCardDetail data={this.state.warehouseData} isLoading={this.state.isLoading}/>
+                            </div>
+                        }
+                        
+                        <div className='button-back-comfirm' style={{marginTop: 0,}}>
                             <Button variant='contained' style={{width: 100}} onClick={this.handleBack}>
                                     Back
                             </Button>
@@ -104,50 +128,23 @@ class WarehouseDetail extends Component {
                         <div className='item-manage-user'>
                             <ManagerProfile user={currentUser} />
                         </div>
-                        <div className='item-manage-user'>
-                            <Link to="/warehouse-detail">
-                                <Button variant='contained'
-                                        color= 'secondary'
-                                        onClick={this.handleMock}        
-                                >
-                                    Mock select warehouse
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>
-                            <Link to="/parcels">
-                                <Button variant='contained' style={{width: 235}}>
-                                    Warehouse Parcels
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>   
-                            <Link to="/stored-parcels"> 
-                                <Button variant='contained' style={{width: 235}}>
-                                Confirm stored
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>
-                            <Link to="/exported-parcels">
-                                <Button variant='contained' style={{width: 235}}>
-                                    Confirm exported
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className='item-manage-user'>
-                            <Link to="/request-report">
-                                <Button variant='contained' style={{width: 235}}>
-                                    Request Report
-                                </Button>
-                            </Link>
-                        </div>
-
                     </div>
 
                 </div>
                 
-
+                { this.state.isLoading && (
+                    <Dialog
+                        open={this.state.isLoading}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle id="alert-dialog-title">
+                            <span className="spinner-border spinner-border-sm"></span>
+                            Loading...
+                        </DialogTitle>
+                    </Dialog>
+                    )
+                }
             </div>
         )
     }

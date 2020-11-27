@@ -51,7 +51,6 @@ export const register = (userId, firstName, lastName, position, address, zipCode
 export const login = (user_id, password) => (dispatch) => {
     return AuthService.login(user_id, password).then(
       (response) => {
-        console.log(response)
         dispatch({
           type: LOGIN_SUCCESS,
           payload: { user: response.data },

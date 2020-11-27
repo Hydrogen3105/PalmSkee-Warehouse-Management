@@ -10,24 +10,13 @@ import { history } from '../../helpers/history'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
-import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import SearchIcon from '@material-ui/icons/Search'
 import FilterListIcon from '@material-ui/icons/FilterList'
 
-import { ColorButton, useStyles } from '../../styles/material-style'
+import { ColorButton, BlueButton, GreenButton, useStyles } from '../../styles/material-style'
 
-/*const useStyles = makeStyles((theme) => ({
-    root: {
-      '& > *': {
-        margin: theme.spacing(1),
-      },
-    },
-    input: {
-      display: 'none',
-    },
-  }))*/
 
 class ManageUser extends Component {
     constructor(props){
@@ -46,12 +35,26 @@ class ManageUser extends Component {
     componentDidMount() {
         AdminService.getAllUsers()
         .then((response) => {
+            const all_user = response.data.payload.map(user => {
+                return {
+                    ...user,
+                    id: user.userId
+                }
+            })
             this.setState({
-                allUser: response.data.payload,
-                showUser: response.data.payload,
+                allUser: all_user,
+                showUser: all_user,
                 isLoading: false,
             })
         })
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(prevState.showUser !== this.state.showUser){
+            this.setState({
+                isLoading: false
+            })
+        }
     }
 
     handleBack() {
@@ -59,12 +62,16 @@ class ManageUser extends Component {
     }
 
     handleSearch(allUser) {
-        //user => user.userId === this.state.searchText
+        this.setState({
+            isLoading: true
+        })
+        
         if(this.state.searchText !== ''){
             const searchData = allUser.filter(user => {
-                const regex = new RegExp(  '^' + this.state.searchText,'g')
+                const regex = new RegExp(  '^' + this.state.searchText,'gi')
                 return regex.test(user.userId)
             })
+            console.log(searchData)
             this.setState({
                 showUser: searchData,
                 searchText: ''
@@ -72,7 +79,8 @@ class ManageUser extends Component {
         }
         else {
             this.setState({
-                showUser: allUser
+                showUser: allUser,
+                isLoading: false
             })  
         }
     }
@@ -101,32 +109,24 @@ class ManageUser extends Component {
                 <div id="outer">
                     <div className="inner">
                         <Link to="/register">
-                            <Button variant="contained">
+                            <BlueButton variant="contained" color='primary' className={useStyles.margin} style={{ width: 150 }}>
                                 Add User
-                            </Button>
+                            </BlueButton>
                         </Link>
                     </div>
                     <div className='inner'>
                         <Link to="/edit-user">
-                            <Button variant="contained">
+                            <GreenButton variant="contained" color='primary' className={useStyles.margin} style={{ width: 150 }}>
                                 Edit User
-                            </Button>
+                            </GreenButton>
                         </Link>
                     </div>
                     <div className='inner'>
                         <Link to="/delete-user">
-                            <Button variant="contained">
+                            <ColorButton variant="contained" color='primary' className={useStyles.margin} style={{ width: 150 }}>
                                 Delete User
-                            </Button>
+                            </ColorButton>
                         </Link>
-                    </div>
-                    <div className='inner'>
-                        <button className="btn btn-danger btn-block" 
-                                    style={{width: 150}}
-                                    onClick={() => console.log(this.state.allUser)}
-                            >
-                                    Data
-                        </button>
                     </div>
                 </div>
 
@@ -171,7 +171,12 @@ class ManageUser extends Component {
                             </div>
                             
                         </div>
-                        <UsersTable users={this.state.showUser}/>
+                        {
+                            !this.state.isLoading &&
+                            <div>
+                                <UsersTable users={this.state.showUser} />
+                            </div>
+                        }
                     </div>
 
                     <div>

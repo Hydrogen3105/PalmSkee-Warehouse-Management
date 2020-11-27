@@ -78,26 +78,16 @@ class App extends Component {
     }
   }
 
+  componentWillUnmount() {
+    localStorage.removeItem("store");
+  }
+
   logOut() {
     this.props.dispatch(logout());
   }
 
   render() {
     const { currentUser } = this.state;
-    /*const classes = makeStyles((theme) => ({
-      root: {
-        flexGrow: 1,
-      },
-      menuButton: {
-        marginRight: theme.spacing(2),
-      },
-      title: {
-        flexGrow: 1,
-      },
-      login: {
-        textAlign: "right",
-      },
-    }));*/
 
     return (
       <Router history={history}>
@@ -109,7 +99,9 @@ class App extends Component {
                     <MenuIcon />
                 </IconButton>
                   <Typography variant="h6" >
+                  <Link to="/home" className="backToHome">
                     My PWS
+                   </Link> 
                   </Typography>
                 { currentUser && (
                   <div className="navbar-nav ml-auto navbar-expand">

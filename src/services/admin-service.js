@@ -17,6 +17,10 @@ class AdminService {
     getAllUsers() {
         return axios.get(API_URL + "users/", { headers: authHeader() })
     }
+
+    getUserById(userId) {
+        return axios.get(API_URL + `users/${userId}`, { headers: authHeader() })
+    }
 }
 
 export default new AdminService()

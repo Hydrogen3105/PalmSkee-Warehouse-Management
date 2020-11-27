@@ -9,7 +9,7 @@ import { clearMessage } from '../actions/message'
 
 import { connect } from "react-redux";
 import { login, login_status } from "../actions/auth";
-
+import {currentUserData} from '../actions/current_user'
 
 const required = (value) => {
   if (!value) {
@@ -67,8 +67,15 @@ class Login extends Component {
     if (this.checkBtn.context._errors.length === 0) {
       dispatch(login(this.state.username, this.state.password))
         .then(() => {
-          history.push("/home");
-          window.location.reload();
+          dispatch(currentUserData(this.state.username)).then(() =>{
+            history.push("/home");
+            window.location.reload();
+          }).catch(() => {
+            this.setState({
+              loading: false,
+            })
+          })
+          
         })
         .catch(() => {
           this.setState({
