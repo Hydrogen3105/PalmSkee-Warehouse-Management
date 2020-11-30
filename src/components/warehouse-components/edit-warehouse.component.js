@@ -2,19 +2,19 @@ import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-
 import { history } from "../../helpers/history";
 import { dialog_state } from "../../actions/dialog";
+import { select_warehouse } from "../../actions/warehouses";
 import QuestionDialog from "../../dialogs/dialog.component";
 import ComfirmedDialog from "../../dialogs/dialog-confirmed.component";
 
 import AdminService from "../../services/admin-service";
 import warehouseService from "../../services/warehouse-service";
-import { select_warehouse } from "../../actions/warehouses";
+
+import Form from "react-validation/build/form";
+import Input from "react-validation/build/input";
+import CheckButton from "react-validation/build/button";
+import Select from "react-validation/build/select";
 
 const required = (value) => {
   if (!value) {
@@ -49,12 +49,8 @@ class EditWarehouse extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
     this.onChangewarehouseId = this.onChangewarehouseId.bind(this);
+    this.handleBack = this.handleBack.bind(this)
   }
-
-  //   componentDidMount() {
-  //     this.props.dispatch(dialog_state(0));
-
-  //   }
 
   componentDidMount() {
     this.props.dispatch(dialog_state(0));
@@ -86,7 +82,25 @@ class EditWarehouse extends Component {
             });
           }
         );
-      });
+      }).then(() => {
+        if (this.state.warehouseId === '' && this.props.warehouseId !== "") {
+          const pre_select_warehouse = this.state.allWarehouse.filter(warehouse => warehouse.warehouseId === this.props.warehouseId)
+          this.setState({
+            warehouseId: pre_select_warehouse[0].warehouseId,
+            name: pre_select_warehouse[0].name,
+            address: pre_select_warehouse[0].address.address,
+            zipCode: pre_select_warehouse[0].address.zipCode,
+            country: pre_select_warehouse[0].address.country,
+            city: pre_select_warehouse[0].address.city,
+            coordinates: pre_select_warehouse[0].address.coordinates,
+            phone: pre_select_warehouse[0].phone,
+            type: pre_select_warehouse[0].type,
+            managerId: pre_select_warehouse[0].managerId,
+            status: pre_select_warehouse[0].status,
+          })
+
+        }
+      })
   }
   componentDidUpdate(prevProps, prevState) {
     if (prevState.warehouseId !== this.state.warehouseId) {
@@ -142,10 +156,18 @@ class EditWarehouse extends Component {
 
   handleBack() {
     history.push("/manage-warehouse");
+    this.props.dispatch(select_warehouse(''))
   }
 
-  handleEdit() {
-    this.props.dispatch(dialog_state(1));
+  handleEdit(e) {
+    e.preventDefault()
+
+    this.form.validateAll()
+    if(this.checkBtn.context._errors.length === 0){
+      this.props.dispatch(dialog_state(1));
+      this.props.dispatch(select_warehouse(''))
+    }
+    
   }
 
   render() {
@@ -198,16 +220,19 @@ class EditWarehouse extends Component {
         <h1>Editing New Warehouse</h1>
         <div className="menu-and-button center">
           <div className="card card-container-edit-user">
-            <form>
+            <Form onSubmit={this.handleAdd}
+              ref={(c) => this.form = c}
+            >
               <h4>Detail</h4>
               <div className="form-group">
                 <h5>Choose Warehouse</h5>
-                <select
+                <Select
                   name="warehouseId"
                   value={this.state.warehouseId}
                   onChange={this.handleChange}
                   className="form-control"
                   style={{ width: 300 }}
+                  validations = {[ required, ]}
                 >
                   <option value="">Choose Warehouse for editing</option>
                   {this.state.allWarehouse.map((warehouse) => {
@@ -220,12 +245,12 @@ class EditWarehouse extends Component {
                       </option>
                     );
                   })}
-                </select>
+                </Select>
               </div>
 
               <div className="form-group">
                 <h5>Warehouse Name</h5>
-                <input
+                <Input
                   type="text"
                   style={{ width: 300 }}
                   name="name"
@@ -233,12 +258,13 @@ class EditWarehouse extends Component {
                   value={this.state.name}
                   onChange={this.handleChange}
                   className="form-control"
+                  validations = {[ required, ]}
                 />
               </div>
 
               <div className="form-group">
                 <h5>Warehouse Address</h5>
-                <textarea
+                <Input
                   type="text"
                   style={{ width: 300 }}
                   name="address"
@@ -246,9 +272,10 @@ class EditWarehouse extends Component {
                   value={this.state.address}
                   onChange={this.handleChange}
                   className="form-control"
+                  validations = {[ required, ]}
                 />
                 <br />
-                <input
+                <Input
                   type="text"
                   name="zipCode"
                   placeholder="Zipcode"
@@ -256,9 +283,10 @@ class EditWarehouse extends Component {
                   value={this.state.zipCode}
                   onChange={this.handleChange}
                   className="form-control"
+                  validations = {[ required, ]}
                 />
                 <br />
-                <input
+                <Input
                   type="text"
                   name="city"
                   placeholder="City"
@@ -266,9 +294,10 @@ class EditWarehouse extends Component {
                   value={this.state.city}
                   onChange={this.handleChange}
                   className="form-control"
+                  validations = {[ required, ]}
                 />
                 <br />
-                <input
+                <Input
                   type="text"
                   name="country"
                   placeholder="Country"
@@ -276,12 +305,13 @@ class EditWarehouse extends Component {
                   value={this.state.country}
                   onChange={this.handleChange}
                   className="form-control"
+                  validations = {[ required, ]}
                 />
               </div>
 
               <div className="form-group">
                 <h5>Coordinates</h5>
-                <input
+                <Input
                   type="number"
                   name="coordinatesLat"
                   placeholder="Latitude"
@@ -289,20 +319,22 @@ class EditWarehouse extends Component {
                   onChange={this.handleChange}
                   className="form-control"
                   style={{ marginBottom: 10 }}
+                  validations = {[ required, ]}
                 />
-                <input
+                <Input
                   type="number"
                   name="coordinatesLng"
                   placeholder="Longtitude"
                   value={this.state.coordinates.lng}
                   onChange={this.handleChange}
                   className="form-control"
+                  validations = {[ required, ]}
                 />
               </div>
 
               <div className="form-group">
                 <h5>Warehouse contact</h5>
-                <input
+                <Input
                   type="tel"
                   name="phone"
                   pattern="[0-9]{10}"
@@ -310,46 +342,51 @@ class EditWarehouse extends Component {
                   value={this.state.phone}
                   onChange={this.handleChange}
                   className="form-control"
+                  validations = {[ required, ]}
                 />
               </div>
 
               <div className="form-group">
                 <h5>Type of Warehouse</h5>
-                <select
+                <Select
                   name="type"
                   value={this.state.type}
                   onChange={this.handleChange}
                   className="form-control"
+                  validations = {[ required, ]}
                 >
                   <option value="">Choose Warehouse type</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
-                </select>
+                </Select>
               </div>
 
               <div className="form-group">
                 <h5>Status</h5>
-                <select
+                <Select
                   name="status"
                   value={this.state.status}
                   onChange={this.handleChange}
                   className="form-control"
+                  validations = {[ required, ]}
                 >
                   <option value="">Choose Warehouse status</option>
                   <option value="open">Open</option>
                   <option value="close">Close</option>
-                </select>
+                </Select>
               </div>
 
               <div className="form-group">
                 <h5> Manager </h5>
-                <select
+                <Select
                   name="manager_id"
                   value={this.state.manager_id}
                   onChange={this.handleChange}
                   style={{ width: 300 }}
                   className="form-control"
+                  validations = {[ required, ]}
                 >
+                  <option value=''>Choose Warehouse Manager</option>
                   {allManagers.map((user) => {
                     return (
                       <option key={user.userId} value={user.userId}>
@@ -357,14 +394,20 @@ class EditWarehouse extends Component {
                       </option>
                     );
                   })}
-                </select>
+                </Select>
               </div>
-            </form>
+              <CheckButton
+                style={{ display: "none" }}
+                ref={(c) => {
+                  this.checkBtn = c;
+                }}
+              />
+            </Form>
             {this.props.dialog_state === 1 ? (
               <QuestionDialog topic="edit" data={payload_data} />
             ) : (
-              this.props.dialog_state === 2 && <ComfirmedDialog topic="edit" />
-            )}
+                this.props.dialog_state === 2 && <ComfirmedDialog topic="edit" />
+              )}
           </div>
           <div className="button-back-comfirm">
             <div>
@@ -395,9 +438,11 @@ class EditWarehouse extends Component {
 function mapStateToProp(state) {
   const { user } = state.auth;
   const { dialog_state } = state.dialog;
+  const { warehouseId } = state.warehouse
   return {
     user,
     dialog_state,
+    warehouseId,
   };
 }
 

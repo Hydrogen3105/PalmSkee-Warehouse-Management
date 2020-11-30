@@ -2,13 +2,6 @@ import React, { Component } from "react"
 import { Redirect } from "react-router-dom"
 import { connect } from "react-redux"
 
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
-
-import WarehouseService from '../../services/warehouse-service'
-
 import { history } from '../../helpers/history'
 import { dialog_state } from '../../actions/dialog'
 import QuestionDialog from '../../dialogs/dialog.component'
@@ -16,8 +9,23 @@ import ComfirmedDialog from '../../dialogs/dialog-confirmed.component'
 
 import AdminService from '../../services/admin-service'
 
+import Form from "react-validation/build/form";
+import Input from "react-validation/build/input";
+import CheckButton from "react-validation/build/button";
+import Select from "react-validation/build/select";
+
+const required = (value) => {
+    if (!value) {
+        return (
+            <div className="alert alert-danger" role="alert">
+                This field is required!
+            </div>
+        );
+    }
+};
+
 class AddWarehouse extends Component {
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state = {
             allUser: [],
@@ -26,18 +34,18 @@ class AddWarehouse extends Component {
             zipCode: "",
             city: "",
             country: "",
-            coordinates:{lat:"",lng:""},
+            coordinates: { lat: "", lng: "" },
             phone: "",
             number_staffs: 0,
-            status:"",
-            type:"",
+            status: "",
+            type: "",
             manager_id: "",
         }
 
         this.handleChange = this.handleChange.bind(this)
         this.handleAdd = this.handleAdd.bind(this)
     }
- 
+
     componentDidMount() {
         this.props.dispatch(dialog_state(0))
         AdminService.getAllUsers().then(response => {
@@ -49,7 +57,7 @@ class AddWarehouse extends Component {
 
     handleChange(e) {
         const { name, value } = e.target
-        if(name === 'coordinatesLat'){
+        if (name === 'coordinatesLat') {
             this.setState({
                 coordinates: {
                     ...this.state.coordinates,
@@ -57,7 +65,7 @@ class AddWarehouse extends Component {
                 }
             })
         }
-        else if(name === 'coordinatesLng'){
+        else if (name === 'coordinatesLng') {
             this.setState({
                 coordinates: {
                     ...this.state.coordinates,
@@ -69,185 +77,203 @@ class AddWarehouse extends Component {
             this.setState({
                 [name]: value
             })
-        } 
+        }
     }
 
     handleBack() {
         history.push('/manage-warehouse')
     }
 
-    handleAdd () {
-        this.props.dispatch(dialog_state(1))
+    handleAdd(e) {
+        e.preventDefault()
+
+        this.form.validateAll()
+        if (this.checkBtn.context._errors.length === 0) {
+            this.props.dispatch(dialog_state(1))
+        }
+
     }
 
-    render () {
+    render() {
         const { user: currentUser } = this.props
         const { position } = currentUser.payload[0]
 
-        if(!currentUser) {
+        if (!currentUser) {
             return <Redirect to='/login' />
         }
-        else if(position !== 'admin'){
+        else if (position !== 'admin') {
             return <Redirect to='/home' />
         }
 
-        const allManagers= this.state.allUser.filter(user => user.position === 'manager')
+        const allManagers = this.state.allUser.filter(user => user.position === 'manager')
 
         return (
             <div>
                 <h3>Adding New Warehouse</h3>
                 <div className='menu-and-button center'>
                     <div className="card card-container-edit-user">
-                        <form>
+                        <Form onSubmit={this.handleAdd}
+                            ref={(c) => this.form = c}
+                        >
                             <h4>Detail</h4>
                             <div className='form-group'>
                                 <h5>Warehouse name</h5>
-                                <input  type='text'
-                                        name='name'
-                                        value={this.state.name}
-                                        onChange={this.handleChange}
-                                        className='form-control'
+                                <Input type='text'
+                                    name='name'
+                                    value={this.state.name}
+                                    onChange={this.handleChange}
+                                    className='form-control'
+                                    validations={[required,]}
                                 />
                             </div>
 
                             <div className='form-group'>
                                 <h5>Warehouse Address</h5>
-                                <textarea type='text'
-                                        style= {{width: 300}}
-                                        name='address'
-                                        placeholder='Address Detail...'
-                                        value={this.state.address}
-                                        onChange={this.handleChange}
-                                        className='form-control'
+                                <Input type='text'
+                                    style={{ width: 300 }}
+                                    name='address'
+                                    placeholder='Address Detail...'
+                                    value={this.state.address}
+                                    onChange={this.handleChange}
+                                    className='form-control'
+                                    validations={[required,]}
                                 />
                                 <br />
-                                <input  type='text'
-                                        name='zipCode'
-                                        style= {{width: 300}}
-                                        placeholder='Zip Code'
-                                        value={this.state.zipCode}
-                                        onChange={this.handleChange}
-                                        className='form-control'
+                                <Input type='text'
+                                    name='zipCode'
+                                    style={{ width: 300 }}
+                                    placeholder='Zip Code'
+                                    value={this.state.zipCode}
+                                    onChange={this.handleChange}
+                                    className='form-control'
+                                    validations={[required,]}
                                 />
                                 <br />
-                                <input  type='text'
-                                        name='city'
-                                        style= {{width: 300}}
-                                        placeholder='City'
-                                        value={this.state.city}
-                                        onChange={this.handleChange}
-                                        className='form-control'
+                                <Input type='text'
+                                    name='city'
+                                    style={{ width: 300 }}
+                                    placeholder='City'
+                                    value={this.state.city}
+                                    onChange={this.handleChange}
+                                    className='form-control'
                                 />
                                 <br />
-                                <input  type='text'
-                                        name='country'
-                                        style= {{width: 300}}
-                                        placeholder='Country'
-                                        value={this.state.country}
-                                        onChange={this.handleChange}
-                                        className='form-control'
+                                <Input type='text'
+                                    name='country'
+                                    style={{ width: 300 }}
+                                    placeholder='Country'
+                                    value={this.state.country}
+                                    onChange={this.handleChange}
+                                    className='form-control'
+                                    validations={[required,]}
                                 />
                             </div>
 
                             <div className='form-group'>
                                 <h5>Coordinate</h5>
-                                <input  type='number'
-                                        name='coordinatesLat'
-                                        placeholder="latitude"
-                                        value={this.state.coordinates.lat}
-                                        onChange={this.handleChange}
-                                        className='form-control'
+                                <Input type='number'
+                                    name='coordinatesLat'
+                                    placeholder="latitude"
+                                    value={this.state.coordinates.lat}
+                                    onChange={this.handleChange}
+                                    style={{ marginBottom: 10 }}
+                                    className='form-control'
+                                    validations={[required,]}
                                 />
-                                <input  type='number'
-                                        name='coordinatesLng'
-                                        placeholder="longtitude"
-                                        value={this.state.coordinates.lng}
-                                        onChange={this.handleChange}
-                                        className='form-control'
+                                <Input type='number'
+                                    name='coordinatesLng'
+                                    placeholder="longtitude"
+                                    value={this.state.coordinates.lng}
+                                    onChange={this.handleChange}
+                                    className='form-control'
+                                    validations={[required,]}
                                 />
                             </div>
 
                             <div className='form-group'>
                                 <h5>Warehouse contact</h5>
-                                <input  type='tel'
-                                        name='phone'
-                                        pattern="[0-9]{10}"
-                                        placeholder="0827400474"
-                                        value={this.state.phone}
-                                        onChange={this.handleChange}
-                                        className='form-control'
+                                <input type='tel'
+                                    name='phone'
+                                    pattern="[0-9]{10}"
+                                    placeholder="0827400474"
+                                    value={this.state.phone}
+                                    onChange={this.handleChange}
+                                    className='form-control'
+                                    validations={[required,]}
                                 />
                             </div>
 
                             <div className='form-group'>
                                 <h5>Type of Warehouse</h5>
-                                <Select 
-                                        name='type'
-                                        value={this.state.type}
-                                        onChange={this.handleChange}
-                                        className='form-control'
-                                ><MenuItem value="1" > <span>
-                                                 1
-                                            </span>
-                                </MenuItem>
-                                <MenuItem value="2" > <span>
-                                                 2
-                                            </span>
-                                </MenuItem>
+                                <Select
+                                    name='type'
+                                    value={this.state.type}
+                                    onChange={this.handleChange}
+                                    className='form-control'
+                                    validations={[required,]}
+                                >
+                                    <option value="">Choose Warehouse type</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
                                 </Select>
                             </div>
 
                             <div className='form-group'>
-                                <h5>Status</h5>
-                                <Select 
+                                <label>Status
+                                <Select
                                         name='status'
                                         value={this.state.status}
                                         onChange={this.handleChange}
                                         className='form-control'
-                                ><MenuItem value="open" > <span>
-                                                 Open
-                                            </span>
-                                </MenuItem>
-                                <MenuItem value="close" > <span>
-                                                 Close
-                                            </span>
-                                </MenuItem>
-                                </Select>
+                                        validations={[required,]}
+                                    >
+                                        <option value="">Choose Warehouse status</option>
+                                        <option value="open">Open</option>
+                                        <option value="close">Close</option>
+                                    </Select>
+                                </label>
                             </div>
 
                             <div className="form-group">
-                                <FormControl>
-                                    <h5>Manager</h5>
+                                <label>Manager
                                     <Select name="manager_id"
-                                            value={this.state.manager_id}
-                                            onChange={this.handleChange}
-                                            style={{ width: 300}}
-                                            className="form-control"
+                                        value={this.state.manager_id}
+                                        onChange={this.handleChange}
+                                        style={{ width: 300 }}
+                                        className="form-control"
+                                        validations={[required,]}
                                     >
-                                    { 
-                                        allManagers.map(user => {
-                                        return <MenuItem    key={user.userId} 
-                                                            value={user.userId}
-                                                >
-                                                    <span>
-                                                        <strong>{user.userId}</strong> {user.firstName} {user.lastName}
-                                                    </span>
-                                                </MenuItem>
-                                        })
-                                    }
+                                        <option value=''>Choose Warehouse Manager</option>
+                                        {
+                                            allManagers.map(user => {
+                                                return (
+                                                    <option key={user.userId} value={user.userId}>
+                                                        {user.userId} {user.firstName} {user.lastName}
+                                                    </option>
+                                                )
+                                            })
+                                        }
                                     </Select>
-                                </FormControl>
+                                </label>
                             </div>
-                        </form>
-                        {   this.props.dialog_state === 1 ? 
-                            <QuestionDialog topic='add' 
-                                            data={{name:this.state.name,address:this.state.address,
-                                            zipCode:this.state.zipCode,city:this.state.city,
-                                            country:this.state.country,phone:this.state.phone,
-                                            type:this.state.type,
-                                            status:this.state.status,managerId:this.state.manager_id,
-                                            coordinates:this.state.coordinates}} /> :
-                            this.props.dialog_state === 2 && 
+                            <CheckButton
+                                style={{ display: "none" }}
+                                ref={(c) => {
+                                    this.checkBtn = c;
+                                }}
+                            />
+                        </Form>
+                        {this.props.dialog_state === 1 ?
+                            <QuestionDialog topic='add'
+                                data={{
+                                    name: this.state.name, address: this.state.address,
+                                    zipCode: this.state.zipCode, city: this.state.city,
+                                    country: this.state.country, phone: this.state.phone,
+                                    type: this.state.type,
+                                    status: this.state.status, managerId: this.state.manager_id,
+                                    coordinates: this.state.coordinates
+                                }} /> :
+                            this.props.dialog_state === 2 &&
                             <ComfirmedDialog topic='add' />
                         }
 
@@ -255,25 +281,25 @@ class AddWarehouse extends Component {
 
                     <div className='button-back-comfirm'>
                         <div>
-                            <button className="btn btn-danger btn-block" 
-                                    style={{width: 100}}
-                                    onClick={this.handleBack}
+                            <button className="btn btn-danger btn-block"
+                                style={{ width: 100 }}
+                                onClick={this.handleBack}
                             >
                                 Back
                             </button>
                         </div>
                         <div>
-                            <button className="btn btn-primary btn-block" 
-                                    style={{width: 100}}
-                                    onClick={this.handleAdd}
+                            <button className="btn btn-primary btn-block"
+                                style={{ width: 100 }}
+                                onClick={this.handleAdd}
                             >
                                 Add
                             </button>
                         </div>
                     </div>
                 </div>
-                
-                
+
+
             </div>
         )
     }

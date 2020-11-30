@@ -13,7 +13,6 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import Select from "react-validation/build/select";
 
-import WarehouseService from '../../services/warehouse-service'
 import SearchService from '../../services/sender-service'
 import SendersTable from './sender-table.component'
 

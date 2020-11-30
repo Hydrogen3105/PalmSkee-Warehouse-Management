@@ -151,36 +151,37 @@ function QuestionDialog({
           });
 
         break;
-      
-      // case 'delete-parcel':
-      //     const deleted_parcel = data.parcelId
-      //     dispatch(add_parcel(deleted_parcel))
-      //     .then(() => {
-      //       dispatch(dialog_state(prevState + 1))
-      //     })
-      //     .catch(() => {
-      //       setLoading(false)
-      //     })
 
-      //     break
-      
-      case 'store' :
-        var { status, updateBy, parcels} = data
+      case 'delete-parcel':
+        const deleted_parcel = data.parcels
+        deleted_parcel.map((parcelId) => {
+          dispatch(delete_parcel(parcelId))
+            .then(() => {
+              dispatch(dialog_state(prevState + 1))
+            })
+            .catch(() => {
+              setLoading(false)
+            })
+        })
+        break
+
+      case 'store':
+        var { status, updateBy, parcels } = data
         dispatch(edit_status(status, updateBy, parcels)).then(() => {
           dispatch(dialog_state(prevState + 1))
         })
-        .catch(() => {
-          setLoading(false)
-        })
+          .catch(() => {
+            setLoading(false)
+          })
         break
-      
-      case 'export' :
+
+      case 'export':
         dispatch(edit_status(data.status, data.updateBy, data.parcels)).then(() => {
           dispatch(dialog_state(prevState + 1))
         })
-        .catch(() => {
-          setLoading(false)
-        })
+          .catch(() => {
+            setLoading(false)
+          })
         break
 
       case "add":
@@ -287,28 +288,28 @@ function QuestionDialog({
           {topic === "add"
             ? "Confirm Adding Warehouse?"
             : topic === "edit"
-            ? "Confirm Editing Warehouse?"
-            : topic === "delete"
-            ? "Confirm Deleting Warehouse?"
-            : topic === "add-user"
-            ? "Confirm Adding User"
-            : topic === "edit-user"
-            ? "Confirm Editing User"
-            : topic === "delete-user"
-            ? "Confirm Deleting User"
-            : topic === "send-analysis"
-            ? "Confirm Sending Analysis Report?"
-            : topic === "send-request"
-            ? "Confirm Sending Request?"
-            : topic === "add-parcel"
-            ? "Confirm Adding Parcel?"
-            : topic === "edit-parcel"
-            ? "Confirm Editing Parcel?"
-            : topic === "delete-parcel"
-            ? "Confirm Deleting Parcel?"
-            : topic === "export"
-            ? "Confirm Exporting Parcels?"
-            : topic === "store" && "Confirm Storing Parcels?"}
+              ? "Confirm Editing Warehouse?"
+              : topic === "delete"
+                ? "Confirm Deleting Warehouse?"
+                : topic === "add-user"
+                  ? "Confirm Adding User"
+                  : topic === "edit-user"
+                    ? "Confirm Editing User"
+                    : topic === "delete-user"
+                      ? "Confirm Deleting User"
+                      : topic === "send-analysis"
+                        ? "Confirm Sending Analysis Report?"
+                        : topic === "send-request"
+                          ? "Confirm Sending Request?"
+                          : topic === "add-parcel"
+                            ? "Confirm Adding Parcel?"
+                            : topic === "edit-parcel"
+                              ? "Confirm Editing Parcel?"
+                              : topic === "delete-parcel"
+                                ? "Confirm Deleting Parcel?"
+                                : topic === "export"
+                                  ? "Confirm Exporting Parcels?"
+                                  : topic === "store" && "Confirm Storing Parcels?"}
         </DialogTitle>
         <DialogActions>
           <Button onClick={handleClose} color="primary">

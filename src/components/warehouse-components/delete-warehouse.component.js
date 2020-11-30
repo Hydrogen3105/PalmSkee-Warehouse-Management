@@ -1,17 +1,27 @@
-import React , { Component } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { history } from '../../helpers/history'
 import { Redirect } from 'react-router-dom'
 import warehouseService from '../../services/warehouse-service'
 
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import FormControl from '@material-ui/core/FormControl'
-import Select from '@material-ui/core/Select'
+import Form from "react-validation/build/form";
+import CheckButton from "react-validation/build/button";
+import Select from "react-validation/build/select";
+
 import QuestionDialog from '../../dialogs/dialog.component'
 import ComfirmedDialog from '../../dialogs/dialog-confirmed.component'
 
 import { dialog_state } from '../../actions/dialog'
+
+const required = (value) => {
+    if (!value) {
+        return (
+            <div className="alert alert-danger" role="alert">
+                This field is required!
+            </div>
+        );
+    }
+};
 
 class DeleteWarehouse extends Component {
     constructor(props) {
@@ -19,9 +29,9 @@ class DeleteWarehouse extends Component {
         this.state = {
             warehouseId: "",
             loading: false,
-            allWarehouse:[],
+            allWarehouse: [],
             open_warning: false,
-            
+
         }
 
         this.handleBack = this.handleBack.bind(this)
@@ -33,11 +43,11 @@ class DeleteWarehouse extends Component {
     componentDidMount() {
         this.props.dispatch(dialog_state(0))
         warehouseService.getAllWarehouses()
-        .then((response) => {
-            this.setState({
-                allWarehouse: response.data.payload
+            .then((response) => {
+                this.setState({
+                    allWarehouse: response.data.payload
+                })
             })
-        })
     }
 
     handleBack() {
@@ -55,21 +65,12 @@ class DeleteWarehouse extends Component {
         this.props.dispatch(dialog_state(1))
     }
 
-    handleDelete() {
-        this.setState({
-            open_warning: false
-        })
+    handleDelete(e) {
+        e.preventDefault()
 
-        if(this.state.warehouseId !== ''){
+        this.form.validateAll()
+        if (this.checkBtn.context._errors.length === 0) {
             this.props.dispatch(dialog_state(1))
-            this.setState({
-                open_warning: false
-            })
-        }
-        else{
-            this.setState({
-                open_warning: true
-            })
         }
     }
 
@@ -79,14 +80,14 @@ class DeleteWarehouse extends Component {
         })
     }
 
-    render () {
+    render() {
         const { user: currentUser } = this.props
         const { position } = currentUser.payload[0]
 
-        if(!currentUser) {
+        if (!currentUser) {
             return <Redirect to='/login' />
         }
-        else if(position !== 'admin'){
+        else if (position !== 'admin') {
             return <Redirect to='/home' />
         }
 
@@ -95,51 +96,50 @@ class DeleteWarehouse extends Component {
                 <h1>Deleting Warehouse</h1>
                 <div className='menu-and-button center'>
                     <div className="card card-container-edit-user">
-                        <div className="form-group">
-                            <FormControl>
-                                <InputLabel>Warehouse ID</InputLabel>
+                        <Form onSubmit={this.handleAdd}
+                            ref={(c) => this.form = c}
+                        >
+                            <div className="form-group">
+                                <label>Warehouse ID
                                 <Select name="warehouseId"
                                         value={this.state.warehouseId}
                                         onChange={this.handleChange}
-                                        style={{ width: 250}}
-                                >
-                                { this.state.allWarehouse.map(warehouse => {
-                                    return <MenuItem    key={warehouse.warehouseId} 
-                                                        value={warehouse.warehouseId}
-                                            >
-                                                <span>
-                                                    <strong>{warehouse.warehouseId}</strong> {warehouse.name} 
-                                                </span>
-                                            </MenuItem>
-                                    })}
-                                    {/* <MenuItem value='WH006'><strong>WH006</strong> Sia O Warehouse</MenuItem> */}
-                                </Select>
-                            </FormControl>
-                        </div>
-                        <div className='from-group'>
-                            <label> Permission File
-                                <input type='file' />
-                            </label>
-                            
-                            <label> Report file
-                                <input type='file' />
-                            </label>
+                                        style={{ width: 250 }}
+                                        validations = {[required, ]}
+                                        className='form-control'
+                                    >
+                                        <option value=''>Choose Warehouse for deleting</option>
+                                        {this.state.allWarehouse.map(warehouse => {
+                                            return <option key={warehouse.warehouseId}
+                                                value={warehouse.warehouseId}
+                                            > {warehouse.warehouseId}{" "}{warehouse.name}
+                                            </option>
+                                        })}
+                                    </Select>
+                                </label>
+                            </div>
+                            <CheckButton
+                                style={{ display: "none" }}
+                                ref={(c) => {
+                                    this.checkBtn = c;
+                                }}
+                            />
+                        </Form>
 
-                        </div>
                     </div>
                     <div className='button-back-comfirm'>
                         <div>
-                            <button className="btn btn-danger btn-block" 
-                                    style={{width: 100}}
-                                    onClick={this.handleBack}
+                            <button className="btn btn-danger btn-block"
+                                style={{ width: 100 }}
+                                onClick={this.handleBack}
                             >
                                 Back
                             </button>
                         </div>
                         <div>
-                            <button className="btn btn-primary btn-block" 
-                                    style={{width: 100}}
-                                    onClick={this.handleDialog}
+                            <button className="btn btn-primary btn-block"
+                                style={{ width: 100 }}
+                                onClick={this.handleDelete}
                             >
                                 Delete
                             </button>
@@ -147,13 +147,13 @@ class DeleteWarehouse extends Component {
                     </div>
 
                 </div>
-                
-                {   this.props.dialog_state === 1 ? 
-                    <QuestionDialog topic='delete' data={this.state.warehouseId}/> :
-                    this.props.dialog_state === 2 && 
+
+                {   this.props.dialog_state === 1 ?
+                    <QuestionDialog topic='delete' data={this.state.warehouseId} /> :
+                    this.props.dialog_state === 2 &&
                     <ComfirmedDialog topic='delete' />
                 }
-                
+
             </div>
         )
     }
