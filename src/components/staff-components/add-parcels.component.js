@@ -1,7 +1,6 @@
-import React , { Component } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Redirect , Link } from 'react-router-dom'
-import { Button } from '@material-ui/core'
+import { Redirect, Link } from 'react-router-dom'
 import { history } from '../../helpers/history'
 
 import QuestionDialog from '../../dialogs/dialog.component'
@@ -19,43 +18,45 @@ import SendersTable from './sender-table.component'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
+import { BlueButton, GreenButton, AmberButton, useStyles } from '../../styles/material-style'
+
 const required = (value) => {
     if (!value) {
-      return (
-        <div className="alert alert-danger" role="alert">
-          This field is required!
-        </div>
-      );
+        return (
+            <div className="alert alert-danger" role="alert">
+                This field is required!
+            </div>
+        );
     }
 };
 
 const vsize = (value) => {
-    if(value > 1000) {
+    if (value > 1000) {
         return (
-        <div className="alert alert-danger" role="alert">
-          This field needs to be below than or equal 1000 mm!
-        </div>
+            <div className="alert alert-danger" role="alert">
+                This field needs to be below than or equal 1000 mm!
+            </div>
         )
-    }else if(value < 0) {
+    } else if (value < 0) {
         return (
-        <div className="alert alert-danger" role="alert">
-          This field needs to be over than 0!
-        </div>
+            <div className="alert alert-danger" role="alert">
+                This field needs to be over than 0!
+            </div>
         )
     }
 }
 
 const vweight = (value) => {
-    if(value.includes('.')){
+    if (value.includes('.')) {
         const sep = value.split('.')
-        if(sep[1].length !== 2){
+        if (sep[1].length !== 2) {
             return (
                 <div className="alert alert-danger" role="alert">
                     This field needs to have just 2 digits!
                 </div>
             )
         }
-    }else if(value < 0) {
+    } else if (value < 0) {
         return (
             <div className="alert alert-danger" role="alert">
                 This field needs to be over than 0!
@@ -81,7 +82,7 @@ class AddParcel extends Component {
             allWarehouses: [],
             allSenders: []
         }
-        
+
         this.handleBack = this.handleBack.bind(this)
         this.handleAdd = this.handleAdd.bind(this)
         this.handleChange = this.handleChange.bind(this)
@@ -109,14 +110,14 @@ class AddParcel extends Component {
                     allWarehouses: response.data.payload,
                     isLoading: false
                 })
-                },(error) => {
-                    this.setState({
-                        isLoading: false
-                    })
-                }
+            }, (error) => {
+                this.setState({
+                    isLoading: false
+                })
+            }
             )
         })
-        
+
     }
 
     onSelectSender = (senderId) => {
@@ -125,8 +126,8 @@ class AddParcel extends Component {
         })
     }
 
-    handleChange (e) {
-        const {name , value} = e.target
+    handleChange(e) {
+        const { name, value } = e.target
         this.setState({
             [name]: value
         })
@@ -147,19 +148,19 @@ class AddParcel extends Component {
             this.setState({
                 isSameLocation: false
             })
-        }else if(this.state.fromWarehouseId === this.state.toWarehouseId && this.state.fromWarehouseId !== '' && this.state.toWarehouseId !== ''){
+        } else if (this.state.fromWarehouseId === this.state.toWarehouseId && this.state.fromWarehouseId !== '' && this.state.toWarehouseId !== '') {
             this.setState({
                 isSameLocation: true
             })
         }
     }
 
-    render () {
+    render() {
         const { user: currentUser } = this.props
 
-        if(!currentUser){
-            return <Redirect to="/login"/>
-        }else if(currentUser.payload[0].position !== "staff" && currentUser.payload[0].position !== "manager") {
+        if (!currentUser) {
+            return <Redirect to="/login" />
+        } else if (currentUser.payload[0].position !== "staff" && currentUser.payload[0].position !== "manager") {
             return <Redirect to="/home" />
         }
 
@@ -171,88 +172,88 @@ class AddParcel extends Component {
                 <div id='outer'>
                     <div className='inner'>
                         <Link to="/add-parcel">
-                            <Button variant="contained" color="primary">
+                            <BlueButton variant="contained" color="primary" className={useStyles.margin}>
                                 New
-                            </Button>
+                            </BlueButton>
                         </Link>
                     </div>
                     <div className='inner'>
                         <Link to="/stored-parcels">
-                            <Button variant="contained" color="secondary">
+                            <AmberButton variant="contained" color="secondary" className={useStyles.margin}>
                                 Stored
-                            </Button>
+                            </AmberButton>
                         </Link>
                     </div>
                     <div className='inner'>
                         <Link to="/exported-parcels">
-                            <Button variant="contained" color="primary">
+                            <GreenButton variant="contained" color="primary" className={useStyles.margin}>
                                 Exported
-                            </Button>
+                            </GreenButton>
                         </Link>
                     </div>
                 </div>
 
-                <div className='center' style={{ display: "flex", justifyContent: "space-between", flexDirection: 'column',width: 1000 }}>
+                <div className='center' style={{ display: "flex", justifyContent: "space-between", flexDirection: 'column', width: 1000 }}>
                     <div>
-                        <Form   onSubmit={this.handleAdd}
-                                ref={(c) => this.form = c}
+                        <Form onSubmit={this.handleAdd}
+                            ref={(c) => this.form = c}
                         >
                             <div className="register-card" style={{ width: 1000 }}>
-                                
+
                                 <div style={{ display: "flex", justifyContent: "space-around" }}>
                                     <div>
                                         {""}
                                         <h4>Detail</h4>
                                         <div className="form-group">
                                             <label htmlFor="width">Width</label>
-                                            <Input  type="number"
-                                                    name="width"
-                                                    className="form-control"
-                                                    value={this.state.width}
-                                                    onChange={this.handleChange}
-                                                    validations = {[required, vsize]}
+                                            <Input type="number"
+                                                name="width"
+                                                className="form-control"
+                                                value={this.state.width}
+                                                onChange={this.handleChange}
+                                                validations={[required, vsize]}
                                             />
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="height">Height</label>
-                                            <Input  type="number"
-                                                    name="height"
-                                                    className="form-control"
-                                                    value={this.state.height}
-                                                    onChange={this.handleChange}
-                                                    validations = {[required, vsize]}
+                                            <Input type="number"
+                                                name="height"
+                                                className="form-control"
+                                                value={this.state.height}
+                                                onChange={this.handleChange}
+                                                validations={[required, vsize]}
                                             />
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="length">Length</label>
-                                            <Input  type="number"
-                                                    name="length"
-                                                    className="form-control"
-                                                    value={this.state.length}
-                                                    onChange={this.handleChange}
-                                                    validations = {[required, vsize]}
+                                            <Input type="number"
+                                                name="length"
+                                                className="form-control"
+                                                value={this.state.length}
+                                                onChange={this.handleChange}
+                                                validations={[required, vsize]}
                                             />
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="weight">Weight</label>
-                                            <Input  type="number"
-                                                    name="weight"
-                                                    className="form-control"
-                                                    value={this.state.weight}
-                                                    onChange={this.handleChange}
-                                                    validations = {[required, vweight]}
+                                            <Input type="number"
+                                                name="weight"
+                                                className="form-control"
+                                                value={this.state.weight}
+                                                onChange={this.handleChange}
+                                                validations={[required, vweight]}
                                             />
                                         </div>
-                                        
+
                                         <div className="form-group">
                                             <h4>Optional</h4>
-                                            <textarea   name="optional"
-                                                        value={this.state.optional}
-                                                        className="form-control"
-                                                        style={{width: 350, height: 150}}
-                                                        placeholder="optional"
-                                                        onChange={this.handleChange}
-                                                        
+                                            <textarea name="optional"
+                                                value={this.state.optional}
+                                                className="form-control"
+                                                style={{ width: 350, height: 150 }}
+                                                placeholder="optional"
+                                                onChange={this.handleChange}
+
                                             />
                                         </div>
                                         {""}
@@ -261,7 +262,7 @@ class AddParcel extends Component {
                                         {""}
                                         <h4>Sender</h4>
                                         <div className="form-group">
-                                            <Input  type="text"
+                                            {/*<Input  type="text"
                                                     name="senderId"
                                                     className="form-control"
                                                     value={this.state.senderId}
@@ -270,36 +271,51 @@ class AddParcel extends Component {
                                                     style={{width: 350,marginBottom: 10}}
                                             />
                                             { !this.state.isLoading && <SendersTable senders={this.state.allSenders} onSelectSender={this.onSelectSender}/>} 
+                                            */}
+                                            <Select
+                                                name="senderId"
+                                                className="form-control"
+                                                value={this.state.senderId}
+                                                onChange={this.handleChange}
+                                                validations={[required]}
+                                            >
+                                                <option value=''>Choose sender of parcel</option>
+                                                {!this.state.isLoading &&
+                                                    this.state.allSenders.map(sender => {
+                                                        return <option key={sender.senderId} value={sender.senderId}>{sender.senderId}{" "}{sender.senderName}</option>
+                                                    })
+                                                }
+                                            </Select>
                                         </div>
-                                        <h4 style={{marginBottom: 15}}>Destination</h4>
-                                        { this.state.fromWarehouseId === this.state.toWarehouseId && this.state.isSameLocation && 
-                                                <div className="form-group">
-                                                    <div className="alert alert-danger" role="alert">
-                                                        Origin and Destination must not the same place!
+                                        <h4 style={{ marginBottom: 15 }}>Destination</h4>
+                                        {this.state.fromWarehouseId === this.state.toWarehouseId && this.state.isSameLocation &&
+                                            <div className="form-group">
+                                                <div className="alert alert-danger" role="alert">
+                                                    Origin and Destination must not the same place!
                                                     </div>
-                                                </div>
+                                            </div>
                                         }
                                         <div className="form-group">
-                                            <Select name='fromWarehouseId' 
-                                                    value={this.state.fromWarehouseId}
-                                                    onChange={this.handleChange}
-                                                    validations= {[required]}
-                                                    className='form-control'
-                                                    disabled
+                                            <Select name='fromWarehouseId'
+                                                value={this.state.fromWarehouseId}
+                                                onChange={this.handleChange}
+                                                validations={[required]}
+                                                className='form-control'
+                                                disabled
                                             >
                                                 <option value={this.state.fromWarehouseId}>{this.state.fromWarehouseId}</option>
                                             </Select>
                                         </div>
                                         <div className="form-group">
-                                            <Select name='toWarehouseId' 
-                                                    value={this.state.toWarehouseId}
-                                                    onChange={this.handleChange}
-                                                    validations= {[required]}
-                                                    className='form-control'
-                        
+                                            <Select name='toWarehouseId'
+                                                value={this.state.toWarehouseId}
+                                                onChange={this.handleChange}
+                                                validations={[required]}
+                                                className='form-control'
+
                                             >
                                                 <option value=''>Choose parcel's destination</option>
-                                                { this.state.allWarehouses.map(warehouse => {
+                                                {this.state.allWarehouses.map(warehouse => {
                                                     return <option key={warehouse.warehouseId} value={warehouse.warehouseId}>{warehouse.warehouseId} {warehouse.name}</option>
                                                 })}
                                             </Select>
@@ -309,7 +325,7 @@ class AddParcel extends Component {
                                 </div>
 
                             </div>
-                            
+
                             <CheckButton
                                 style={{ display: "none" }}
                                 ref={(c) => {
@@ -317,23 +333,23 @@ class AddParcel extends Component {
                                 }}
                             />
                         </Form>
-                        
+
                     </div>
-                    <div className="button-back-comfirm">
+                    <div className="button-back-comfirm" style={{ marginTop: 20 }}>
                         <div>
-                            <button className="btn btn-danger btn-block" 
-                                    style={{width: 100}}
-                                    onClick={this.handleBack}
+                            <button className="btn btn-danger btn-block"
+                                style={{ width: 100 }}
+                                onClick={this.handleBack}
                             >
-                                    Back
+                                Back
                             </button>
                         </div>
-                        <div>   
-                            <button className="btn btn-primary btn-block" 
-                                    style={{width: 100}}
-                                    onClick={this.handleAdd}
+                        <div>
+                            <button className="btn btn-primary btn-block"
+                                style={{ width: 100 }}
+                                onClick={this.handleAdd}
                             >
-                                    Confirm 
+                                Confirm
                             </button>
                         </div>
                     </div>
@@ -349,15 +365,15 @@ class AddParcel extends Component {
                             Loading...
                         </DialogTitle>
                     </Dialog>
-                    )
+                )
                 }
                 {
-                    this.props.dialog_state === 1 ? 
-                    <QuestionDialog topic='add-parcel' data={payload_data}/> :
-                    this.props.dialog_state === 2 && 
-                    <ConfirmedDialog topic='add-parcel' />
+                    this.props.dialog_state === 1 ?
+                        <QuestionDialog topic='add-parcel' data={payload_data} /> :
+                        this.props.dialog_state === 2 &&
+                        <ConfirmedDialog topic='add-parcel' />
                 }
-                    
+
             </div>
         )
     }

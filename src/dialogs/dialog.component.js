@@ -3,9 +3,13 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
+import { red } from '@material-ui/core/colors';
+import { ColorButton, GreyButton } from '../styles/material-style'
 import { connect } from "react-redux";
 import { dialog_state } from "../actions/dialog";
 import { edit_user, delete_user, select_user } from "../actions/admin";
+import { register } from '../actions/auth'
 import {
   delete_parcel,
   edit_parcel,
@@ -44,6 +48,46 @@ function QuestionDialog({
     setLoading(true);
 
     switch (topic) {
+      case 'add-user':
+        var {
+          userId,
+          firstName,
+          position,
+          lastName,
+          address,
+          zipCode,
+          city,
+          country,
+          dob,
+          gender,
+          email,
+          phone,
+          warehouseId,
+        } = data;
+        dispatch(
+          register(
+            userId,
+            firstName,
+            lastName,
+            position,
+            address,
+            zipCode,
+            city,
+            country,
+            dob,
+            gender,
+            email,
+            phone,
+            warehouseId
+          )
+        )
+          .then(() => {
+            dispatch(dialog_state(prevState + 1));
+          })
+          .catch(() => {
+            setLoading(false);
+          });
+        break;
       case "edit-user":
         var {
           userId,
@@ -283,52 +327,58 @@ function QuestionDialog({
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        fullWidth={true}
+        maxWidth={'xs'}
       >
-        <DialogTitle id="alert-dialog-title">
-          {topic === "add"
-            ? "Confirm Adding Warehouse?"
-            : topic === "edit"
-              ? "Confirm Editing Warehouse?"
-              : topic === "delete"
-                ? "Confirm Deleting Warehouse?"
-                : topic === "add-user"
-                  ? "Confirm Adding User"
-                  : topic === "edit-user"
-                    ? "Confirm Editing User"
-                    : topic === "delete-user"
-                      ? "Confirm Deleting User"
-                      : topic === "send-analysis"
-                        ? "Confirm Sending Analysis Report?"
-                        : topic === "send-request"
-                          ? "Confirm Sending Request?"
-                          : topic === "add-parcel"
-                            ? "Confirm Adding Parcel?"
-                            : topic === "edit-parcel"
-                              ? "Confirm Editing Parcel?"
-                              : topic === "delete-parcel"
-                                ? "Confirm Deleting Parcel?"
-                                : topic === "export"
-                                  ? "Confirm Exporting Parcels?"
-                                  : topic === "store" && "Confirm Storing Parcels?"}
+
+        <DialogTitle id="alert-dialog-title" style={{ textAlign: "center" }}>
+          <div style={{ display: "flex", flexDirection: 'column' }}>
+            <div style={{marginBottom: 15}}>
+              <ErrorOutlineIcon style={{ textAlign: "center", color: red[900], width: 100, height: 'auto'}} />
+            </div>
+            <div>
+              <strong>
+                {topic === "add"
+                  ? "Confirm Adding Warehouse ?"
+                  : topic === "edit"
+                    ? "Confirm Editing Warehouse ?"
+                    : topic === "delete"
+                      ? "Confirm Deleting Warehouse ?"
+                      : topic === "add-user"
+                        ? "Confirm Adding User ?"
+                        : topic === "edit-user"
+                          ? "Confirm Editing User ?"
+                          : topic === "delete-user"
+                            ? "Confirm Deleting User ?"
+                            : topic === "send-analysis"
+                              ? "Confirm Sending Analysis Report ?"
+                              : topic === "send-request"
+                                ? "Confirm Sending Request ?"
+                                : topic === "add-parcel"
+                                  ? "Confirm Adding Parcel ?"
+                                  : topic === "edit-parcel"
+                                    ? "Confirm Editing Parcel ?"
+                                    : topic === "delete-parcel"
+                                      ? "Confirm Deleting Parcel ?"
+                                      : topic === "export"
+                                        ? "Confirm Exporting Parcels ?"
+                                        : topic === "store" && "Confirm Storing Parcels ?"}
+              </strong>
+            </div>
+          </div>
+
+
         </DialogTitle>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
+        <DialogActions style={{ display: "flex", justifyContent: "space-around" }}>
+          <GreyButton onClick={handleClose} color="primary">
             Back
-          </Button>
-          <Button
-            onClick={() => {
-              console.log(data, message);
-            }}
-            color="primary"
-          >
-            Data
-          </Button>
-          <Button onClick={handleConfirm} color="primary" autoFocus>
+          </GreyButton>
+          <ColorButton onClick={handleConfirm} color="primary" autoFocus>
             Confirm
             {loading && (
               <span className="spinner-border spinner-border-sm"></span>
             )}
-          </Button>
+          </ColorButton>
         </DialogActions>
       </Dialog>
     </div>
