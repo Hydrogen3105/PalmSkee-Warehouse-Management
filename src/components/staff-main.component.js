@@ -1,7 +1,6 @@
 import React, { Component } from "react"
 import { Redirect, Link } from "react-router-dom"
 import { connect } from "react-redux"
-import { Button } from '@material-ui/core'
 import StaffProfile from '../components/profile.components/staff-profile.component'
 import WarehouseService from '../services/warehouse-service'
 import Dialog from '@material-ui/core/Dialog'
@@ -9,7 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 
 import Chart from 'react-google-charts'
 
-import { BlueButton ,useStyles, PurpleButton, LightBlueButton } from '../styles/material-style'
+import { BlueButton, useStyles, PurpleButton, LightBlueButton } from '../styles/material-style'
 import CardGiftcardIcon from '@material-ui/icons/CardGiftcard'
 import InputIcon from '@material-ui/icons/Input'
 import FlightTakeoffIcon from '@material-ui/icons/FlightTakeoff'
@@ -43,76 +42,88 @@ class StaffMain extends Component {
         }
 
         const used = this.state.warehouseData.usedSpace
-        const data =    [
+        const data = [
             ['Type', 'Space'],
-            ['Used Space', used*100],
-            ['Free Space', 100 - (used*100)],
+            ['Used Space', used * 100],
+            ['Free Space', 100 - (used * 100)],
         ]
 
         return (
             <div>
                 <h2 style={{ marginBottom: 15 }}>Warehouse Management System : Staff</h2>
-                <div className='staff-container'>
-                    <div className='item-manage-user'>
-                        <div className='staff-main'>
-                            <div className='register-card' style={{ width: 800 }}>
-                                <div style={{ display: "flex" ,justifyContent: "space-between"}}>
-                                    <div >
-                                        <h3>{this.state.warehouseData.warehouseId}</h3>
-                                        <h4>{this.state.warehouseData.name}</h4>
-                                        { this.state.warehouseData.address && 
-                                            <div>
-                                                <h5>{this.state.warehouseData.address.address},</h5>
-                                                <h5>{this.state.warehouseData.address.city}, {this.state.warehouseData.address.country}</h5>
+                <div>
+                    <div>
+                        <div style={{ marginBottom: 30 }}>
+                            <div style={{
+                                display: "flex",
+                                justifyContent: "space-between"
+                            }}
+                            >
+                                <div className='register-card' style={{ width: 750 }}>
+                                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                        <div >
+                                            <h3>{this.state.warehouseData.warehouseId}</h3>
+                                            <h4>{this.state.warehouseData.name}</h4>
+                                            {this.state.warehouseData.address &&
+                                                <div>
+                                                    <h5>{this.state.warehouseData.address.address},</h5>
+                                                    <h5>{this.state.warehouseData.address.city}, {this.state.warehouseData.address.country}</h5>
+                                                </div>
+                                            }
+                                        </div>
+                                        {
+                                            !this.state.isLoading &&
+                                            <div >
+                                                <Chart
+                                                    width={'480px'}
+                                                    height={'300px'}
+                                                    chartType="PieChart"
+                                                    loader={<div>Loading Chart</div>}
+                                                    data={data}
+                                                    options={{
+                                                        title: 'Parcels in Storage (Percent)',
+                                                        backgroundColor: 'none',
+                                                    }}
+                                                    
+                                                />
                                             </div>
                                         }
+
                                     </div>
-                                    {
-                                        !this.state.isLoading && 
-                                        <div style={{backgroundColor: { fill:'transparent' }}}>
-                                            <Chart
-                                                width={'350px'}
-                                                height={'200px'}
-                                                chartType="PieChart"
-                                                loader={<div>Loading Chart</div>}
-                                                data={data}
-                                                options={{
-                                                    title: 'Parcels in Storage (Percent)',
-                                                }}
-                                                
-                                            />
-                                        </div>
-                                    }
-                                    
                                 </div>
-                            </div>
-                            <div style={{ width: 250 }}>
-                                <StaffProfile user={currentUser} />
+                                <div style={{ width: 250 }}>
+                                    <StaffProfile user={currentUser} />
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className='item-manage-user'>
-                        <div className='staff-main-button' >
+
+                    <div>
+                        <div style={{
+                            display: "flex",
+                            justifyContent: "space-evenly"
+                        }}
+                        >
                             <div>
                                 <Link to="/parcels">
-                                    <LightBlueButton variant='contained' color='primary' startIcon={<CardGiftcardIcon />} className={useStyles.margin} style={{ width: 250, height: 100, fontSize: 20 }}>
+                                    <LightBlueButton variant='contained' color='primary' startIcon={<CardGiftcardIcon />} className={useStyles.margin} style={{ width: 250, height: 80, fontSize: 14 }}>
                                         Parcels
                                     </LightBlueButton>
                                 </Link>
                             </div>
                             <div>
                                 <Link to="/stored-parcels">
-                                    <BlueButton variant='contained' color='primary' startIcon={<InputIcon />} className={useStyles.margin} style={{ width: 250, height: 100, fontSize: 20 }}>
+                                    <BlueButton variant='contained' color='primary' startIcon={<InputIcon />} className={useStyles.margin} style={{ width: 250, height: 80, fontSize: 14 }}>
                                         Store
                                     </BlueButton>
                                 </Link>
                             </div>
                             <div>
                                 <Link to="/exported-parcels">
-                                    <PurpleButton variant='contained' color='primary' startIcon={<FlightTakeoffIcon />} className={useStyles.margin} style={{ width: 250, height: 100, fontSize: 20 }}>
+                                    <PurpleButton variant='contained' color='primary' startIcon={<FlightTakeoffIcon />} className={useStyles.margin} style={{ width: 250, height: 80, fontSize: 14 }}>
                                         Export
-                                    </PurpleButton>   
+                                    </PurpleButton>
                                 </Link>
                             </div>
                         </div>

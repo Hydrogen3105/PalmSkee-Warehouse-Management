@@ -6,13 +6,20 @@ import Select from "react-validation/build/select";
 import { isEmail } from "validator";
 
 import { connect } from "react-redux";
-import { register } from "../../actions/auth";
+// import { register } from "../../actions/auth";
 import { Link } from "react-router-dom"
 import { Button } from '@material-ui/core'
 import { Redirect } from "react-router-dom";
 
 import { history } from "../../helpers/history";
 import AdminProfile from "../profile.components/admin-profile.component";
+import SearchService from '../../services/sender-service'
+
+import QuestionDialog from '../../dialogs/dialog.component'
+import ConfirmedDialog from '../../dialogs/dialog-confirmed.component'
+import { dialog_state } from '../../actions/dialog'
+
+import { BlueButton, GreenButton, ColorButton} from '../../styles/material-style'
 
 const required = (value) => {
   if (!value) {
@@ -35,10 +42,10 @@ const email = (value) => {
 };
 
 const vusername = (value) => {
-  if (value.length < 3 || value.length > 30) {
+  if (value.length !== 5) {
     return (
       <div className="alert alert-danger" role="alert">
-        The username must be between 3 and 30 characters.
+        The username must be between 5 characters.
       </div>
     );
   }
@@ -65,6 +72,7 @@ class Register extends Component {
       warehouse: "",
       successful: false,
       isGenderMissing: false,
+      allWarehouse: [],
     };
 
     this.handleRegister = this.handleRegister.bind(this);
@@ -72,6 +80,14 @@ class Register extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.onChangeWarehouseID = this.onChangeWarehouseID.bind(this);
+  }
+
+  componentDidMount() {
+    SearchService.searchWarehouses().then(response => {
+      this.setState({
+        allWarehouse: response.data.payload
+      })
+    })
   }
 
   handleChange(e) {
@@ -108,55 +124,55 @@ class Register extends Component {
     });
 
     this.form.validateAll();
-    const {
-      user_id,
-      firstname,
-      lastname,
-      position,
-      address,
-      zip_code,
-      city,
-      country,
-      dob,
-      gender,
-      email,
-      phone_number,
-      warehouse,
-    } = this.state;
+    // const {
+    //   user_id,
+    //   firstname,
+    //   lastname,
+    //   position,
+    //   address,
+    //   zip_code,
+    //   city,
+    //   country,
+    //   dob,
+    //   gender,
+    //   email,
+    //   phone_number,
+    //   warehouse,
+    // } = this.state;
     if (
       this.checkBtn.context._errors.length === 0 &&
       this.state.gender !== ""
     ) {
-      this.props
-        .dispatch( 
-          register(
-            user_id,
-            firstname,
-            lastname,
-            position,
-            address,
-            zip_code,
-            city,
-            country,
-            dob,
-            gender,
-            email,
-            phone_number,
-            warehouse
-          )
-        )
-        .then(() => {
-          this.setState({
-            successful: true,
-          });
-        })
-        .catch(() => {
-          this.setState({
-            successful: false,
-          });
-          history.push("/manage-user");
-        });
-    }else if(this.state.gender === ''){
+      // this.props
+      //   .dispatch(
+      //     register(
+      //       user_id,
+      //       firstname,
+      //       lastname,
+      //       position,
+      //       address,
+      //       zip_code,
+      //       city,
+      //       country,
+      //       dob,
+      //       gender,
+      //       email,
+      //       phone_number,
+      //       warehouse
+      //     )
+      //   )
+      //   .then(() => {
+      //     this.setState({
+      //       successful: true,
+      //     });
+      //   })
+      //   .catch(() => {
+      //     this.setState({
+      //       successful: false,
+      //     });
+      //   });
+      this.props.dispatch(dialog_state(1))
+    } else if (this.state.gender === '') {
       this.setState({
         isGenderMissing: true
       })
@@ -172,33 +188,40 @@ class Register extends Component {
       return <Redirect to="/home" />;
     }
 
+    const payload_data = {
+      userId: this.state.user_id,
+      firstName: this.state.firstname,
+      lastName: this.state.lastname,
+      position: this.state.position,
+      address: this.state.address,
+      zipCode: this.state.zip_code,
+      city: this.state.city,
+      country: this.state.country,
+      dob: this.state.dob,
+      gender: this.state.gender,
+      email: this.state.email,
+      phone: this.state.phone_number,
+      warehouseId: this.state.warehouse
+    }
+
     return (
       <div className="col-md-12">
         <h4>Adding New User</h4>
         <div id="outer">
           <div className="inner">
             <Link to="/register">
-              <Button variant="contained">Add User</Button>
+              <BlueButton variant="contained" style={{ width: 150 }}>Add User</BlueButton>
             </Link>
           </div>
           <div className="inner">
             <Link to="/edit-user">
-              <Button variant="contained">Edit User</Button>
+              <GreenButton variant="contained" style={{ width: 150 }}>Edit User</GreenButton>
             </Link>
           </div>
           <div className="inner">
             <Link to="/delete-user">
-              <Button variant="contained">Delete User</Button>
+              <ColorButton variant="contained" style={{ width: 150 }}>Delete User</ColorButton>
             </Link>
-          </div>
-          <div className="inner">
-            <button
-              className="btn btn-danger btn-block"
-              style={{ width: 150 }}
-              onClick={() => console.log(this.state.allUser)}
-            >
-              Data
-            </button>
           </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -235,17 +258,6 @@ class Register extends Component {
                       />
                     </div>
 
-                    {/*<div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <Input
-                          type="password"
-                          className="form-control"
-                          name="password"
-                          value={this.state.password}
-                          onChange={this.handleChange}
-                          validations={[required, vpassword]}
-                        />
-                      </div>*/}
                     <div style={{ display: "flex" }}>
                       <div className="form-group" style={{ marginRight: 40 }}>
                         <label htmlFor="firstname" className="label-form">
@@ -401,8 +413,9 @@ class Register extends Component {
                             validations={[required]}
                           >
                             <option value="">Choose warehouse</option>
-                            <option value="WH001">WH001 O-Cha Warehouse</option>
-                            <option value="WH002">WH002 Cha-O Warehouse</option>
+                            {this.state.allWarehouse.map(warehouse => {
+                              return <option key={warehouse.warehouseId} value={warehouse.warehouseId}>{warehouse.warehouseId}{" "}{warehouse.name}</option>
+                            })}
                           </Select>
                         </label>
                       </div>
@@ -429,12 +442,12 @@ class Register extends Component {
 
                     <div className="form-group">
                       <label>Gender</label>
-                      { this.state.gender === '' && this.state.isGenderMissing && 
+                      {this.state.gender === '' && this.state.isGenderMissing &&
                         <div className="form-group">
                           <div className="alert alert-danger" role="alert">
                             This field is required
                           </div>
-                      </div>
+                        </div>
                       }
                       <div
                         style={{
@@ -504,7 +517,7 @@ class Register extends Component {
                   </div>
                 )}
 
-                {message && (
+                {/* {message && (
                   <div className="form-group">
                     <div
                       className={
@@ -524,7 +537,7 @@ class Register extends Component {
                       Back
                     </button>
                   </div>
-                )}
+                )} */}
                 <CheckButton
                   style={{ display: "none" }}
                   ref={(c) => {
@@ -539,6 +552,11 @@ class Register extends Component {
             <AdminProfile user={currentUser} />
           </div>
         </div>
+        {   this.props.dialog_state === 1 ?
+          <QuestionDialog topic='add-user' data={payload_data} /> :
+          this.props.dialog_state === 2 &&
+          <ConfirmedDialog topic='add-user' />
+        }
       </div>
     );
   }
@@ -547,9 +565,11 @@ class Register extends Component {
 function mapStateToProps(state) {
   const { user } = state.auth;
   const { message } = state.message;
+  const { dialog_state } = state.dialog;
   return {
     user,
     message,
+    dialog_state,
   };
 }
 

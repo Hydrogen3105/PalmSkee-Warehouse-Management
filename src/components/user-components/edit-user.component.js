@@ -9,7 +9,6 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import Select from "react-validation/build/select";
 import { isEmail } from "validator";
-import { Button } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import AdminProfile from '../profile.components/admin-profile.component'
 
@@ -22,6 +21,9 @@ import { select_user } from "../../actions/admin";
 
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
+
+import SearchService from '../../services/sender-service'
+import { BlueButton, GreenButton, ColorButton} from '../../styles/material-style'
 
 const required = (value) => {
     if (!value) {
@@ -64,6 +66,7 @@ class EditUser extends Component {
       allUser: [],
       loading: true,
       isGenderMissing: false,
+      allWarehouse: [],
     };
 
     this.onChangeUserID = this.onChangeUserID.bind(this);
@@ -81,8 +84,16 @@ class EditUser extends Component {
       .then((response) => {
         this.setState({
           allUser: response.data.payload,
-          loading: false,
+          
         });
+      })
+      .then(() => {
+        SearchService.searchWarehouses().then(response =>{
+          this.setState({
+            allWarehouse: response.data.payload,
+            loading: false,
+          })
+        })
       })
       .then(() => {
         if (this.state.userId === "" && this.props.userId !== "") {
@@ -108,7 +119,12 @@ class EditUser extends Component {
             loading: false
           });
         }
-      });
+      })
+      .catch(() => {
+        this.setState({
+          loading: false,
+        })
+      })
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -246,27 +262,18 @@ class EditUser extends Component {
         <div id="outer">
           <div className="inner">
             <Link to="/register">
-              <Button variant="contained">Add User</Button>
+              <BlueButton variant="contained" style={{ width: 150 }}>Add User</BlueButton>
             </Link>
           </div>
           <div className="inner">
             <Link to="/edit-user">
-              <Button variant="contained">Edit User</Button>
+              <GreenButton variant="contained" style={{ width: 150 }}>Edit User</GreenButton>
             </Link>
           </div>
           <div className="inner">
             <Link to="/delete-user">
-              <Button variant="contained">Delete User</Button>
+              <ColorButton variant="contained" style={{ width: 150 }}>Delete User</ColorButton>
             </Link>
-          </div>
-          <div className="inner">
-            <button
-              className="btn btn-danger btn-block"
-              style={{ width: 150 }}
-              onClick={() => console.log(this.state.allUser)}
-            >
-              Data
-            </button>
           </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -463,8 +470,9 @@ class EditUser extends Component {
                             validations={[required]}
                           >
                             <option value="">Choose warehouse</option>
-                            <option value="WH001">WH001 O-Cha Warehouse</option>
-                            <option value="WH002">WH002 Cha-O Warehouse</option>
+                            {this.state.allWarehouse.map(warehouse => {
+                              return <option key={warehouse.warehouseId} value={warehouse.warehouseId}>{warehouse.warehouseId}{" "}{warehouse.name}</option>
+                            })}
                           </Select>
                         </label>
                       </div>

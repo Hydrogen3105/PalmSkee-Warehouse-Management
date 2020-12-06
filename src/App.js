@@ -93,13 +93,10 @@ class App extends Component {
       <Router history={history}>
         <div>
           <div className={navBarUseStyles.root}>
-            <AppBar position="static">
+            <AppBar position="static" style={{height: '55px'}}>
               <Toolbar>
-                <IconButton edge="start" color="inherit" aria-label="menu">
-                    <MenuIcon />
-                </IconButton>
                   <Typography variant="h6" >
-                  <Link to="/home" className="backToHome">
+                  <Link to="/home" className={navBarUseStyles.menuButton} style={{color: '#ffffff'}}>
                     My PWS
                    </Link> 
                   </Typography>

@@ -1,6 +1,6 @@
 import { createMuiTheme, withStyles, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { deepPurple, blue , red, indigo, green, amber, } from '@material-ui/core/colors';
+import { deepPurple, blue , red, indigo, green, amber, grey } from '@material-ui/core/colors';
 
 export const ColorButton = withStyles((theme) => ({
     root: {
@@ -24,6 +24,7 @@ export const navBarUseStyles = makeStyles((theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
+    color: '#ffffff'
   },
   title: {
     flexGrow: 1,
@@ -110,6 +111,16 @@ export const DarkPurpleButton = withStyles((theme) => ({
     backgroundColor: deepPurple[700],
     '&:hover': {
       backgroundColor: deepPurple[700],
+    },
+  },
+}))(Button);
+
+export const GreyButton = withStyles((theme) => ({
+  root: {
+    color: theme.palette.getContrastText(grey[500]),
+    backgroundColor: grey[500],
+    '&:hover': {
+      backgroundColor: grey[500],
     },
   },
 }))(Button);

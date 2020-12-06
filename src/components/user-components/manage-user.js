@@ -103,9 +103,7 @@ class ManageUser extends Component {
 
         return (
             <div>
-                <h2>Manage User</h2>
-                <br />
-
+                <h2 style={{marginBottom: 10}}>Manage User</h2>
                 <div id="outer">
                     <div className="inner">
                         <Link to="/register">
@@ -186,9 +184,7 @@ class ManageUser extends Component {
                     </div>
 
                 </div>
-                
-                <br />
-                <div>
+                <div style={{marginTop: 10}}>
                     <Link to="/home">
                         <ColorButton variant="contained" color="primary" className={useStyles.margin}>
                             Back

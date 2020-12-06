@@ -36,13 +36,14 @@ class WarehouseCardDetail extends Component {
                                 !this.props.isLoading &&
                                 <div style={{ backgroundColor: { fill: 'transparent' },marginBottom: 15 }}>
                                     <Chart
-                                        width={'500px'}
-                                        height={'200px'}
+                                        width={'480px'}
+                                        height={'300px'}
                                         chartType="PieChart"
                                         loader={<div>Loading Chart</div>}
                                         data={data}
                                         options={{
                                             title: 'Parcels in Storage (Percent)',
+                                            backgroundColor: 'none',
                                         }}
 
                                     />
