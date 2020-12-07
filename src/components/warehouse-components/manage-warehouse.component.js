@@ -48,6 +48,7 @@ class ManageWarehouse extends Component {
                     isLoading: false,
                 })
             })
+            .catch(() => this.setState({isLoading: false}))
     }
 
     componentDidUpdate(prevProps, prevState) {

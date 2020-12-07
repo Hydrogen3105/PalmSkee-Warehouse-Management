@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { Link, Redirect } from "react-router-dom"
 import { connect } from "react-redux"
 import { Button } from '@material-ui/core'
+import WarehouseService from '../services/warehouse-service'
 
 import IconButton from '@material-ui/core/IconButton'
 import SearchIcon from '@material-ui/icons/Search'
@@ -14,9 +15,69 @@ class AdminMain extends Component {
         super(props)
 
         this.state = {
-            showWarehouses: []
+            allWarehouses: [],
+            showWarehouses: [],
+            isLoading: true,
+            searchText: "",
+            
         }
     }
+    componentDidMount() {
+        WarehouseService.getAllWarehouses()
+            .then((response) => {
+                const all_warehouse = response.data.payload.map(warehouse => {
+                    return {
+                        ...warehouse,
+                        id: warehouse.warehouseId
+                    }
+                })
+                this.setState({
+                    allWarehouses: all_warehouse,
+                    showWarehouses: all_warehouse,
+                    isLoading: false,
+                })
+            })
+            .catch(() => this.setState({isLoading: false}))
+    }
+
+    handleChange = (e) => {
+        const { name, value } = e.target
+        this.setState({
+            [name]: value
+        })
+    }
+    
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.showWarehouses !== this.state.showWarehouses) {
+            this.setState({
+                isLoading: false
+            })
+        }
+    }
+
+    handleSearch = (allWarehouses) => {
+        this.setState({
+            isLoading: true
+        })
+
+        if (this.state.searchText !== '') {
+            const searchData = allWarehouses.filter(warehouse => {
+                const regex = new RegExp('^' + this.state.searchText, 'gi')
+                return regex.test(warehouse.warehouseId)
+            })
+            this.setState({
+                showWarehouses: searchData,
+                searchText: ''
+            })
+        }
+        else {
+            this.setState({
+                showWarehouses: allWarehouses,
+                isLoading: false
+            })
+        }
+    }
+
 
     render () {
         const {user: currentUser} = this.props
@@ -63,7 +124,7 @@ class AdminMain extends Component {
                                         <IconButton color="primary" 
                                                     aria-label="search" 
                                                     component="span" 
-                                                    onClick={() => this.handleSearch(this.state.allUser)}
+                                                    onClick={() => this.handleSearch(this.state.allWarehouses)}
                                         >
                                             <SearchIcon />
                                         </IconButton>
@@ -74,9 +135,12 @@ class AdminMain extends Component {
                                 
                         </div>
                         {/*Above Table */}
-                        <div>
-                            <WarehousesTable warehouses={this.state.showWarehouses} />
-                        </div>
+                        {
+                            !this.state.isLoading &&
+                            <div>
+                                <WarehousesTable warehouses={this.state.showWarehouses} position='admin'/>
+                            </div>
+                        }
                     </div>
                     {/** */}
                     <div>
