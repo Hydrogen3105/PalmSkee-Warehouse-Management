@@ -9,7 +9,7 @@ import { clearMessage } from '../actions/message'
 
 import { connect } from "react-redux";
 import { login, login_status } from "../actions/auth";
-import {currentUserData} from '../actions/current_user'
+import { currentUserData } from '../actions/current_user'
 
 const required = (value) => {
   if (!value) {
@@ -67,7 +67,7 @@ class Login extends Component {
     if (this.checkBtn.context._errors.length === 0) {
       dispatch(login(this.state.username, this.state.password))
         .then(() => {
-          dispatch(currentUserData(this.state.username)).then(() =>{
+          dispatch(currentUserData(this.state.username)).then(() => {
             history.push("/home");
             window.location.reload();
           }).catch(() => {
@@ -75,7 +75,7 @@ class Login extends Component {
               loading: false,
             })
           })
-          
+
         })
         .catch(() => {
           this.setState({
@@ -145,16 +145,31 @@ class Login extends Component {
                 )}
                 <span>Login</span>
               </button>
-              
+
             </div>
 
-            {message && (
+            {/* {message && (
               <div className="form-group">
                 <div className="alert alert-danger" role="alert">
                   {message}
                 </div>
               </div>
-            )}
+            )} */}
+            {
+              this.props.statusId == 400 ? (
+                <div className="form-group">
+                  <div className="alert alert-danger" role="alert">
+                    Username or password is not correct.
+                  </div>
+                </div>
+              ) : this.props.statusId == 500 && (
+                <div className="form-group">
+                  <div className="alert alert-danger" role="alert">
+                    Server connection error.
+                  </div>
+                </div>
+              )
+            }
             <CheckButton
               style={{ display: "none" }}
               ref={(c) => {
@@ -164,7 +179,7 @@ class Login extends Component {
           </Form>
         </div>
         { this.props.statusId === 426 &&
-          <LoginDialog isOpen={true} userId={this.state.username} password={this.state.password}/>
+          <LoginDialog isOpen={true} userId={this.state.username} password={this.state.password} />
         }
       </div>
     );
@@ -174,7 +189,7 @@ class Login extends Component {
 function mapStateToProps(state) {
   const { isLoggedIn } = state.auth;
   const { message } = state.message;
-  const { statusId } = state.status 
+  const { statusId } = state.status
   return {
     isLoggedIn,
     message,

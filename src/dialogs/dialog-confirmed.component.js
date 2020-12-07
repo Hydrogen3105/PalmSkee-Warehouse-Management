@@ -1,5 +1,4 @@
 import React from 'react'
-import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogTitle from '@material-ui/core/DialogTitle'
@@ -7,13 +6,14 @@ import { connect } from 'react-redux'
 import { dialog_state } from '../actions/dialog'
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { BlueButton } from '../styles/material-style'
-import { green } from '@material-ui/core/colors';
+import { green, red } from '@material-ui/core/colors';
+
 
 function ComfirmedDialog({ dispatch, dialog_state: state, topic }) {
   const [open, setOpen] = React.useState(false)
 
   React.useEffect(() => {
-    state === 2 && setOpen(true)
+    state === 2 && setOpen(true) 
   }, [])
 
   const handleClose = () => {
@@ -23,8 +23,7 @@ function ComfirmedDialog({ dispatch, dialog_state: state, topic }) {
   }
 
   const handleConfirm = () => {
-    const prevState = state
-    dispatch(dialog_state(prevState + 1))
+    dispatch(dialog_state(0))
     window.location.reload()
     setOpen(false)
   }
@@ -59,6 +58,7 @@ function ComfirmedDialog({ dispatch, dialog_state: state, topic }) {
           </BlueButton>
         </DialogActions>
       </Dialog>
+
     </div>
   )
 }

@@ -1,13 +1,13 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import { red } from '@material-ui/core/colors';
-import { ColorButton, GreyButton } from '../styles/material-style'
+import { BlueButton, GreyButton } from '../styles/material-style'
 import { connect } from "react-redux";
 import { dialog_state } from "../actions/dialog";
+import { clearMessage } from '../actions/message'
 import { edit_user, delete_user, select_user } from "../actions/admin";
 import { register } from '../actions/auth'
 import {
@@ -40,10 +40,12 @@ function QuestionDialog({
 
   const handleClose = () => {
     dispatch(dialog_state(0));
+    dispatch(clearMessage())
     setOpen(false);
   };
 
   const handleConfirm = () => {
+    dispatch(clearMessage())
     const prevState = state;
     setLoading(true);
 
@@ -78,7 +80,7 @@ function QuestionDialog({
             gender,
             email,
             phone,
-            warehouseId
+            warehouseId,
           )
         )
           .then(() => {
@@ -133,7 +135,8 @@ function QuestionDialog({
         dispatch(delete_user(selected_userId))
           .then(() => {
             dispatch(dialog_state(prevState + 1));
-          })
+          }
+          )
           .catch(() => {
             setLoading(false);
           });
@@ -333,11 +336,11 @@ function QuestionDialog({
 
         <DialogTitle id="alert-dialog-title" style={{ textAlign: "center" }}>
           <div style={{ display: "flex", flexDirection: 'column' }}>
-            <div style={{marginBottom: 15}}>
-              <ErrorOutlineIcon style={{ textAlign: "center", color: red[900], width: 100, height: 'auto'}} />
+            <div style={{ marginBottom: 15 }}>
+              <ErrorOutlineIcon style={{ textAlign: "center", color: red[900], width: 100, height: 'auto' }} />
             </div>
             <div>
-              <strong>
+              <strong style={{marginBottom: 15}}>
                 {topic === "add"
                   ? "Confirm Adding Warehouse ?"
                   : topic === "edit"
@@ -364,24 +367,30 @@ function QuestionDialog({
                                         ? "Confirm Exporting Parcels ?"
                                         : topic === "store" && "Confirm Storing Parcels ?"}
               </strong>
+              {
+                message && 
+                < div className="alert alert-danger" role="alert">
+                  Something went wrong.
+                </div>
+              }
             </div>
           </div>
 
 
         </DialogTitle>
-        <DialogActions style={{ display: "flex", justifyContent: "space-around" }}>
-          <GreyButton onClick={handleClose} color="primary">
-            Back
+      <DialogActions style={{ display: "flex", justifyContent: "space-around" }}>
+        <GreyButton onClick={handleClose} color="primary">
+          Back
           </GreyButton>
-          <ColorButton onClick={handleConfirm} color="primary" autoFocus>
-            Confirm
+        <BlueButton onClick={handleConfirm} color="primary" autoFocus>
+          Confirm
             {loading && (
-              <span className="spinner-border spinner-border-sm"></span>
-            )}
-          </ColorButton>
-        </DialogActions>
+            <span className="spinner-border spinner-border-sm"></span>
+          )}
+        </BlueButton>
+      </DialogActions>
       </Dialog>
-    </div>
+    </div >
   );
 }
 
