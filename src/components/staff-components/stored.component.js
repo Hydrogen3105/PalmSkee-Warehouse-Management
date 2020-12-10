@@ -242,6 +242,7 @@ class StoredParcels extends Component {
                         <button className="btn btn-primary btn-block"
                             style={{ width: 100 }}
                             onClick={this.handleStored}
+                            disabled={!(this.state.selectedParcels.length > 0)}
                         >
                             Store
                         </button>

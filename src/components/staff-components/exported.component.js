@@ -243,6 +243,7 @@ class ExportedParcels extends Component {
                         <button className="btn btn-primary btn-block"
                             style={{ width: 100 }}
                             onClick={this.handleExported}
+                            disabled={!(this.state.selectedParcels.length > 0 )}
                         >
                             Export
                         </button>
