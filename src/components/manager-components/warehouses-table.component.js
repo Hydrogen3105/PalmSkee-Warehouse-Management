@@ -16,23 +16,35 @@ const columns = [
 function WarehousesTable({ dispatch, warehouses, position }) {
   const handleSelectWarehouse = (warehouseId) => {
     dispatch(select_warehouse(warehouseId));
-    if(position){
-       history.push('/edit-warehouse')
+    if (position) {
+      history.push('/edit-warehouse')
     }
-    else{
+    else {
       history.push("/warehouse-detail");
     }
-     
+
   };
 
   return (
-    <div style={{ height: 500, width: 750 }}>
+    <div>
+      { position === 'admin' ?
+        (<div style={{ height: 500, width: 700 }}>
           <DataGrid
             rows={warehouses}
             columns={columns}
             pageSize={10}
             onRowClick={(row) => handleSelectWarehouse(row.data.warehouseId)}
           />
+        </div>) :
+        (<div style={{ height: 500, width: 750 }}>
+          <DataGrid
+            rows={warehouses}
+            columns={columns}
+            pageSize={10}
+            onRowClick={(row) => handleSelectWarehouse(row.data.warehouseId)}
+          />
+        </div>)
+      }
     </div>
   );
 }
