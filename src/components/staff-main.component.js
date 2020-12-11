@@ -31,6 +31,7 @@ class StaffMain extends Component {
                 isLoading: false
             })
         })
+        .catch(() => this.setState({isLoading: false}))
     }
 
     render() {

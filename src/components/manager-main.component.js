@@ -50,6 +50,7 @@ class ManagerMain extends Component {
                 })
             }
         )
+        .catch(() => this.setState({isLoading: false}))
     }
 
     componentDidUpdate(prevProps, prevState) {
